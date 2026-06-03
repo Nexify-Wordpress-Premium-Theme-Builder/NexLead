@@ -1,14 +1,9 @@
 import Link from "next/link";
-import {
-  Calendar,
-  Check,
-  MessageCircle,
-  Send,
-  UserPlus,
-} from "lucide-react";
+import { Calendar, Check, MessageCircle, Send, UserPlus } from "lucide-react";
 import { mockActivityFeed } from "@/data/mock-dashboard";
 import type { ActivityFeedItem } from "@/types/dashboard";
 import { cn } from "@/lib/cn";
+import { panelClass } from "@/lib/panel";
 
 const activityStyles: Record<
   ActivityFeedItem["type"],
@@ -21,15 +16,12 @@ const activityStyles: Record<
   lead: { bg: "bg-slate-100 text-slate-600", icon: UserPlus },
 };
 
-export function RecentActivity() {
+export function RecentActivity({ className }: { className?: string }) {
   return (
-    <div className="rounded-2xl border border-border bg-surface p-5 shadow-card md:p-6">
+    <div className={cn(panelClass("p-6"), "animate-fade-up", className)}>
       <div className="mb-5 flex items-center justify-between">
         <h3 className="text-base font-semibold text-text-primary">Recent Activity</h3>
-        <Link
-          href="#"
-          className="text-sm font-medium text-primary transition-colors duration-200 hover:text-primary-hover"
-        >
+        <Link href="#" className="link-section">
           View all activity →
         </Link>
       </div>
@@ -41,11 +33,11 @@ export function RecentActivity() {
           return (
             <div
               key={item.id}
-              className="flex gap-3 rounded-xl border border-border/80 p-4 transition-all duration-200 hover:bg-slate-50/50"
+              className="flex gap-3 rounded-[14px] border border-border-soft bg-surface/60 p-4 transition-all duration-200 hover:border-border hover:bg-surface-muted"
             >
               <div
                 className={cn(
-                  "flex h-9 w-9 shrink-0 items-center justify-center rounded-full",
+                  "flex h-[38px] w-[38px] shrink-0 items-center justify-center rounded-full",
                   style.bg,
                 )}
               >

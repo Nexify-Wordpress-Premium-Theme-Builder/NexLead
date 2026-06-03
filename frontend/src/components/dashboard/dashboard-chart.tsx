@@ -2,19 +2,21 @@
 
 import { ChevronDown, Info } from "lucide-react";
 import { mockChartData } from "@/data/mock-dashboard";
+import { panelClass } from "@/lib/panel";
+import { cn } from "@/lib/cn";
 
-const CHART_HEIGHT = 220;
+const CHART_HEIGHT = 228;
 const CHART_WIDTH = 560;
-const PADDING = { top: 16, right: 12, bottom: 32, left: 36 };
+const PADDING = { top: 20, right: 12, bottom: 36, left: 40 };
 const MAX_Y = 200;
 
-export function DashboardChart() {
+export function DashboardChart({ className }: { className?: string }) {
   const innerW = CHART_WIDTH - PADDING.left - PADDING.right;
   const innerH = CHART_HEIGHT - PADDING.top - PADDING.bottom;
   const barGap = innerW / mockChartData.length;
 
   return (
-    <div className="rounded-2xl border border-border bg-surface p-5 shadow-card md:p-6">
+    <div className={cn(panelClass("p-6 md:p-6"), "animate-fade-up", className)}>
       <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2">
           <h3 className="text-base font-semibold text-text-primary">
@@ -24,24 +26,24 @@ export function DashboardChart() {
         </div>
         <button
           type="button"
-          className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-surface px-3 py-1.5 text-sm text-text-secondary transition-all duration-200 hover:bg-slate-50"
+          className="inline-flex h-9 items-center gap-1.5 rounded-xl border border-border-soft bg-surface px-3 text-sm font-medium text-text-secondary transition-all duration-200 hover:bg-surface-muted"
         >
           Last 30 days
           <ChevronDown className="h-4 w-4" />
         </button>
       </div>
 
-      <div className="mb-4 flex flex-wrap gap-4 text-xs text-text-secondary">
+      <div className="mb-5 flex flex-wrap gap-5 text-xs font-medium text-text-secondary">
         <span className="flex items-center gap-2">
-          <span className="h-2.5 w-2.5 rounded-sm bg-primary" />
+          <span className="h-2.5 w-2.5 rounded-[3px] bg-primary" />
           Leads Acquired
         </span>
         <span className="flex items-center gap-2">
-          <span className="h-2.5 w-2.5 rounded-sm bg-primary/40" />
+          <span className="h-2.5 w-2.5 rounded-[3px] bg-[#93C5FD]" />
           Outreach Sent
         </span>
         <span className="flex items-center gap-2">
-          <span className="h-0.5 w-4 rounded bg-green" />
+          <span className="h-0.5 w-5 rounded bg-green" />
           Meetings Booked
         </span>
       </div>
@@ -62,10 +64,11 @@ export function DashboardChart() {
                   x2={CHART_WIDTH - PADDING.right}
                   y1={y}
                   y2={y}
-                  stroke="#E5E7EB"
-                  strokeDasharray="4 4"
+                  stroke="#E2E8F0"
+                  strokeDasharray="4 6"
+                  opacity={0.7}
                 />
-                <text x={8} y={y + 4} className="fill-text-muted text-[10px]">
+                <text x={10} y={y + 4} fill="#94A3B8" fontSize="13">
                   {tick}
                 </text>
               </g>
@@ -73,11 +76,12 @@ export function DashboardChart() {
           })}
 
           {mockChartData.map((point, i) => {
-            const x = PADDING.left + i * barGap + barGap * 0.15;
-            const barW = barGap * 0.28;
+            const x = PADDING.left + i * barGap + barGap * 0.12;
+            const barW = barGap * 0.3;
             const leadH = (point.leadsAcquired / MAX_Y) * innerH;
             const outreachH = (point.outreachSent / MAX_Y) * innerH;
             const baseY = PADDING.top + innerH;
+            const delay = i * 0.05;
 
             return (
               <g key={point.date}>
@@ -86,22 +90,31 @@ export function DashboardChart() {
                   y={baseY - leadH}
                   width={barW}
                   height={leadH}
-                  rx={4}
+                  rx={5}
                   fill="#2563EB"
+                  style={{
+                    animation: `chart-bar-grow 520ms cubic-bezier(0.16, 1, 0.3, 1) ${delay}s both`,
+                    transformOrigin: `${x + barW / 2}px ${baseY}px`,
+                  }}
                 />
                 <rect
-                  x={x + barW + 4}
+                  x={x + barW + 5}
                   y={baseY - outreachH}
                   width={barW}
                   height={outreachH}
-                  rx={4}
+                  rx={5}
                   fill="#93C5FD"
+                  style={{
+                    animation: `chart-bar-grow 520ms cubic-bezier(0.16, 1, 0.3, 1) ${delay + 0.04}s both`,
+                    transformOrigin: `${x + barW + 5 + barW / 2}px ${baseY}px`,
+                  }}
                 />
                 <text
-                  x={x + barW}
-                  y={CHART_HEIGHT - 8}
+                  x={x + barW + 2}
+                  y={CHART_HEIGHT - 10}
                   textAnchor="middle"
-                  className="fill-text-muted text-[10px]"
+                  fill="#94A3B8"
+                  fontSize="13"
                 >
                   {point.date}
                 </text>
@@ -115,11 +128,11 @@ export function DashboardChart() {
             strokeWidth="2.5"
             strokeLinecap="round"
             strokeLinejoin="round"
+            className="opacity-0 [animation:fade-up_600ms_cubic-bezier(0.16,1,0.3,1)_0.35s_both]"
             points={mockChartData
               .map((point, i) => {
                 const x = PADDING.left + i * barGap + barGap * 0.5;
-                const y =
-                  PADDING.top + innerH - (point.meetingsBooked / MAX_Y) * innerH;
+                const y = PADDING.top + innerH - (point.meetingsBooked / MAX_Y) * innerH;
                 return `${x},${y}`;
               })
               .join(" ")}
@@ -127,7 +140,16 @@ export function DashboardChart() {
           {mockChartData.map((point, i) => {
             const x = PADDING.left + i * barGap + barGap * 0.5;
             const y = PADDING.top + innerH - (point.meetingsBooked / MAX_Y) * innerH;
-            return <circle key={point.date} cx={x} cy={y} r={4} fill="#16A34A" />;
+            return (
+              <circle
+                key={point.date}
+                cx={x}
+                cy={y}
+                r={4}
+                fill="#16A34A"
+                className="opacity-0 [animation:fade-up_400ms_cubic-bezier(0.16,1,0.3,1)_0.5s_both]"
+              />
+            );
           })}
         </svg>
       </div>
