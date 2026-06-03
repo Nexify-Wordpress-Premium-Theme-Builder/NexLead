@@ -1,15 +1,23 @@
+import type { ReactNode } from "react";
+
 export interface PageHeaderProps {
   title: string;
   description?: string;
+  action?: ReactNode;
 }
 
-export function PageHeader({ title, description }: PageHeaderProps) {
+export function PageHeader({ title, description, action }: PageHeaderProps) {
   return (
-    <div className="mb-6">
-      <h1 className="text-2xl font-semibold text-text-primary">{title}</h1>
-      {description ? (
-        <p className="mt-1 text-sm text-text-secondary">{description}</p>
-      ) : null}
+    <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+      <div>
+        <h1 className="text-[28px] font-bold leading-tight tracking-tight text-text-primary md:text-[32px]">
+          {title}
+        </h1>
+        {description ? (
+          <p className="mt-1 text-sm text-text-secondary md:text-[15px]">{description}</p>
+        ) : null}
+      </div>
+      {action ? <div className="shrink-0">{action}</div> : null}
     </div>
   );
 }

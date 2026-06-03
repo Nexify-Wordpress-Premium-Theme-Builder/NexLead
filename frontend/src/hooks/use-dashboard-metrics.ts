@@ -1,6 +1,6 @@
-import { mockDashboardOverview } from "@/data/mock-dashboard";
-import type { DashboardMetric } from "@/types/dashboard";
+import { mockDashboardKpis } from "@/data/mock-dashboard";
+import type { DashboardKpi } from "@/types/dashboard";
 
-export function useDashboardMetrics(): DashboardMetric[] {
-  return mockDashboardOverview.metrics;
+export function useDashboardMetrics(): DashboardKpi[] {
+  return mockDashboardKpis;
 }
