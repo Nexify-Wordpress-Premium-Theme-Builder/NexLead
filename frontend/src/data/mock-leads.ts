@@ -1,0 +1,40 @@
+import type { Lead } from "@shared/types/lead";
+
+export const mockLeads: Lead[] = [
+  {
+    id: "lead-1",
+    companyName: "Northline Studio",
+    website: "https://northlinestudio.com",
+    industry: "Design Agency",
+    location: "Austin, TX",
+    status: "audited",
+    opportunityScore: 82,
+    websiteStatus: "needs_work",
+    createdAt: "2026-05-28T10:00:00.000Z",
+    updatedAt: "2026-05-28T11:00:00.000Z",
+  },
+  {
+    id: "lead-2",
+    companyName: "Summit Legal Group",
+    website: "https://summitlegal.com",
+    industry: "Legal Services",
+    location: "Denver, CO",
+    status: "message_ready",
+    opportunityScore: 76,
+    websiteStatus: "okay",
+    createdAt: "2026-05-27T14:30:00.000Z",
+    updatedAt: "2026-05-27T16:00:00.000Z",
+  },
+  {
+    id: "lead-3",
+    companyName: "BrightPath Consulting",
+    website: "https://brightpath.io",
+    industry: "B2B Consulting",
+    location: "Chicago, IL",
+    status: "replied",
+    opportunityScore: 91,
+    websiteStatus: "needs_work",
+    createdAt: "2026-05-26T09:15:00.000Z",
+    updatedAt: "2026-05-28T09:30:00.000Z",
+  },
+];

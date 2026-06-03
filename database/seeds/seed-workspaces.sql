@@ -1,0 +1,1 @@
+-- Seed placeholder: demo workspaces will be added during development.

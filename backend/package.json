@@ -1,0 +1,14 @@
+{
+  "name": "nexlead-backend",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "echo \"Backend dev server placeholder\"",
+    "build": "tsc",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "typescript": "^5"
+  }
+}

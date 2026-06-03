@@ -1,0 +1,15 @@
+CREATE TABLE IF NOT EXISTS workspaces (
+  id UUID PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  slug VARCHAR(100) NOT NULL UNIQUE,
+  plan_id VARCHAR(50) NOT NULL DEFAULT 'starter',
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS workspace_members (
+  id UUID PRIMARY KEY,
+  workspace_id UUID NOT NULL REFERENCES workspaces(id),
+  user_id UUID NOT NULL REFERENCES users(id),
+  role VARCHAR(50) NOT NULL DEFAULT 'member',
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
