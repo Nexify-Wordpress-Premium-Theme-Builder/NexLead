@@ -6,6 +6,7 @@ export interface DashboardKpi {
   id: string;
   label: string;
   value: string;
+  numericValue: number;
   trendLabel: string;
   trendPercent: number;
   accent: MetricAccent;

@@ -10,10 +10,20 @@ const CHART_WIDTH = 560;
 const PADDING = { top: 20, right: 12, bottom: 36, left: 40 };
 const MAX_Y = 200;
 
+const barDelays = [100, 170, 240, 310, 380, 450, 520, 590];
+
 export function DashboardChart({ className }: { className?: string }) {
   const innerW = CHART_WIDTH - PADDING.left - PADDING.right;
   const innerH = CHART_HEIGHT - PADDING.top - PADDING.bottom;
   const barGap = innerW / mockChartData.length;
+
+  const linePoints = mockChartData
+    .map((point, i) => {
+      const x = PADDING.left + i * barGap + barGap * 0.5;
+      const y = PADDING.top + innerH - (point.meetingsBooked / MAX_Y) * innerH;
+      return `${x},${y}`;
+    })
+    .join(" ");
 
   return (
     <div className={cn(panelClass("p-6 md:p-6"), "animate-fade-up", className)}>
@@ -81,34 +91,38 @@ export function DashboardChart({ className }: { className?: string }) {
             const leadH = (point.leadsAcquired / MAX_Y) * innerH;
             const outreachH = (point.outreachSent / MAX_Y) * innerH;
             const baseY = PADDING.top + innerH;
-            const delay = i * 0.05;
+            const delay = barDelays[i] ?? 100;
 
             return (
               <g key={point.date}>
-                <rect
-                  x={x}
-                  y={baseY - leadH}
-                  width={barW}
-                  height={leadH}
-                  rx={5}
-                  fill="#2563EB"
-                  style={{
-                    animation: `chart-bar-grow 520ms cubic-bezier(0.16, 1, 0.3, 1) ${delay}s both`,
-                    transformOrigin: `${x + barW / 2}px ${baseY}px`,
-                  }}
-                />
-                <rect
-                  x={x + barW + 5}
-                  y={baseY - outreachH}
-                  width={barW}
-                  height={outreachH}
-                  rx={5}
-                  fill="#93C5FD"
-                  style={{
-                    animation: `chart-bar-grow 520ms cubic-bezier(0.16, 1, 0.3, 1) ${delay + 0.04}s both`,
-                    transformOrigin: `${x + barW + 5 + barW / 2}px ${baseY}px`,
-                  }}
-                />
+                <g
+                  transform={`translate(${x + barW / 2}, ${baseY})`}
+                  className="animate-bar-grow"
+                  style={{ animationDelay: `${delay}ms` }}
+                >
+                  <rect
+                    x={-barW / 2}
+                    y={-leadH}
+                    width={barW}
+                    height={leadH}
+                    rx={5}
+                    fill="#2563EB"
+                  />
+                </g>
+                <g
+                  transform={`translate(${x + barW + 5 + barW / 2}, ${baseY})`}
+                  className="animate-bar-grow"
+                  style={{ animationDelay: `${delay + 40}ms` }}
+                >
+                  <rect
+                    x={-barW / 2}
+                    y={-outreachH}
+                    width={barW}
+                    height={outreachH}
+                    rx={5}
+                    fill="#93C5FD"
+                  />
+                </g>
                 <text
                   x={x + barW + 2}
                   y={CHART_HEIGHT - 10}
@@ -128,26 +142,23 @@ export function DashboardChart({ className }: { className?: string }) {
             strokeWidth="2.5"
             strokeLinecap="round"
             strokeLinejoin="round"
-            className="opacity-0 [animation:fade-up_600ms_cubic-bezier(0.16,1,0.3,1)_0.35s_both]"
-            points={mockChartData
-              .map((point, i) => {
-                const x = PADDING.left + i * barGap + barGap * 0.5;
-                const y = PADDING.top + innerH - (point.meetingsBooked / MAX_Y) * innerH;
-                return `${x},${y}`;
-              })
-              .join(" ")}
+            points={linePoints}
+            className="animate-chart-line"
+            style={{ animationDelay: "280ms" }}
           />
           {mockChartData.map((point, i) => {
             const x = PADDING.left + i * barGap + barGap * 0.5;
             const y = PADDING.top + innerH - (point.meetingsBooked / MAX_Y) * innerH;
+            const dotDelay = 900 + i * 50;
             return (
               <circle
-                key={point.date}
+                key={`dot-${point.date}`}
                 cx={x}
                 cy={y}
                 r={4}
                 fill="#16A34A"
-                className="opacity-0 [animation:fade-up_400ms_cubic-bezier(0.16,1,0.3,1)_0.5s_both]"
+                className="animate-dot-in"
+                style={{ animationDelay: `${dotDelay}ms` }}
               />
             );
           })}
