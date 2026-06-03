@@ -26,8 +26,6 @@ const statusLabels = {
   good: "Good",
 } as const;
 
-const rowDelays = [200, 270, 340, 410, 480];
-
 function ActionIcon({ type }: { type: OpportunityLeadRow["actionType"] }) {
   if (type === "personalize") return <Pencil className="h-3.5 w-3.5" />;
   if (type === "follow_up") return <Phone className="h-3.5 w-3.5" />;
@@ -59,8 +57,7 @@ export function TopOpportunityLeads({ className }: { className?: string }) {
             {mockOpportunityLeads.map((lead, index) => (
               <tr
                 key={lead.id}
-                className="animate-fade-up-row group table-row-hover border-b border-border-soft last:border-0"
-                style={{ animationDelay: `${rowDelays[index] ?? 200}ms` }}
+                className="group border-b border-border-soft transition-colors duration-200 last:border-0 hover:bg-surface-muted"
               >
                 <td className="py-[14px] pr-3">
                   <div className="flex items-center gap-2.5">
@@ -94,7 +91,7 @@ export function TopOpportunityLeads({ className }: { className?: string }) {
                 <td className="py-[14px]">
                   <button
                     type="button"
-                    className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary transition-colors duration-160 group-hover:text-primary-hover hover:underline"
+                    className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary transition-colors duration-200 group-hover:text-primary-hover hover:underline"
                   >
                     <ActionIcon type={lead.actionType} />
                     {lead.nextAction}

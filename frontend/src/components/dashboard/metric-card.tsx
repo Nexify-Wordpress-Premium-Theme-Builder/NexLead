@@ -1,9 +1,5 @@
-"use client";
-
 import { Calendar, Send, Target, TrendingUp, Users } from "lucide-react";
 import type { DashboardKpi, MetricAccent } from "@/types/dashboard";
-import { useCountUp } from "@/hooks/use-count-up";
-import { formatNumber } from "@/lib/formatters";
 import { cn } from "@/lib/cn";
 import { panelClass } from "@/lib/panel";
 
@@ -44,17 +40,7 @@ const icons = {
   "meetings-booked": Calendar,
 } as const;
 
-const countDelays = [100, 180, 260, 340] as const;
-
-function Sparkline({
-  data,
-  color,
-  delay = 0,
-}: {
-  data: number[];
-  color: string;
-  delay?: number;
-}) {
+function Sparkline({ data, color }: { data: number[]; color: string }) {
   const max = Math.max(...data);
   const min = Math.min(...data);
   const range = max - min || 1;
@@ -69,44 +55,28 @@ function Sparkline({
     .join(" ");
 
   return (
-    <div
-      className="animate-reveal-x overflow-hidden"
-      style={{ animationDelay: `${delay}ms` }}
-    >
-      <svg width={width} height={height} className="overflow-visible" aria-hidden>
-        <polyline
-          fill="none"
-          stroke={color}
-          strokeWidth="1.75"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          points={points}
-        />
-      </svg>
-    </div>
+    <svg width={width} height={height} className="overflow-visible opacity-90" aria-hidden>
+      <polyline
+        fill="none"
+        stroke={color}
+        strokeWidth="1.75"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        points={points}
+      />
+    </svg>
   );
 }
 
 export function MetricCard({
   metric,
   className,
-  index = 0,
 }: {
   metric: DashboardKpi;
   className?: string;
-  index?: number;
 }) {
   const styles = accentStyles[metric.accent];
   const Icon = icons[metric.id as keyof typeof icons] ?? Users;
-  const countDelay = countDelays[index] ?? 100;
-  const sparkDelay = countDelay + 120;
-
-  const animatedValue = useCountUp({
-    end: metric.numericValue,
-    start: 0,
-    duration: 1100,
-    delay: countDelay,
-  });
 
   return (
     <div
@@ -126,15 +96,12 @@ export function MetricCard({
         >
           <Icon className="h-5 w-5" />
         </div>
-        <Sparkline data={metric.sparkline} color={styles.spark} delay={sparkDelay} />
+        <Sparkline data={metric.sparkline} color={styles.spark} />
       </div>
       <div>
         <p className="text-sm font-medium text-[#64748B]">{metric.label}</p>
-        <p
-          className="mt-1 text-[30px] font-bold leading-9 tracking-[-0.03em] text-text-primary tabular-nums"
-          suppressHydrationWarning
-        >
-          {formatNumber(animatedValue)}
+        <p className="mt-1 text-[30px] font-bold leading-9 tracking-[-0.03em] text-text-primary">
+          {metric.value}
         </p>
         <p className={cn("mt-2 flex items-center gap-1 text-xs font-medium", styles.trend)}>
           <TrendingUp className="h-3.5 w-3.5" />

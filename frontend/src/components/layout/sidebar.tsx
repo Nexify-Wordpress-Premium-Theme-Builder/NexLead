@@ -40,7 +40,7 @@ export function Sidebar({ className }: SidebarProps) {
               key={item.id}
               href={item.href}
               className={cn(
-                "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-[background-color,color,border-color,box-shadow] duration-[180ms]",
+                "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-200",
                 isActive
                   ? "border border-[rgba(37,99,235,0.12)] bg-gradient-to-br from-[#EFF6FF] to-[#EEF2FF] text-primary shadow-[inset_0_0_0_1px_rgba(255,255,255,0.55)]"
                   : "text-text-secondary hover:bg-surface-muted hover:text-text-primary",
