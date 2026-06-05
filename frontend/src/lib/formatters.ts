@@ -5,5 +5,5 @@ export function formatScore(value: number): string {
 }
 
 export function formatNumber(value: number): string {
-  return value.toLocaleString("en-US");
+  return value.toLocaleString("tr-TR");
 }

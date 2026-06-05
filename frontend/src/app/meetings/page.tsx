@@ -6,8 +6,8 @@ export default function MeetingsPage() {
     <div className="space-y-5">
       <PageHeader
         className="animate-fade-up"
-        title="Meetings"
-        description="Review booked meetings and prepare with lead-specific opportunity briefs."
+        title="Görüşmeler"
+        description="Planlanan görüşmeleri inceleyin ve müşteri özelinde fırsat brifleriyle hazırlanın."
       />
       <MeetingsPageContent />
     </div>

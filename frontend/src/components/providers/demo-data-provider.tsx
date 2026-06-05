@@ -64,23 +64,23 @@ const stageOrder: PipelineStageId[] = [
 ];
 
 const stageBadge: Record<PipelineStageId, string> = {
-  new: "New",
-  audited: "Audited",
-  message_ready: "Ready",
-  sent: "Sent",
-  replied: "Replied",
-  meeting: "Meeting",
-  closed: "Closed",
+  new: "Yeni",
+  audited: "Analiz Edildi",
+  message_ready: "Hazır",
+  sent: "Gönderildi",
+  replied: "Yanıt Geldi",
+  meeting: "Görüşme",
+  closed: "Kapandı",
 };
 
 const nextActionByStage: Record<PipelineStageId, string> = {
-  new: "Run Audit",
-  audited: "Send Audit",
-  message_ready: "Personalize",
-  sent: "Follow Up",
-  replied: "Book Meeting",
-  meeting: "View Brief",
-  closed: "Archive",
+  new: "Analiz Çalıştır",
+  audited: "Analiz Gönder",
+  message_ready: "Kişiselleştir",
+  sent: "Takip Et",
+  replied: "Görüşme Planla",
+  meeting: "Brifi Gör",
+  closed: "Arşivle",
 };
 
 export interface DemoDataState {
@@ -123,31 +123,37 @@ function createId(prefix: string): string {
 }
 
 function createDefaultLeadDetail(lead: Lead): LeadDetailMap[string] {
+  const websiteStatusByCode: Record<Lead["websiteStatus"], string> = {
+    needs_work: "İyileştirme Gerekli",
+    okay: "Orta",
+    good: "İyi",
+  };
+
   return {
     id: lead.id,
     company: lead.companyName,
     industry: lead.industry,
     website: lead.website,
-    location: lead.location ?? "Unknown",
-    companySize: "11–50 employees",
-    contactStatus: "Not reviewed",
+    location: lead.location ?? "Bilinmiyor",
+    companySize: "11–50 çalışan",
+    contactStatus: "İncelenmedi",
     opportunityScore: lead.opportunityScore,
-    websiteStatus: lead.websiteStatus === "needs_work" ? "Needs Work" : lead.websiteStatus,
-    outreachStatus: "Not Sent",
+    websiteStatus: websiteStatusByCode[lead.websiteStatus],
+    outreachStatus: "Gönderilmedi",
     nextAction: nextActionByStage[stageByLeadStatus[lead.status]],
     auditSummary: [],
     opportunityReasons: [],
     suggestedServices: [],
     outreachSubject: "",
     outreachBody: "",
-    timeline: [{ label: "Lead added", time: new Date().toISOString() }],
+    timeline: [{ label: "Müşteri eklendi", time: new Date().toISOString() }],
   };
 }
 
 function createActivityItem(
   message: string,
   type: ActivityFeedItem["type"],
-  timeAgo = "Just now",
+  timeAgo = "Az önce",
 ): ActivityFeedItem {
   return {
     id: createId("act"),
@@ -171,7 +177,7 @@ function flattenPipelineCards(): FlattenedPipelineCard[] {
         company: card.company,
         industry: card.industry,
         score: card.score,
-        nextAction: card.nextAction,
+        nextAction: nextActionByStage[stageId],
         badge: stageBadge[stageId],
         leadId: matchedLead?.id,
       };
@@ -278,7 +284,7 @@ export function DemoDataProvider({ children }: DemoDataProviderProps) {
         id: createId("act"),
         message: activity.message,
         type: activity.type,
-        timeAgo: activity.timeAgo ?? "Just now",
+        timeAgo: activity.timeAgo ?? "Az önce",
       };
 
       setState((currentState) => ({
@@ -313,7 +319,7 @@ export function DemoDataProvider({ children }: DemoDataProviderProps) {
       },
       pipelineCards: upsertPipelineCard(currentState.pipelineCards, nextLead, "new"),
       activityFeed: [
-        createActivityItem(`New lead added: ${nextLead.companyName}`, "lead"),
+        createActivityItem(`Yeni müşteri eklendi: ${nextLead.companyName}`, "lead"),
         ...currentState.activityFeed,
       ].slice(0, 30),
     }));
@@ -352,7 +358,7 @@ export function DemoDataProvider({ children }: DemoDataProviderProps) {
       ...currentState,
       campaigns: [nextCampaign, ...currentState.campaigns],
       activityFeed: [
-        createActivityItem(`Campaign created: ${nextCampaign.name}`, "outreach"),
+        createActivityItem(`Kampanya oluşturuldu: ${nextCampaign.name}`, "outreach"),
         ...currentState.activityFeed,
       ].slice(0, 30),
     }));
@@ -384,7 +390,7 @@ export function DemoDataProvider({ children }: DemoDataProviderProps) {
             ? upsertPipelineCard(currentState.pipelineCards, updatedLead, "meeting")
             : currentState.pipelineCards,
         activityFeed: [
-          createActivityItem(`Meeting scheduled: ${nextMeeting.title}`, "meeting"),
+          createActivityItem(`Görüşme planlandı: ${nextMeeting.title}`, "meeting"),
           ...currentState.activityFeed,
         ].slice(0, 30),
       };
@@ -420,7 +426,7 @@ export function DemoDataProvider({ children }: DemoDataProviderProps) {
         leads: currentState.leads.map((lead) => (lead.id === updatedLead.id ? updatedLead : lead)),
         pipelineCards: upsertPipelineCard(currentState.pipelineCards, updatedLead, "replied"),
         activityFeed: [
-          createActivityItem(`Meeting cancelled: ${targetMeeting.title}`, "meeting"),
+          createActivityItem(`Görüşme iptal edildi: ${targetMeeting.title}`, "meeting"),
           ...currentState.activityFeed,
         ].slice(0, 30),
       };

@@ -12,21 +12,19 @@ import { Select } from "@/components/ui/select";
 import { StatKpiCard } from "@/components/shared/stat-kpi-card";
 import { FilterPills } from "@/components/shared/filter-pills";
 import { Badge } from "@/components/ui/badge";
-import { mockLeadFilters } from "@/data/mock-leads";
 import { useDemoData } from "@/hooks/use-demo-data";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/cn";
+import { formatIndustry, leadStatusLabels, websiteStatusLabels } from "@/lib/i18n/tr-labels";
 import { panelClass } from "@/lib/panel";
 import { ROUTES } from "@/lib/routes";
 import {
   filterLeadsByStatus,
-  getLeadDisplayStatus,
-  getLeadNextAction,
-  mapFilterLabel,
   searchLeads,
   sortLeadsByOpportunity,
 } from "@/services/demo-leads-service";
-import type { LeadStatus, WebsiteStatus } from "@/types/lead";
+import type { Lead, LeadStatus, WebsiteStatus } from "@/types/lead";
+import type { LeadFilterStatus } from "@/services/demo-leads-service";
 
 const kpiDelays = [
   "animation-delay-100",
@@ -43,16 +41,61 @@ const rowDelays = [
   "animation-delay-300",
 ] as const;
 
-const statusVariant = {
-  "Needs Work": "warning",
-  Audited: "default",
-  "Message Ready": "purple",
-  Sent: "default",
-  Replied: "success",
-  Meeting: "success",
-  Good: "success",
-  Okay: "default",
+const statusVariantByKey = {
+  needs_work: "warning",
+  okay: "default",
+  good: "success",
+  audited: "default",
+  message_ready: "purple",
+  sent: "default",
+  replied: "success",
+  meeting: "success",
+  closed: "default",
 } as const;
+
+const filterItems = [
+  "Tümü",
+  websiteStatusLabels.needs_work,
+  leadStatusLabels.audited,
+  leadStatusLabels.message_ready,
+  leadStatusLabels.sent,
+  leadStatusLabels.replied,
+  leadStatusLabels.meeting,
+] as const;
+
+const filterToStatus: Record<string, LeadFilterStatus> = {
+  Tümü: "all",
+  [websiteStatusLabels.needs_work]: "needs_work",
+  [leadStatusLabels.audited]: "audited",
+  [leadStatusLabels.message_ready]: "message_ready",
+  [leadStatusLabels.sent]: "sent",
+  [leadStatusLabels.replied]: "replied",
+  [leadStatusLabels.meeting]: "meeting",
+};
+
+const actionLabelsByStatus: Record<LeadStatus, string> = {
+  new: "Analiz Gönder",
+  audited: "Analiz Gönder",
+  message_ready: "Gönder",
+  sent: "Takip Et",
+  replied: "Takip Et",
+  meeting: "Brifi Gör",
+  closed: "Arşivle",
+};
+
+function getLeadStatusMeta(lead: Lead) {
+  if (lead.status === "new") {
+    return {
+      label: websiteStatusLabels[lead.websiteStatus],
+      variant: statusVariantByKey[lead.websiteStatus],
+    };
+  }
+
+  return {
+    label: leadStatusLabels[lead.status],
+    variant: statusVariantByKey[lead.status],
+  };
+}
 
 const nextStatusMap: Partial<Record<LeadStatus, LeadStatus>> = {
   new: "audited",
@@ -78,7 +121,7 @@ export function LeadsPageContent() {
   const toast = useToast();
   const { leads, addLead, updateLeadStatus, addActivity } = useDemoData();
 
-  const [activeFilter, setActiveFilter] = useState("All");
+  const [activeFilter, setActiveFilter] = useState("Tümü");
   const [searchQuery, setSearchQuery] = useState("");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -95,22 +138,22 @@ export function LeadsPageContent() {
 
   const kpis = useMemo(
     () => [
-      { id: "total", label: "Total Leads", numericValue: leads.length, accent: "blue" as const },
+      { id: "total", label: "Toplam Müşteri", numericValue: leads.length, accent: "blue" as const },
       {
         id: "needs-work",
-        label: "Needs Work",
+        label: websiteStatusLabels.needs_work,
         numericValue: leads.filter((lead) => lead.websiteStatus === "needs_work").length,
         accent: "orange" as const,
       },
       {
         id: "message-ready",
-        label: "Message Ready",
+        label: leadStatusLabels.message_ready,
         numericValue: leads.filter((lead) => lead.status === "message_ready").length,
         accent: "purple" as const,
       },
       {
         id: "meetings",
-        label: "Meetings",
+        label: "Görüşmeler",
         numericValue: leads.filter((lead) => lead.status === "meeting").length,
         accent: "green" as const,
       },
@@ -119,7 +162,7 @@ export function LeadsPageContent() {
   );
 
   const filteredLeads = useMemo(() => {
-    const status = mapFilterLabel(activeFilter);
+    const status = filterToStatus[activeFilter] ?? "all";
     const byStatus = filterLeadsByStatus(leads, status);
     const byQuery = searchLeads(byStatus, searchQuery);
     return sortLeadsByOpportunity(byQuery, sortDirection);
@@ -127,7 +170,7 @@ export function LeadsPageContent() {
 
   const handleCreateLead = async () => {
     if (!newLeadForm.companyName.trim() || !newLeadForm.website.trim()) {
-      toast.warning("Missing required fields", "Company and website are required.");
+      toast.warning("Zorunlu alanlar eksik", "Şirket ve web sitesi alanları zorunludur.");
       return;
     }
 
@@ -137,8 +180,8 @@ export function LeadsPageContent() {
     const lead = addLead({
       companyName: newLeadForm.companyName.trim(),
       website: newLeadForm.website.trim(),
-      industry: newLeadForm.industry.trim() || "General",
-      location: newLeadForm.location.trim() || "Unknown",
+      industry: newLeadForm.industry.trim() || "Genel",
+      location: newLeadForm.location.trim() || "Bilinmiyor",
       opportunityScore: Number(newLeadForm.opportunityScore) || 70,
       websiteStatus: newLeadForm.websiteStatus,
     });
@@ -154,24 +197,24 @@ export function LeadsPageContent() {
       websiteStatus: "needs_work",
     });
 
-    toast.success("Lead added", `${lead.companyName} has been added to your pipeline.`);
+    toast.success("Müşteri eklendi", `${lead.companyName} satış sürecinize eklendi.`);
   };
 
   const handleAction = async (leadId: string) => {
     const targetLead = leads.find((lead) => lead.id === leadId);
     if (!targetLead) return;
 
-    const actionLabel = getLeadNextAction(targetLead);
+    const actionLabel = actionLabelsByStatus[targetLead.status];
 
-    if (actionLabel === "View Brief") {
+    if (targetLead.status === "meeting") {
       router.push(ROUTES.app.meetings);
-      toast.info("Opening meeting brief", `${targetLead.companyName} meeting details are ready.`);
+      toast.info("Görüşme brifi açılıyor", `${targetLead.companyName} görüşme detayları hazır.`);
       return;
     }
 
     const nextStatus = nextStatusMap[targetLead.status];
     if (!nextStatus) {
-      toast.info("No further action", `${targetLead.companyName} is already closed.`);
+      toast.info("Ek aksiyon yok", `${targetLead.companyName} zaten kapatılmış durumda.`);
       return;
     }
 
@@ -180,11 +223,11 @@ export function LeadsPageContent() {
     updateLeadStatus(leadId, nextStatus);
     addActivity({
       type: "outreach",
-      message: `${actionLabel} completed for ${targetLead.companyName}`,
+      message: `${targetLead.companyName} için "${actionLabel}" aksiyonu tamamlandı`,
     });
     setActionLoadingLeadId(null);
 
-    toast.success("Lead updated", `${targetLead.companyName} moved to ${nextStatus.replace("_", " ")}.`);
+    toast.success("Müşteri güncellendi", `${targetLead.companyName} "${leadStatusLabels[nextStatus]}" aşamasına taşındı.`);
   };
 
   return (
@@ -204,7 +247,7 @@ export function LeadsPageContent() {
       <div className={cn(panelClass("p-6"), "animate-fade-up animation-delay-300")}>
         <div className="mb-4 flex flex-wrap items-center gap-2">
           <Input
-            placeholder="Search leads by company, website, industry..."
+            placeholder="Şirket, web sitesi veya sektöre göre ara..."
             value={searchQuery}
             onChange={(event) => setSearchQuery(event.target.value)}
             className="min-w-[240px] flex-1"
@@ -217,7 +260,7 @@ export function LeadsPageContent() {
             className="inline-flex h-10 items-center gap-2 rounded-lg border border-border bg-surface px-3 text-sm font-medium text-text-secondary transition-colors hover:bg-surface-muted hover:text-text-primary"
           >
             <ArrowUpDown className="h-4 w-4" />
-            Score {sortDirection === "desc" ? "High → Low" : "Low → High"}
+            Puan {sortDirection === "desc" ? "Yüksek → Düşük" : "Düşük → Yüksek"}
           </button>
           <button
             type="button"
@@ -225,12 +268,12 @@ export function LeadsPageContent() {
             onClick={() => setIsAddModalOpen(true)}
           >
             <Plus className="h-4 w-4" />
-            Add Lead
+            Müşteri Ekle
           </button>
         </div>
 
         <FilterPills
-          items={[...mockLeadFilters]}
+          items={[...filterItems]}
           active={activeFilter}
           onChange={setActiveFilter}
           className="mb-5"
@@ -238,18 +281,18 @@ export function LeadsPageContent() {
 
         {filteredLeads.length === 0 ? (
           <EmptyState
-            title="No leads match these filters"
-            description="Adjust your search query or choose a different status filter."
+            title="Bu filtrelere uyan müşteri yok"
+            description="Arama sorgunuzu güncelleyin veya farklı bir durum filtresi seçin."
             action={
               <button
                 type="button"
                 onClick={() => {
                   setSearchQuery("");
-                  setActiveFilter("All");
+                  setActiveFilter("Tümü");
                 }}
                 className="btn-campaign"
               >
-                Reset View
+                Görünümü Sıfırla
               </button>
             }
           />
@@ -259,13 +302,13 @@ export function LeadsPageContent() {
               <thead>
                 <tr className="border-b border-border-soft">
                   {[
-                    "Company",
-                    "Industry",
-                    "Website",
-                    "Status",
-                    "Opportunity Score",
-                    "Last Updated",
-                    "Next Action",
+                    "Şirket",
+                    "Sektör",
+                    "Web Sitesi",
+                    "Durum",
+                    "Fırsat Puanı",
+                    "Son Güncelleme",
+                    "Sonraki Aksiyon",
                   ].map((col) => (
                     <th
                       key={col}
@@ -278,8 +321,8 @@ export function LeadsPageContent() {
               </thead>
               <tbody>
                 {filteredLeads.map((lead, index) => {
-                  const displayStatus = getLeadDisplayStatus(lead);
-                  const actionLabel = getLeadNextAction(lead);
+                  const statusMeta = getLeadStatusMeta(lead);
+                  const actionLabel = actionLabelsByStatus[lead.status];
                   return (
                     <tr
                       key={lead.id}
@@ -297,11 +340,13 @@ export function LeadsPageContent() {
                           {lead.companyName}
                         </Link>
                       </td>
-                      <td className="py-3 pr-3 text-[13px] text-text-secondary">{lead.industry}</td>
+                      <td className="py-3 pr-3 text-[13px] text-text-secondary">
+                        {formatIndustry(lead.industry)}
+                      </td>
                       <td className="py-3 pr-3 text-[13px] text-primary">{lead.website}</td>
                       <td className="py-3 pr-3">
-                        <Badge variant={statusVariant[displayStatus as keyof typeof statusVariant] ?? "default"}>
-                          {displayStatus}
+                        <Badge variant={statusMeta.variant ?? "default"}>
+                          {statusMeta.label}
                         </Badge>
                       </td>
                       <td className="py-3 pr-3">
@@ -310,7 +355,7 @@ export function LeadsPageContent() {
                         </span>
                       </td>
                       <td className="py-3 pr-3 text-[13px] text-text-secondary">
-                        {new Date(lead.updatedAt).toLocaleDateString("en-US")}
+                        {new Date(lead.updatedAt).toLocaleDateString("tr-TR")}
                       </td>
                       <td className="py-3">
                         <button
@@ -321,7 +366,7 @@ export function LeadsPageContent() {
                         >
                           <LoadingButtonState
                             isLoading={actionLoadingLeadId === lead.id}
-                            loadingText="Updating..."
+                            loadingText="Güncelleniyor..."
                           >
                             {actionLabel}
                           </LoadingButtonState>
@@ -339,7 +384,7 @@ export function LeadsPageContent() {
       <Modal
         open={isAddModalOpen}
         onClose={() => (isAdding ? undefined : setIsAddModalOpen(false))}
-        title="Add New Lead"
+        title="Yeni Müşteri Ekle"
         footer={
           <>
             <button
@@ -348,7 +393,7 @@ export function LeadsPageContent() {
               className="inline-flex h-10 items-center justify-center rounded-lg border border-border bg-surface px-4 text-sm font-medium text-text-secondary transition-colors hover:bg-surface-muted hover:text-text-primary disabled:cursor-not-allowed disabled:opacity-60"
               disabled={isAdding}
             >
-              Cancel
+              İptal
             </button>
             <button
               type="button"
@@ -356,8 +401,8 @@ export function LeadsPageContent() {
               className="btn-campaign inline-flex h-10 items-center justify-center px-4 disabled:cursor-not-allowed disabled:opacity-60"
               disabled={isAdding}
             >
-              <LoadingButtonState isLoading={isAdding} loadingText="Adding...">
-                Save Lead
+              <LoadingButtonState isLoading={isAdding} loadingText="Ekleniyor...">
+                Müşteriyi Kaydet
               </LoadingButtonState>
             </button>
           </>
@@ -365,7 +410,7 @@ export function LeadsPageContent() {
       >
         <div className="grid gap-3">
           <div>
-            <label className="mb-1.5 block text-xs font-semibold text-text-muted">Company</label>
+            <label className="mb-1.5 block text-xs font-semibold text-text-muted">Şirket</label>
             <Input
               value={newLeadForm.companyName}
               onChange={(event) =>
@@ -375,7 +420,7 @@ export function LeadsPageContent() {
             />
           </div>
           <div>
-            <label className="mb-1.5 block text-xs font-semibold text-text-muted">Website</label>
+            <label className="mb-1.5 block text-xs font-semibold text-text-muted">Web Sitesi</label>
             <Input
               value={newLeadForm.website}
               onChange={(event) =>
@@ -386,7 +431,7 @@ export function LeadsPageContent() {
           </div>
           <div className="grid gap-3 sm:grid-cols-2">
             <div>
-              <label className="mb-1.5 block text-xs font-semibold text-text-muted">Industry</label>
+              <label className="mb-1.5 block text-xs font-semibold text-text-muted">Sektör</label>
               <Input
                 value={newLeadForm.industry}
                 onChange={(event) =>
@@ -396,19 +441,19 @@ export function LeadsPageContent() {
               />
             </div>
             <div>
-              <label className="mb-1.5 block text-xs font-semibold text-text-muted">Location</label>
+              <label className="mb-1.5 block text-xs font-semibold text-text-muted">Konum</label>
               <Input
                 value={newLeadForm.location}
                 onChange={(event) =>
                   setNewLeadForm((current) => ({ ...current, location: event.target.value }))
                 }
-                placeholder="New York, NY"
+                placeholder="İstanbul"
               />
             </div>
           </div>
           <div className="grid gap-3 sm:grid-cols-2">
             <div>
-              <label className="mb-1.5 block text-xs font-semibold text-text-muted">Opportunity Score</label>
+              <label className="mb-1.5 block text-xs font-semibold text-text-muted">Fırsat Puanı</label>
               <Input
                 type="number"
                 min={1}
@@ -423,7 +468,7 @@ export function LeadsPageContent() {
               />
             </div>
             <div>
-              <label className="mb-1.5 block text-xs font-semibold text-text-muted">Website Status</label>
+              <label className="mb-1.5 block text-xs font-semibold text-text-muted">Web Sitesi Durumu</label>
               <Select
                 value={newLeadForm.websiteStatus}
                 onChange={(event) =>
@@ -433,9 +478,9 @@ export function LeadsPageContent() {
                   }))
                 }
                 options={[
-                  { label: "Needs Work", value: "needs_work" },
-                  { label: "Okay", value: "okay" },
-                  { label: "Good", value: "good" },
+                  { label: websiteStatusLabels.needs_work, value: "needs_work" },
+                  { label: websiteStatusLabels.okay, value: "okay" },
+                  { label: websiteStatusLabels.good, value: "good" },
                 ]}
               />
             </div>

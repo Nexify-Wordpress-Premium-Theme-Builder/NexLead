@@ -19,13 +19,13 @@ export function DashboardChart({ className }: { className?: string }) {
     <div className={cn(panelClass("p-6"), "animate-fade-up", className)}>
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <h3 className="text-[15px] font-semibold text-text-primary">
-          Lead Acquisition & Conversions
+          Müşteri Kazanımı ve Dönüşümler
         </h3>
         <button
           type="button"
           className="inline-flex h-9 items-center gap-1.5 rounded-xl border border-border-soft bg-surface px-3 text-[13px] font-medium text-text-secondary transition-all duration-200 hover:border-border hover:bg-surface-muted"
         >
-          Last 30 days
+          Son 30 gün
           <ChevronDown className="h-3.5 w-3.5" />
         </button>
       </div>
@@ -33,15 +33,15 @@ export function DashboardChart({ className }: { className?: string }) {
       <div className="mb-4 flex flex-wrap gap-4 text-xs font-medium text-text-secondary">
         <span className="flex items-center gap-1.5">
           <span className="h-2 w-2 rounded-[2px] bg-primary" />
-          Leads Acquired
+          Kazanılan Müşteriler
         </span>
         <span className="flex items-center gap-1.5">
           <span className="h-2 w-2 rounded-[2px] bg-[#93C5FD]" />
-          Outreach Sent
+          Gönderilen İletişim
         </span>
         <span className="flex items-center gap-1.5">
           <span className="h-0.5 w-4 rounded bg-green" />
-          Meetings Booked
+          Planlanan Görüşmeler
         </span>
       </div>
 
@@ -50,7 +50,7 @@ export function DashboardChart({ className }: { className?: string }) {
           viewBox={`0 0 ${CHART_WIDTH} ${CHART_HEIGHT}`}
           className="min-w-[480px] w-full"
           role="img"
-          aria-label="Lead acquisition and conversions chart"
+          aria-label="Müşteri kazanımı ve dönüşüm grafiği"
         >
           {[0, 50, 100, 150, 200].map((tick) => {
             const y = PADDING.top + innerH - (tick / MAX_Y) * innerH;

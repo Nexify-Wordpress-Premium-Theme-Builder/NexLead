@@ -29,8 +29,8 @@ function wait(ms: number) {
 function formatDateTime(value: string) {
   const date = new Date(value);
   return {
-    date: date.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }),
-    time: date.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" }),
+    date: date.toLocaleDateString("tr-TR", { month: "short", day: "numeric", year: "numeric" }),
+    time: date.toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" }),
   };
 }
 
@@ -46,7 +46,7 @@ export function MeetingsPageContent() {
   const [preparedMeetingIds, setPreparedMeetingIds] = useState<string[]>([]);
   const [form, setForm] = useState({
     leadId: leads[0]?.id ?? "",
-    title: "Discovery Call",
+    title: "Tanışma Görüşmesi",
     date: "",
     time: "",
     attendeeName: "",
@@ -61,14 +61,14 @@ export function MeetingsPageContent() {
   const brief = useMemo(
     () => ({
       companySummary: selectedLeadDetail?.company
-        ? `${selectedLeadDetail.company} is in ${selectedLeadDetail.industry} with score ${selectedLeadDetail.opportunityScore}/100.`
+        ? `${selectedLeadDetail.company}, ${selectedLeadDetail.industry} sektöründe ve fırsat skoru ${selectedLeadDetail.opportunityScore}/100.`
         : mockMeetingBriefData.companySummary,
       mainIssues:
         selectedLeadDetail?.opportunityReasons.length && selectedLeadDetail.opportunityReasons.length > 0
           ? selectedLeadDetail.opportunityReasons
           : mockMeetingBriefData.mainIssues,
       salesAngle: selectedLeadDetail?.suggestedServices[0]
-        ? `Position ${selectedLeadDetail.suggestedServices[0]} as the fastest win before the meeting.`
+        ? `Görüşme öncesinde en hızlı kazanım olarak ${selectedLeadDetail.suggestedServices[0]} hizmetini konumlandırın.`
         : mockMeetingBriefData.salesAngle,
       recommendedOffer: selectedLeadDetail?.suggestedServices.length
         ? selectedLeadDetail.suggestedServices.join(" + ")
@@ -80,16 +80,16 @@ export function MeetingsPageContent() {
 
   const kpis = useMemo(
     () => [
-      { id: "upcoming", label: "Upcoming", numericValue: meetings.length, accent: "blue" as const },
+      { id: "upcoming", label: "Yaklaşan", numericValue: meetings.length, accent: "blue" as const },
       {
         id: "prepared",
-        label: "Prepared Briefs",
+        label: "Hazır Brifler",
         numericValue: preparedMeetingIds.length,
         accent: "green" as const,
       },
       {
         id: "this-week",
-        label: "This Week",
+        label: "Bu Hafta",
         numericValue: meetings.filter((meeting) => {
           const date = new Date(meeting.scheduledAt);
           const now = new Date();
@@ -100,7 +100,7 @@ export function MeetingsPageContent() {
       },
       {
         id: "conversion-calls",
-        label: "Conversion Calls",
+        label: "Dönüşüm Görüşmeleri",
         numericValue: meetings.filter((meeting) => meeting.title.toLowerCase().includes("strategy")).length,
         accent: "orange" as const,
       },
@@ -110,7 +110,7 @@ export function MeetingsPageContent() {
 
   const handleScheduleMeeting = async () => {
     if (!form.leadId || !form.date || !form.time || !form.attendeeName.trim()) {
-      toast.warning("Missing fields", "Lead, date, time, and attendee name are required.");
+      toast.warning("Eksik alanlar var", "Müşteri, tarih, saat ve katılımcı adı zorunludur.");
       return;
     }
 
@@ -120,7 +120,7 @@ export function MeetingsPageContent() {
 
     const meeting = addMeeting({
       leadId: form.leadId,
-      title: form.title.trim() || "Discovery Call",
+      title: form.title.trim() || "Tanışma Görüşmesi",
       scheduledAt,
       attendeeName: form.attendeeName.trim(),
       attendeeEmail: form.attendeeEmail.trim() || undefined,
@@ -128,42 +128,42 @@ export function MeetingsPageContent() {
     });
     addActivity({
       type: "meeting",
-      message: `Meeting scheduled with ${meeting.attendeeName}`,
+      message: `${meeting.attendeeName} ile görüşme planlandı`,
     });
     setSelectedMeetingId(meeting.id);
     setIsScheduling(false);
     setIsScheduleModalOpen(false);
     setForm({
       leadId: leads[0]?.id ?? "",
-      title: "Discovery Call",
+      title: "Tanışma Görüşmesi",
       date: "",
       time: "",
       attendeeName: "",
       attendeeEmail: "",
       notes: "",
     });
-    toast.success("Meeting scheduled", `${meeting.title} added to calendar.`);
+    toast.success("Görüşme planlandı", `${meeting.title} takvime eklendi.`);
   };
 
   const handleCopyBrief = async () => {
     const summary = [
-      `Meeting Brief`,
-      `Lead: ${selectedLead?.companyName ?? "N/A"}`,
-      `Summary: ${brief.companySummary}`,
+      "Görüşme Brifi",
+      `Müşteri: ${selectedLead?.companyName ?? "Yok"}`,
+      `Özet: ${brief.companySummary}`,
       "",
-      "Main issues:",
+      "Ana sorunlar:",
       ...brief.mainIssues.map((issue) => `- ${issue}`),
       "",
-      `Sales angle: ${brief.salesAngle}`,
-      `Recommended offer: ${brief.recommendedOffer}`,
-      `Notes: ${brief.notes}`,
+      `Satış açısı: ${brief.salesAngle}`,
+      `Önerilen teklif: ${brief.recommendedOffer}`,
+      `Notlar: ${brief.notes}`,
     ].join("\n");
 
     try {
       await navigator.clipboard.writeText(summary);
-      toast.success("Brief copied", "Meeting brief copied to clipboard.");
+      toast.success("Brif kopyalandı", "Görüşme brifi panoya kopyalandı.");
     } catch {
-      toast.error("Copy failed", "Clipboard access is unavailable.");
+      toast.error("Kopyalama başarısız", "Pano erişimi kullanılamıyor.");
     }
   };
 
@@ -174,7 +174,7 @@ export function MeetingsPageContent() {
         ? current.filter((id) => id !== selectedMeetingId)
         : [...current, selectedMeetingId],
     );
-    toast.success("Prepared status updated", "Meeting preparation status saved.");
+    toast.success("Hazırlık durumu güncellendi", "Görüşme hazırlık durumu kaydedildi.");
   };
 
   const handleConfirmCancel = async () => {
@@ -185,7 +185,7 @@ export function MeetingsPageContent() {
     setPreparedMeetingIds((current) => current.filter((id) => id !== cancelTargetId));
     setIsCancelling(false);
     setCancelTargetId(null);
-    toast.success("Meeting cancelled", "Selected meeting has been cancelled.");
+    toast.success("Görüşme iptal edildi", "Seçilen görüşme iptal edildi.");
   };
 
   return (
@@ -205,24 +205,24 @@ export function MeetingsPageContent() {
       <section className="grid grid-cols-1 gap-5 xl:grid-cols-2">
         <div className={cn(panelClass("p-6"), "animate-fade-up animation-delay-300")}>
           <div className="mb-4 flex items-center justify-between gap-2">
-            <h3 className="text-[15px] font-semibold text-text-primary">Upcoming Meetings</h3>
+            <h3 className="text-[15px] font-semibold text-text-primary">Yaklaşan Görüşmeler</h3>
             <button
               type="button"
               className="btn-campaign inline-flex h-10 items-center gap-2 px-4"
               onClick={() => setIsScheduleModalOpen(true)}
             >
               <Plus className="h-4 w-4" />
-              Schedule
+              Planla
             </button>
           </div>
 
           {meetings.length === 0 ? (
             <EmptyState
-              title="No meetings scheduled"
-              description="Schedule a meeting to start preparing a brief."
+              title="Planlanan görüşme yok"
+              description="Brif hazırlamaya başlamak için bir görüşme planlayın."
               action={
                 <button type="button" className="btn-campaign" onClick={() => setIsScheduleModalOpen(true)}>
-                  Schedule Meeting
+                  Görüşme Planla
                 </button>
               }
             />
@@ -230,7 +230,7 @@ export function MeetingsPageContent() {
             <ul className="space-y-2">
               {meetings.map((meeting) => {
                 const datetime = formatDateTime(meeting.scheduledAt);
-                const company = leads.find((lead) => lead.id === meeting.leadId)?.companyName ?? "Unknown";
+                const company = leads.find((lead) => lead.id === meeting.leadId)?.companyName ?? "Bilinmiyor";
 
                 return (
                   <li key={meeting.id}>
@@ -258,16 +258,16 @@ export function MeetingsPageContent() {
         </div>
 
         <div className={cn(panelClass("p-6"), "animate-fade-up animation-delay-400")}>
-          <h3 className="mb-4 text-[15px] font-semibold text-text-primary">Meeting Brief</h3>
+          <h3 className="mb-4 text-[15px] font-semibold text-text-primary">Görüşme Brifi</h3>
 
           {selectedMeeting ? (
             <div className="space-y-4">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-wide text-text-muted">Company Summary</p>
+                <p className="text-xs font-semibold uppercase tracking-wide text-text-muted">Şirket Özeti</p>
                 <p className="mt-1.5 text-[13px] leading-relaxed text-text-secondary">{brief.companySummary}</p>
               </div>
               <div>
-                <p className="text-xs font-semibold uppercase tracking-wide text-text-muted">Main Website Issues</p>
+                <p className="text-xs font-semibold uppercase tracking-wide text-text-muted">Ana Web Sitesi Sorunları</p>
                 <ul className="mt-1.5 space-y-1">
                   {brief.mainIssues.map((issue) => (
                     <li key={issue} className="text-[13px] text-text-secondary">
@@ -277,17 +277,17 @@ export function MeetingsPageContent() {
                 </ul>
               </div>
               <div className="rounded-xl border border-primary/10 bg-primary-soft/40 p-4">
-                <p className="text-xs font-semibold uppercase tracking-wide text-primary">Best Sales Angle</p>
+                <p className="text-xs font-semibold uppercase tracking-wide text-primary">En İyi Satış Açısı</p>
                 <p className="mt-1.5 text-[13px] leading-relaxed text-text-secondary">{brief.salesAngle}</p>
               </div>
               <div className="rounded-xl border border-green/10 bg-green-soft/50 p-4">
-                <p className="text-xs font-semibold uppercase tracking-wide text-green">Recommended Offer</p>
+                <p className="text-xs font-semibold uppercase tracking-wide text-green">Önerilen Teklif</p>
                 <p className="mt-1.5 text-[13px] leading-relaxed text-text-secondary">
                   {brief.recommendedOffer}
                 </p>
               </div>
               <div>
-                <p className="text-xs font-semibold uppercase tracking-wide text-text-muted">Notes</p>
+                <p className="text-xs font-semibold uppercase tracking-wide text-text-muted">Notlar</p>
                 <p className="mt-1.5 text-[13px] text-text-secondary">{brief.notes}</p>
               </div>
               <div className="grid gap-2 sm:grid-cols-3">
@@ -297,14 +297,14 @@ export function MeetingsPageContent() {
                   onClick={handleCopyBrief}
                 >
                   <Copy className="mr-2 h-4 w-4" />
-                  Copy Brief
+                  Brifi Kopyala
                 </button>
                 <button
                   type="button"
                   className="btn-campaign inline-flex h-10 items-center justify-center px-3"
                   onClick={handleMarkPrepared}
                 >
-                  {preparedMeetingIds.includes(selectedMeeting.id) ? "Prepared" : "Mark Prepared"}
+                  {preparedMeetingIds.includes(selectedMeeting.id) ? "Hazır" : "Hazır Olarak İşaretle"}
                 </button>
                 <button
                   type="button"
@@ -312,14 +312,14 @@ export function MeetingsPageContent() {
                   onClick={() => setCancelTargetId(selectedMeeting.id)}
                 >
                   <XCircle className="mr-2 h-4 w-4" />
-                  Cancel
+                  İptal Et
                 </button>
               </div>
             </div>
           ) : (
             <EmptyState
-              title="Select a meeting"
-              description="Choose a meeting from the list to view its preparation brief."
+              title="Bir görüşme seçin"
+              description="Hazırlık brifini görmek için listeden bir görüşme seçin."
             />
           )}
         </div>
@@ -328,7 +328,7 @@ export function MeetingsPageContent() {
       <Modal
         open={isScheduleModalOpen}
         onClose={() => (isScheduling ? undefined : setIsScheduleModalOpen(false))}
-        title="Schedule Meeting"
+        title="Görüşme Planla"
         footer={
           <>
             <button
@@ -337,7 +337,7 @@ export function MeetingsPageContent() {
               disabled={isScheduling}
               className="inline-flex h-10 items-center justify-center rounded-lg border border-border bg-surface px-4 text-sm font-medium text-text-secondary transition-colors hover:bg-surface-muted hover:text-text-primary disabled:cursor-not-allowed disabled:opacity-60"
             >
-              Cancel
+              İptal
             </button>
             <button
               type="button"
@@ -345,8 +345,8 @@ export function MeetingsPageContent() {
               disabled={isScheduling}
               className="btn-campaign inline-flex h-10 items-center justify-center px-4 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              <LoadingButtonState isLoading={isScheduling} loadingText="Scheduling...">
-                Schedule
+              <LoadingButtonState isLoading={isScheduling} loadingText="Planlanıyor...">
+                Planla
               </LoadingButtonState>
             </button>
           </>
@@ -354,7 +354,7 @@ export function MeetingsPageContent() {
       >
         <div className="grid gap-3">
           <div>
-            <label className="mb-1.5 block text-xs font-semibold text-text-muted">Lead</label>
+            <label className="mb-1.5 block text-xs font-semibold text-text-muted">Müşteri</label>
             <Select
               value={form.leadId}
               onChange={(event) => setForm((current) => ({ ...current, leadId: event.target.value }))}
@@ -362,7 +362,7 @@ export function MeetingsPageContent() {
             />
           </div>
           <div>
-            <label className="mb-1.5 block text-xs font-semibold text-text-muted">Meeting Title</label>
+            <label className="mb-1.5 block text-xs font-semibold text-text-muted">Görüşme Başlığı</label>
             <Input
               value={form.title}
               onChange={(event) => setForm((current) => ({ ...current, title: event.target.value }))}
@@ -370,7 +370,7 @@ export function MeetingsPageContent() {
           </div>
           <div className="grid gap-3 sm:grid-cols-2">
             <div>
-              <label className="mb-1.5 block text-xs font-semibold text-text-muted">Date</label>
+              <label className="mb-1.5 block text-xs font-semibold text-text-muted">Tarih</label>
               <Input
                 type="date"
                 value={form.date}
@@ -378,7 +378,7 @@ export function MeetingsPageContent() {
               />
             </div>
             <div>
-              <label className="mb-1.5 block text-xs font-semibold text-text-muted">Time</label>
+              <label className="mb-1.5 block text-xs font-semibold text-text-muted">Saat</label>
               <Input
                 type="time"
                 value={form.time}
@@ -388,28 +388,28 @@ export function MeetingsPageContent() {
           </div>
           <div className="grid gap-3 sm:grid-cols-2">
             <div>
-              <label className="mb-1.5 block text-xs font-semibold text-text-muted">Attendee Name</label>
+              <label className="mb-1.5 block text-xs font-semibold text-text-muted">Katılımcı Adı</label>
               <Input
                 value={form.attendeeName}
                 onChange={(event) =>
                   setForm((current) => ({ ...current, attendeeName: event.target.value }))
                 }
-                placeholder="Jane Doe"
+                placeholder="Ayşe Yılmaz"
               />
             </div>
             <div>
-              <label className="mb-1.5 block text-xs font-semibold text-text-muted">Attendee Email</label>
+              <label className="mb-1.5 block text-xs font-semibold text-text-muted">Katılımcı E-posta</label>
               <Input
                 value={form.attendeeEmail}
                 onChange={(event) =>
                   setForm((current) => ({ ...current, attendeeEmail: event.target.value }))
                 }
-                placeholder="jane@company.com"
+                placeholder="ayse@sirket.com"
               />
             </div>
           </div>
           <div>
-            <label className="mb-1.5 block text-xs font-semibold text-text-muted">Notes</label>
+            <label className="mb-1.5 block text-xs font-semibold text-text-muted">Notlar</label>
             <Textarea
               value={form.notes}
               onChange={(event) => setForm((current) => ({ ...current, notes: event.target.value }))}
@@ -421,10 +421,10 @@ export function MeetingsPageContent() {
 
       <ConfirmationDialog
         open={Boolean(cancelTargetId)}
-        title="Cancel meeting?"
-        description="This will remove the selected meeting from your calendar."
-        confirmLabel="Cancel Meeting"
-        cancelLabel="Keep"
+        title="Görüşme iptal edilsin mi?"
+        description="Bu işlem seçilen görüşmeyi takviminizden kaldırır."
+        confirmLabel="Görüşmeyi İptal Et"
+        cancelLabel="Vazgeç"
         loading={isCancelling}
         destructive
         onConfirm={handleConfirmCancel}

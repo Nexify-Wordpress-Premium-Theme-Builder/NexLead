@@ -2,6 +2,8 @@ import Link from "next/link";
 import { mockPipelineStages } from "@/data/mock-dashboard";
 import type { PipelineStageMetric } from "@/types/dashboard";
 import { cn } from "@/lib/cn";
+import { pipelineStageLabels } from "@/lib/i18n/tr-labels";
+import type { PipelineStageId } from "@/types/pipeline";
 import { panelClass } from "@/lib/panel";
 import { ROUTES } from "@/lib/routes";
 
@@ -18,9 +20,9 @@ export function OutreachPipeline({ className }: { className?: string }) {
   return (
     <div className={cn(panelClass("flex h-full flex-col p-6"), "animate-fade-up", className)}>
       <div className="mb-4 flex items-center justify-between">
-        <h3 className="text-[15px] font-semibold text-text-primary">Outreach Pipeline</h3>
+        <h3 className="text-[15px] font-semibold text-text-primary">İletişim Süreci</h3>
         <Link href={ROUTES.app.pipeline} className="link-section">
-          View pipeline →
+          Süreci görüntüle →
         </Link>
       </div>
 
@@ -33,7 +35,9 @@ export function OutreachPipeline({ className }: { className?: string }) {
               toneStyles[stage.tone],
             )}
           >
-            <p className="text-[11px] font-semibold text-text-muted">{stage.label}</p>
+            <p className="text-[11px] font-semibold text-text-muted">
+              {pipelineStageLabels[stage.id as PipelineStageId] ?? stage.label}
+            </p>
             <p className="mt-0.5 text-lg font-bold leading-none tracking-tight text-text-primary tabular-nums">
               {stage.count.toLocaleString()}
             </p>
@@ -44,7 +48,7 @@ export function OutreachPipeline({ className }: { className?: string }) {
 
       <div className="mt-4 border-t border-border-soft pt-3.5">
         <div className="mb-2 flex items-center justify-between text-[13px]">
-          <span className="font-medium text-text-secondary">Overall Reply Rate</span>
+          <span className="font-medium text-text-secondary">Genel Yanıt Oranı</span>
           <span className="font-bold text-text-primary">18.3%</span>
         </div>
         <div className="h-1 overflow-hidden rounded-full bg-slate-100">

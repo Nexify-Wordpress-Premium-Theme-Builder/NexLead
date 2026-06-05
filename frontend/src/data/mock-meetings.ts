@@ -5,16 +5,16 @@ export const mockMeetings: Meeting[] = [
   {
     id: "meeting-1",
     leadId: "1",
-    title: "Discovery Call",
+    title: "Keşif Görüşmesi",
     scheduledAt: "2026-05-20T10:00:00.000Z",
     attendeeName: "John Carter",
     attendeeEmail: "john@technova.io",
-    notes: "TechNova evaluating website improvements.",
+    notes: "TechNova web sitesi iyileştirmelerini değerlendiriyor.",
   },
   {
     id: "meeting-2",
     leadId: "2",
-    title: "Strategy Review",
+    title: "Strateji Değerlendirmesi",
     scheduledAt: "2026-05-21T14:30:00.000Z",
     attendeeName: "Sarah Lin",
     attendeeEmail: "sarah@brightpath.co",
@@ -22,7 +22,7 @@ export const mockMeetings: Meeting[] = [
   {
     id: "meeting-3",
     leadId: "3",
-    title: "Intro Call",
+    title: "Tanışma Görüşmesi",
     scheduledAt: "2026-05-22T11:00:00.000Z",
     attendeeName: "Mike Johnson",
     attendeeEmail: "mike@growthlab.io",
@@ -32,58 +32,58 @@ export const mockMeetings: Meeting[] = [
 export const mockMeetingBriefs: MeetingBrief[] = [
   {
     meetingId: "meeting-1",
-    summary: "TechNova is evaluating website conversion improvements.",
+    summary: "TechNova, web sitesi dönüşüm iyileştirmelerini değerlendiriyor.",
     talkingPoints: [
-      "Focus on mobile conversion gaps",
-      "Highlight missing tracking infrastructure",
+      "Mobil dönüşüm boşluklarına odaklan",
+      "Eksik takip altyapısını öne çıkar",
     ],
-    risks: ["Budget review pending"],
+    risks: ["Bütçe onayı bekleniyor"],
   },
 ];
 
 export const mockMeetingsKpis: PageKpi[] = [
-  { id: "upcoming", label: "Upcoming", numericValue: 8, accent: "blue" },
-  { id: "week", label: "This Week", numericValue: 5, accent: "purple" },
-  { id: "briefs", label: "Prepared Briefs", numericValue: 6, accent: "green" },
-  { id: "calls", label: "Conversion Calls", numericValue: 3, accent: "orange" },
+  { id: "upcoming", label: "Yaklaşan", numericValue: 8, accent: "blue" },
+  { id: "week", label: "Bu Hafta", numericValue: 5, accent: "purple" },
+  { id: "briefs", label: "Hazır Brifler", numericValue: 6, accent: "green" },
+  { id: "calls", label: "Dönüşüm Görüşmeleri", numericValue: 3, accent: "orange" },
 ];
 
 export const mockMeetingList: MeetingListItem[] = [
   {
     id: "1",
     company: "TechNova Solutions",
-    date: "May 20, 2025",
-    time: "10:00 AM",
+    date: "20 Mayıs 2025",
+    time: "10:00",
     assignee: "John Carter",
   },
   {
     id: "2",
     company: "BrightPath Consulting",
-    date: "May 21, 2025",
-    time: "2:30 PM",
+    date: "21 Mayıs 2025",
+    time: "14:30",
     assignee: "Sarah Lin",
   },
   {
     id: "3",
     company: "GrowthLab Marketing",
-    date: "May 22, 2025",
-    time: "11:00 AM",
+    date: "22 Mayıs 2025",
+    time: "11:00",
     assignee: "Mike Johnson",
   },
 ];
 
 export const mockMeetingBriefData: MeetingBriefData = {
   companySummary:
-    "TechNova Solutions is a growing SaaS company with conversion gaps on mobile and missing tracking infrastructure.",
+    "TechNova Solutions, mobil tarafta dönüşüm boşlukları ve eksik takip altyapısı bulunan büyüyen bir SaaS şirketidir.",
   mainIssues: [
-    "Slow mobile load time",
-    "CTA below the fold",
-    "No Meta Pixel detected",
-    "Weak above-the-fold clarity",
+    "Yavaş Web Sitesi",
+    "Zayıf CTA",
+    "Takip Altyapısı Eksik",
+    "Üst bölüm netliği zayıf",
   ],
   salesAngle:
-    "Focus on mobile conversion gaps and missing tracking infrastructure.",
+    "Mobil dönüşüm boşluklarına ve eksik takip altyapısına odaklan.",
   recommendedOffer:
-    "Website conversion audit + landing page improvement package.",
-  notes: "Decision maker confirmed. Follow up with audit summary before the call.",
+    "Web sitesi dönüşüm analizi + landing page iyileştirme paketi.",
+  notes: "Karar verici doğrulandı. Görüşmeden önce analiz özeti ile takip yap.",
 };

@@ -1,60 +1,60 @@
 export const mockProfileSettings = {
   name: "John Carter",
   email: "john@acmemarketing.com",
-  role: "Account Director",
+  role: "Hesap Direktörü",
 };
 
 export const mockWorkspaceSettings = {
   workspaceName: "Acme Marketing",
   companyWebsite: "https://acmemarketing.com",
-  industryFocus: "B2B SaaS & Professional Services",
+  industryFocus: "B2B SaaS ve Profesyonel Hizmetler",
   teamSize: "11–25",
 };
 
 export const mockOutreachSettings = {
   defaultSenderName: "John Carter",
-  signature: "John Carter\nAccount Director · Acme Marketing",
-  tonePreference: "Professional",
-  ctaPreference: "Soft ask",
+  signature: "John Carter\nHesap Direktörü · Acme Marketing",
+  tonePreference: "Profesyonel",
+  ctaPreference: "Yumuşak rica",
 };
 
 export const mockIntegrations = [
   {
     id: "email",
-    name: "Email Provider",
-    description: "Connect Gmail or Outlook for outreach delivery.",
+    name: "E-posta Sağlayıcısı",
+    description: "İletişim gönderimi için Gmail veya Outlook bağlayın.",
     connected: true,
   },
   {
     id: "calendar",
-    name: "Google Calendar",
-    description: "Sync meetings and availability.",
+    name: "Google Takvim",
+    description: "Görüşmeleri ve uygunluk durumunu senkronize edin.",
     connected: true,
   },
   {
     id: "leads",
-    name: "Lead Source Tools",
-    description: "Import leads from Apollo, LinkedIn, and CSV.",
+    name: "Müşteri Kaynak Araçları",
+    description: "Apollo, LinkedIn ve CSV üzerinden müşteri aktarın.",
     connected: false,
   },
   {
     id: "ai",
-    name: "AI Provider",
-    description: "Configure AI model for message personalization.",
+    name: "Yapay Zeka Sağlayıcısı",
+    description: "Mesaj kişiselleştirme için yapay zeka modelini yapılandırın.",
     connected: true,
   },
 ];
 
 export const mockBillingSettings = {
-  plan: "Growth Plan",
-  usage: "2,482 / 5,000 leads",
-  renewalDate: "June 15, 2026",
+  plan: "Büyüme Planı",
+  usage: "2.482 / 5.000 müşteri",
+  renewalDate: "15 Haziran 2026",
 };
 
 export const mockSettingsTabs = [
-  "Profile",
-  "Workspace",
-  "Outreach",
-  "Integrations",
-  "Billing",
+  "Profil",
+  "Çalışma Alanı",
+  "İletişim",
+  "Entegrasyonlar",
+  "Faturalama",
 ] as const;

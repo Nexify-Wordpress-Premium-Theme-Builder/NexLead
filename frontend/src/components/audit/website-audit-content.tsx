@@ -12,6 +12,7 @@ import { mockAuditCategories, mockAuditIssues, mockAuditTypes } from "@/data/moc
 import { useDemoData } from "@/hooks/use-demo-data";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/cn";
+import { auditCategoryLabels, severityLabels } from "@/lib/i18n/tr-labels";
 import { panelClass } from "@/lib/panel";
 import { ROUTES } from "@/lib/routes";
 import { filterAuditIssuesByCategory, filterAuditIssuesBySeverity } from "@/services/demo-audit-service";
@@ -96,37 +97,39 @@ export function WebsiteAuditContent() {
 
   const selectedLead = leads.find((lead) => lead.id === selectedLeadId);
   const summaryText = useMemo(() => {
-    const issueLines = filteredIssues.slice(0, 5).map((issue) => `- ${issue.title} (${issue.severity})`);
+    const issueLines = filteredIssues
+      .slice(0, 5)
+      .map((issue) => `- ${issue.title} (${severityLabels[issue.severity]})`);
     return [
-      `Website Audit Summary`,
+      "Web Sitesi Analiz Özeti",
       `URL: ${websiteUrl}`,
-      `Audit Type: ${auditType}`,
-      `Lead: ${selectedLead?.companyName ?? "N/A"}`,
-      `Score: ${score}/100`,
+      `Analiz Türü: ${auditType}`,
+      `Müşteri: ${selectedLead?.companyName ?? "Yok"}`,
+      `Skor: ${score}/100`,
       "",
-      "Top Issues:",
+      "Öne Çıkan Sorunlar:",
       ...issueLines,
     ].join("\n");
   }, [auditType, filteredIssues, score, selectedLead?.companyName, websiteUrl]);
 
   const kpis = useMemo(
     () => [
-      { id: "score", label: "Audit Score", numericValue: animatedScore, suffix: "/100", accent: "blue" as const },
+      { id: "score", label: "Analiz Skoru", numericValue: animatedScore, suffix: "/100", accent: "blue" as const },
       {
         id: "issues",
-        label: "Visible Issues",
+        label: "Görünen Sorunlar",
         numericValue: filteredIssues.length,
         accent: "orange" as const,
       },
       {
         id: "high",
-        label: "High Severity",
+        label: "Yüksek Öncelik",
         numericValue: filteredIssues.filter((issue) => issue.severity === "high").length,
         accent: "purple" as const,
       },
       {
         id: "quick",
-        label: "Quick Wins",
+        label: "Hızlı Kazanımlar",
         numericValue: filteredIssues.filter((issue) => issue.severity === "low").length,
         accent: "green" as const,
       },
@@ -136,7 +139,7 @@ export function WebsiteAuditContent() {
 
   const handleRunAudit = async () => {
     if (!websiteUrl.trim()) {
-      toast.warning("Website URL required", "Please provide a website URL to run audit.");
+      toast.warning("Web sitesi URL'i gerekli", "Analizi başlatmak için bir URL girin.");
       return;
     }
 
@@ -152,17 +155,17 @@ export function WebsiteAuditContent() {
     }
     addActivity({
       type: "audit",
-      message: `Website audit completed for ${selectedLead?.companyName ?? websiteUrl}`,
+      message: `${selectedLead?.companyName ?? websiteUrl} için web sitesi analizi tamamlandı`,
     });
-    toast.success("Audit completed", `New website score: ${nextScore}/100`);
+    toast.success("Analiz tamamlandı", `Yeni web sitesi skoru: ${nextScore}/100`);
   };
 
   const handleCopySummary = async () => {
     try {
       await navigator.clipboard.writeText(summaryText);
-      toast.success("Summary copied", "Audit summary copied to clipboard.");
+      toast.success("Özet kopyalandı", "Analiz özeti panoya kopyalandı.");
     } catch {
-      toast.error("Copy failed", "Clipboard permission is unavailable.");
+      toast.error("Kopyalama başarısız", "Pano izni kullanılamıyor.");
     }
   };
 
@@ -171,10 +174,10 @@ export function WebsiteAuditContent() {
     await wait(getRandomDelay());
     addActivity({
       type: "audit",
-      message: `Audit summary saved for ${selectedLead?.companyName ?? websiteUrl}`,
+      message: `${selectedLead?.companyName ?? websiteUrl} için analiz özeti kaydedildi`,
     });
     setIsSaving(false);
-    toast.success("Audit saved", "Audit findings have been saved to the activity log.");
+    toast.success("Analiz kaydedildi", "Analiz bulguları aktivite kaydına eklendi.");
   };
 
   const handleCreateOutreach = () => {
@@ -188,18 +191,18 @@ export function WebsiteAuditContent() {
   return (
     <div className="space-y-5">
       <div className={cn(panelClass("p-6"), "animate-fade-up animation-delay-100")}>
-        <h3 className="mb-4 text-[15px] font-semibold text-text-primary">Run Website Audit</h3>
+        <h3 className="mb-4 text-[15px] font-semibold text-text-primary">Web Sitesi Analizi Çalıştır</h3>
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           <div className="xl:col-span-2">
-            <label className="mb-1.5 block text-xs font-semibold text-text-muted">Website URL</label>
+            <label className="mb-1.5 block text-xs font-semibold text-text-muted">Web Sitesi URL</label>
             <Input
-              placeholder="https://example.com"
+              placeholder="https://ornek.com"
               value={websiteUrl}
               onChange={(event) => setWebsiteUrl(event.target.value)}
             />
           </div>
           <div>
-            <label className="mb-1.5 block text-xs font-semibold text-text-muted">Audit Type</label>
+            <label className="mb-1.5 block text-xs font-semibold text-text-muted">Analiz Türü</label>
             <Select
               value={auditType}
               onChange={(event) => setAuditType(event.target.value)}
@@ -207,7 +210,7 @@ export function WebsiteAuditContent() {
             />
           </div>
           <div>
-            <label className="mb-1.5 block text-xs font-semibold text-text-muted">Lead</label>
+            <label className="mb-1.5 block text-xs font-semibold text-text-muted">Müşteri</label>
             <Select
               value={selectedLeadId}
               onChange={(event) => setSelectedLeadId(event.target.value)}
@@ -223,8 +226,8 @@ export function WebsiteAuditContent() {
             disabled={isRunningAudit}
           >
             <Globe className="h-4 w-4" />
-            <LoadingButtonState isLoading={isRunningAudit} loadingText="Running audit...">
-              Run Audit
+            <LoadingButtonState isLoading={isRunningAudit} loadingText="Analiz çalıştırılıyor...">
+              Analizi Çalıştır
             </LoadingButtonState>
           </button>
           <button
@@ -233,7 +236,7 @@ export function WebsiteAuditContent() {
             onClick={handleCopySummary}
           >
             <Copy className="mr-2 h-4 w-4" />
-            Copy Summary
+            Özeti Kopyala
           </button>
           <button
             type="button"
@@ -241,15 +244,15 @@ export function WebsiteAuditContent() {
             onClick={handleSaveAudit}
             disabled={isSaving}
           >
-            <LoadingButtonState isLoading={isSaving} loadingText="Saving...">
+            <LoadingButtonState isLoading={isSaving} loadingText="Kaydediliyor...">
               <span className="inline-flex items-center">
                 <Save className="mr-2 h-4 w-4" />
-                Save Audit
+                Analizi Kaydet
               </span>
             </LoadingButtonState>
           </button>
           <button type="button" className="btn-campaign" onClick={handleCreateOutreach}>
-            Create Outreach
+            İletişim Oluştur
           </button>
         </div>
       </div>
@@ -270,29 +273,29 @@ export function WebsiteAuditContent() {
       <div className={cn(panelClass("p-6"), "animate-fade-up animation-delay-350")}>
         <div className="mb-4 grid gap-3 sm:grid-cols-2">
           <div>
-            <label className="mb-1.5 block text-xs font-semibold text-text-muted">Category</label>
+            <label className="mb-1.5 block text-xs font-semibold text-text-muted">Kategori</label>
             <Select
               value={activeCategory}
               onChange={(event) => setActiveCategory(event.target.value as AuditCategory | "all")}
               options={[
-                { label: "All Categories", value: "all" },
+                { label: "Tüm Kategoriler", value: "all" },
                 ...mockAuditCategories.map((category) => ({
-                  label: category,
+                  label: auditCategoryLabels[category.toLowerCase() as keyof typeof auditCategoryLabels] ?? category,
                   value: category.toLowerCase(),
                 })),
               ]}
             />
           </div>
           <div>
-            <label className="mb-1.5 block text-xs font-semibold text-text-muted">Severity</label>
+            <label className="mb-1.5 block text-xs font-semibold text-text-muted">Öncelik</label>
             <Select
               value={activeSeverity}
               onChange={(event) => setActiveSeverity(event.target.value as AuditSeverity | "all")}
               options={[
-                { label: "All Severities", value: "all" },
-                { label: "High", value: "high" },
-                { label: "Medium", value: "medium" },
-                { label: "Low", value: "low" },
+                { label: "Tüm Öncelikler", value: "all" },
+                { label: severityLabels.high, value: "high" },
+                { label: severityLabels.medium, value: "medium" },
+                { label: severityLabels.low, value: "low" },
               ]}
             />
           </div>
@@ -309,13 +312,15 @@ export function WebsiteAuditContent() {
               )}
             >
               <div className="mb-2 flex items-center justify-between gap-2">
-                <Badge variant={severityVariant[issue.severity]}>{issue.severity}</Badge>
-                <span className="text-[11px] font-semibold uppercase text-text-muted">{issue.category}</span>
+                <Badge variant={severityVariant[issue.severity]}>{severityLabels[issue.severity]}</Badge>
+                <span className="text-[11px] font-semibold uppercase text-text-muted">
+                  {auditCategoryLabels[issue.category as keyof typeof auditCategoryLabels] ?? issue.category}
+                </span>
               </div>
               <h4 className="text-[13px] font-semibold text-text-primary">{issue.title}</h4>
               <p className="mt-1.5 text-[13px] leading-relaxed text-text-secondary">{issue.explanation}</p>
               <p className="mt-2 text-xs text-text-muted">
-                <span className="font-semibold text-text-secondary">Fix:</span> {issue.fix}
+                <span className="font-semibold text-text-secondary">Düzeltme:</span> {issue.fix}
               </p>
               <p className="mt-1 text-xs font-medium text-primary">{issue.impact}</p>
             </div>
@@ -325,7 +330,7 @@ export function WebsiteAuditContent() {
 
       {!hasRunAudit && (
         <p className="text-center text-xs text-text-muted">
-          Run an audit to simulate fresh score generation and lead progression.
+          Analizi çalıştırarak yeni skor üretimini ve müşteri ilerlemesini simüle edin.
         </p>
       )}
     </div>

@@ -20,9 +20,9 @@ export function WebsiteAuditInsights({ className }: { className?: string }) {
   return (
     <div className={cn(panelClass("flex h-full flex-col p-6"), "animate-fade-up", className)}>
       <div className="mb-4 flex items-center justify-between">
-        <h3 className="text-[15px] font-semibold text-text-primary">Website Audit Insights</h3>
+        <h3 className="text-[15px] font-semibold text-text-primary">Web Sitesi Analiz İçgörüleri</h3>
         <Link href={ROUTES.app.websiteAudit} className="link-section">
-          View all →
+          Tümünü gör →
         </Link>
       </div>
 
@@ -37,7 +37,7 @@ export function WebsiteAuditInsights({ className }: { className?: string }) {
               <Icon className="mb-1.5 h-4 w-4 text-text-muted" strokeWidth={2} />
               <span className="text-[11px] font-semibold text-text-secondary">{tile.label}</span>
               <span className="mt-0.5 text-lg font-bold text-red">{tile.issues}</span>
-              <span className="text-[10px] text-text-muted">issues</span>
+              <span className="text-[10px] text-text-muted">sorun</span>
             </div>
           );
         })}
@@ -63,7 +63,7 @@ export function WebsiteAuditInsights({ className }: { className?: string }) {
           <Gauge className="absolute h-3.5 w-3.5 text-primary" />
         </div>
         <div>
-          <p className="text-[13px] font-medium text-text-secondary">Average Website Score</p>
+          <p className="text-[13px] font-medium text-text-secondary">Ortalama Web Sitesi Skoru</p>
           <p className="text-xl font-bold tracking-tight text-text-primary">
             {mockAverageWebsiteScore}
             <span className="text-sm font-semibold text-text-muted">/100</span>

@@ -3,7 +3,7 @@ import type { IndustryPerformance, PageKpi } from "@/types/pages";
 export const mockReportsKpis: PageKpi[] = [
   {
     id: "growth",
-    label: "Lead Growth",
+    label: "Müşteri Artışı",
     numericValue: 186,
     prefix: "+",
     suffix: "%",
@@ -12,14 +12,14 @@ export const mockReportsKpis: PageKpi[] = [
   },
   {
     id: "audit",
-    label: "Audit Completion",
+    label: "Analiz Tamamlanma",
     numericValue: 74,
     suffix: "%",
     accent: "blue",
   },
   {
     id: "reply",
-    label: "Reply Rate",
+    label: "Yanıt Oranı",
     numericValue: 183,
     suffix: "%",
     decimals: 1,
@@ -27,7 +27,7 @@ export const mockReportsKpis: PageKpi[] = [
   },
   {
     id: "conversion",
-    label: "Meeting Conversion",
+    label: "Görüşme Dönüşümü",
     numericValue: 84,
     suffix: "%",
     decimals: 1,
@@ -36,49 +36,49 @@ export const mockReportsKpis: PageKpi[] = [
 ];
 
 export const mockLeadQualityData = [
-  { label: "High Opportunity", value: 612, max: 2482 },
-  { label: "Audited", value: 1840, max: 2482 },
-  { label: "Message Ready", value: 246, max: 2482 },
-  { label: "Meeting Booked", value: 86, max: 2482 },
+  { label: "Yüksek Fırsat", value: 612, max: 2482 },
+  { label: "Analiz Edildi", value: 1840, max: 2482 },
+  { label: "Mesaj Hazır", value: 246, max: 2482 },
+  { label: "Planlanan Görüşme", value: 86, max: 2482 },
 ];
 
 export const mockOutreachPerformance = [
-  { label: "Sent", value: 1014 },
-  { label: "Opened", value: 642 },
-  { label: "Replied", value: 186 },
-  { label: "Booked", value: 86 },
+  { label: "Gönderildi", value: 1014 },
+  { label: "Açıldı", value: 642 },
+  { label: "Yanıt Geldi", value: 186 },
+  { label: "Planlandı", value: 86 },
 ];
 
 export const mockAuditTrends = [
   { label: "SEO", issues: 24 },
-  { label: "Speed", issues: 31 },
-  { label: "Mobile", issues: 15 },
+  { label: "Hız", issues: 31 },
+  { label: "Mobil", issues: 15 },
   { label: "CTA", issues: 18 },
-  { label: "Tracking", issues: 12 },
+  { label: "Takip", issues: 12 },
 ];
 
 export const mockMeetingConversion = [
-  { month: "Jan", rate: 6.2 },
-  { month: "Feb", rate: 7.1 },
+  { month: "Oca", rate: 6.2 },
+  { month: "Şub", rate: 7.1 },
   { month: "Mar", rate: 7.8 },
-  { month: "Apr", rate: 8.0 },
+  { month: "Nis", rate: 8.0 },
   { month: "May", rate: 8.4 },
 ];
 
 export const mockIndustryPerformance: IndustryPerformance[] = [
   { industry: "SaaS", replyRate: 24.5 },
-  { industry: "Consulting", replyRate: 19.2 },
-  { industry: "Marketing", replyRate: 16.8 },
-  { industry: "Logistics", replyRate: 12.4 },
-  { industry: "Healthcare", replyRate: 11.6 },
+  { industry: "Danışmanlık", replyRate: 19.2 },
+  { industry: "Pazarlama", replyRate: 16.8 },
+  { industry: "Lojistik", replyRate: 12.4 },
+  { industry: "Sağlık", replyRate: 11.6 },
 ];
 
 export type ReportRange = "7d" | "30d" | "90d";
 
 export const reportRangeOptions = [
-  { id: "7d" as const, label: "Last 7 days" },
-  { id: "30d" as const, label: "Last 30 days" },
-  { id: "90d" as const, label: "Last 90 days" },
+  { id: "7d" as const, label: "Son 7 gün" },
+  { id: "30d" as const, label: "Son 30 gün" },
+  { id: "90d" as const, label: "Son 90 gün" },
 ];
 
 export const reportDataByRange: Record<
@@ -92,10 +92,10 @@ export const reportDataByRange: Record<
 > = {
   "7d": {
     kpis: [
-      { id: "growth", label: "Lead Growth", numericValue: 92, prefix: "+", suffix: "%", decimals: 1, accent: "green" },
-      { id: "audit", label: "Audit Completion", numericValue: 68, suffix: "%", accent: "blue" },
-      { id: "reply", label: "Reply Rate", numericValue: 162, suffix: "%", decimals: 1, accent: "purple" },
-      { id: "conversion", label: "Meeting Conversion", numericValue: 72, suffix: "%", decimals: 1, accent: "orange" },
+      { id: "growth", label: "Müşteri Artışı", numericValue: 92, prefix: "+", suffix: "%", decimals: 1, accent: "green" },
+      { id: "audit", label: "Analiz Tamamlanma", numericValue: 68, suffix: "%", accent: "blue" },
+      { id: "reply", label: "Yanıt Oranı", numericValue: 162, suffix: "%", decimals: 1, accent: "purple" },
+      { id: "conversion", label: "Görüşme Dönüşümü", numericValue: 72, suffix: "%", decimals: 1, accent: "orange" },
     ],
     leadQuality: mockLeadQualityData.map((item) => ({ ...item, value: Math.round(item.value * 0.18) })),
     outreach: mockOutreachPerformance.map((item) => ({ ...item, value: Math.round(item.value * 0.15) })),
@@ -109,10 +109,10 @@ export const reportDataByRange: Record<
   },
   "90d": {
     kpis: [
-      { id: "growth", label: "Lead Growth", numericValue: 224, prefix: "+", suffix: "%", decimals: 1, accent: "green" },
-      { id: "audit", label: "Audit Completion", numericValue: 81, suffix: "%", accent: "blue" },
-      { id: "reply", label: "Reply Rate", numericValue: 196, suffix: "%", decimals: 1, accent: "purple" },
-      { id: "conversion", label: "Meeting Conversion", numericValue: 96, suffix: "%", decimals: 1, accent: "orange" },
+      { id: "growth", label: "Müşteri Artışı", numericValue: 224, prefix: "+", suffix: "%", decimals: 1, accent: "green" },
+      { id: "audit", label: "Analiz Tamamlanma", numericValue: 81, suffix: "%", accent: "blue" },
+      { id: "reply", label: "Yanıt Oranı", numericValue: 196, suffix: "%", decimals: 1, accent: "purple" },
+      { id: "conversion", label: "Görüşme Dönüşümü", numericValue: 96, suffix: "%", decimals: 1, accent: "orange" },
     ],
     leadQuality: mockLeadQualityData,
     outreach: mockOutreachPerformance.map((item) => ({ ...item, value: Math.round(item.value * 1.2) })),

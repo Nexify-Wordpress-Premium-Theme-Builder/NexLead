@@ -67,7 +67,7 @@ export function Modal({
               type="button"
               onClick={onClose}
               className="rounded-lg p-1.5 text-text-muted transition-colors hover:bg-surface-muted hover:text-text-primary"
-              aria-label="Close modal"
+              aria-label="Kapat"
             >
               <X className="h-4 w-4" />
             </button>

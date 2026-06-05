@@ -6,8 +6,8 @@ export default function WebsiteAuditPage() {
     <div className="space-y-5">
       <PageHeader
         className="animate-fade-up"
-        title="Website Audit"
-        description="Analyze any website and identify conversion, SEO, speed, and tracking opportunities."
+        title="Web Sitesi Analizi"
+        description="Herhangi bir web sitesini analiz edin; dönüşüm, SEO, hız ve takip fırsatlarını belirleyin."
       />
       <WebsiteAuditContent />
     </div>

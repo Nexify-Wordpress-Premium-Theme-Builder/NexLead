@@ -1,9 +1,11 @@
 export default function ForgotPasswordPage() {
   return (
-    <main className="flex min-h-screen items-center justify-center p-6">
-      <div>
-        <h1>Reset password</h1>
-        <p>Enter your email to receive password reset instructions.</p>
+    <main className="app-premium-bg flex min-h-screen items-center justify-center p-6">
+      <div className="panel-premium max-w-md p-8 text-center">
+        <h1 className="text-2xl font-bold text-text-primary">Şifreyi Sıfırla</h1>
+        <p className="mt-2 text-text-secondary">
+          Şifre sıfırlama talimatlarını almak için e-posta adresinizi girin.
+        </p>
       </div>
     </main>
   );

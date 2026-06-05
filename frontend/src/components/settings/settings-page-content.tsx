@@ -13,12 +13,30 @@ import { panelClass } from "@/lib/panel";
 import { cn } from "@/lib/cn";
 
 const tabItems = [
-  { id: "profile", label: "Profile" },
-  { id: "workspace", label: "Workspace" },
-  { id: "outreach", label: "Outreach" },
-  { id: "integrations", label: "Integrations" },
-  { id: "billing", label: "Billing" },
+  { id: "profile", label: "Profil" },
+  { id: "workspace", label: "Çalışma Alanı" },
+  { id: "outreach", label: "İletişim" },
+  { id: "integrations", label: "Entegrasyonlar" },
+  { id: "billing", label: "Faturalandırma" },
 ] as const;
+
+const integrationNameMap: Record<string, string> = {
+  "Email Provider": "E-posta Sağlayıcısı",
+  "Google Calendar": "Google Takvim",
+  "Lead Source Tools": "Müşteri Kaynak Araçları",
+  "AI Provider": "Yapay Zeka Sağlayıcısı",
+};
+
+const integrationDescriptionMap: Record<string, string> = {
+  "Connect Gmail or Outlook for outreach delivery.": "İletişim gönderimi için Gmail veya Outlook bağlayın.",
+  "Sync meetings and availability.": "Görüşmeleri ve uygunluk durumunu senkronize edin.",
+  "Import leads from Apollo, LinkedIn, and CSV.": "Apollo, LinkedIn ve CSV üzerinden müşteri aktarın.",
+  "Configure AI model for message personalization.": "Mesaj kişiselleştirme için yapay zeka modelini yapılandırın.",
+};
+
+const planLabelMap: Record<string, string> = {
+  "Growth Plan": "Büyüme Planı",
+};
 
 function getRandomDelay() {
   return 800 + Math.floor(Math.random() * 701);
@@ -51,7 +69,7 @@ export function SettingsPageContent() {
     await wait(getRandomDelay());
     updateSettings({ profile: profileForm });
     setIsSaving(false);
-    toast.success("Profile saved", "Your profile settings have been updated.");
+    toast.success("Profil kaydedildi", "Profil ayarlarınız güncellendi.");
   };
 
   const saveWorkspace = async () => {
@@ -59,7 +77,7 @@ export function SettingsPageContent() {
     await wait(getRandomDelay());
     updateSettings({ workspace: workspaceForm });
     setIsSaving(false);
-    toast.success("Workspace saved", "Workspace settings updated.");
+    toast.success("Çalışma alanı kaydedildi", "Çalışma alanı ayarları güncellendi.");
   };
 
   const saveOutreach = async () => {
@@ -67,7 +85,7 @@ export function SettingsPageContent() {
     await wait(getRandomDelay());
     updateSettings({ outreach: outreachForm });
     setIsSaving(false);
-    toast.success("Outreach settings saved", "Default outreach preferences updated.");
+    toast.success("İletişim ayarları kaydedildi", "Varsayılan iletişim tercihleri güncellendi.");
   };
 
   const resetProfile = () => setProfileForm(settings.profile);
@@ -89,7 +107,7 @@ export function SettingsPageContent() {
             <Avatar name={profileForm.name} className="h-16 w-16 text-lg" />
             <div className="grid gap-4 sm:grid-cols-2">
               <div>
-                <label className="mb-1.5 block text-xs font-semibold text-text-muted">Name</label>
+                <label className="mb-1.5 block text-xs font-semibold text-text-muted">Ad Soyad</label>
                 <Input
                   value={profileForm.name}
                   onChange={(event) =>
@@ -98,7 +116,7 @@ export function SettingsPageContent() {
                 />
               </div>
               <div>
-                <label className="mb-1.5 block text-xs font-semibold text-text-muted">Email</label>
+                <label className="mb-1.5 block text-xs font-semibold text-text-muted">E-posta</label>
                 <Input
                   value={profileForm.email}
                   type="email"
@@ -108,7 +126,7 @@ export function SettingsPageContent() {
                 />
               </div>
               <div>
-                <label className="mb-1.5 block text-xs font-semibold text-text-muted">Role</label>
+                <label className="mb-1.5 block text-xs font-semibold text-text-muted">Rol</label>
                 <Input
                   value={profileForm.role}
                   onChange={(event) =>
@@ -124,8 +142,8 @@ export function SettingsPageContent() {
                 onClick={saveProfile}
                 disabled={isSaving}
               >
-                <LoadingButtonState isLoading={isSaving} loadingText="Saving...">
-                  Save Profile
+                <LoadingButtonState isLoading={isSaving} loadingText="Kaydediliyor...">
+                  Profili Kaydet
                 </LoadingButtonState>
               </button>
               <button
@@ -133,7 +151,7 @@ export function SettingsPageContent() {
                 className="inline-flex h-10 items-center rounded-lg border border-border bg-surface px-4 text-sm font-medium text-text-secondary transition-colors hover:bg-surface-muted hover:text-text-primary"
                 onClick={resetProfile}
               >
-                Reset
+                Sıfırla
               </button>
             </div>
           </div>
@@ -142,7 +160,7 @@ export function SettingsPageContent() {
         {activeTab === "workspace" && (
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <label className="mb-1.5 block text-xs font-semibold text-text-muted">Workspace name</label>
+              <label className="mb-1.5 block text-xs font-semibold text-text-muted">Çalışma alanı adı</label>
               <Input
                 value={workspaceForm.workspaceName}
                 onChange={(event) =>
@@ -151,7 +169,7 @@ export function SettingsPageContent() {
               />
             </div>
             <div>
-              <label className="mb-1.5 block text-xs font-semibold text-text-muted">Company website</label>
+              <label className="mb-1.5 block text-xs font-semibold text-text-muted">Şirket web sitesi</label>
               <Input
                 value={workspaceForm.companyWebsite}
                 onChange={(event) =>
@@ -160,7 +178,7 @@ export function SettingsPageContent() {
               />
             </div>
             <div>
-              <label className="mb-1.5 block text-xs font-semibold text-text-muted">Industry focus</label>
+              <label className="mb-1.5 block text-xs font-semibold text-text-muted">Odak sektör</label>
               <Input
                 value={workspaceForm.industryFocus}
                 onChange={(event) =>
@@ -169,7 +187,7 @@ export function SettingsPageContent() {
               />
             </div>
             <div>
-              <label className="mb-1.5 block text-xs font-semibold text-text-muted">Team size</label>
+              <label className="mb-1.5 block text-xs font-semibold text-text-muted">Ekip büyüklüğü</label>
               <Input
                 value={workspaceForm.teamSize}
                 onChange={(event) =>
@@ -184,8 +202,8 @@ export function SettingsPageContent() {
                 onClick={saveWorkspace}
                 disabled={isSaving}
               >
-                <LoadingButtonState isLoading={isSaving} loadingText="Saving...">
-                  Save Workspace
+                <LoadingButtonState isLoading={isSaving} loadingText="Kaydediliyor...">
+                  Çalışma Alanını Kaydet
                 </LoadingButtonState>
               </button>
               <button
@@ -193,7 +211,7 @@ export function SettingsPageContent() {
                 className="inline-flex h-10 items-center rounded-lg border border-border bg-surface px-4 text-sm font-medium text-text-secondary transition-colors hover:bg-surface-muted hover:text-text-primary"
                 onClick={resetWorkspace}
               >
-                Reset
+                Sıfırla
               </button>
             </div>
           </div>
@@ -202,7 +220,7 @@ export function SettingsPageContent() {
         {activeTab === "outreach" && (
           <div className="grid gap-4">
             <div>
-              <label className="mb-1.5 block text-xs font-semibold text-text-muted">Default sender name</label>
+              <label className="mb-1.5 block text-xs font-semibold text-text-muted">Varsayılan gönderici adı</label>
               <Input
                 value={outreachForm.defaultSenderName}
                 onChange={(event) =>
@@ -211,7 +229,7 @@ export function SettingsPageContent() {
               />
             </div>
             <div>
-              <label className="mb-1.5 block text-xs font-semibold text-text-muted">Signature</label>
+              <label className="mb-1.5 block text-xs font-semibold text-text-muted">İmza</label>
               <Textarea
                 value={outreachForm.signature}
                 onChange={(event) =>
@@ -221,7 +239,7 @@ export function SettingsPageContent() {
             </div>
             <div className="grid gap-4 sm:grid-cols-2">
               <div>
-                <label className="mb-1.5 block text-xs font-semibold text-text-muted">Tone preference</label>
+                <label className="mb-1.5 block text-xs font-semibold text-text-muted">Ton tercihi</label>
                 <Input
                   value={outreachForm.tonePreference}
                   onChange={(event) =>
@@ -230,7 +248,7 @@ export function SettingsPageContent() {
                 />
               </div>
               <div>
-                <label className="mb-1.5 block text-xs font-semibold text-text-muted">CTA preference</label>
+                <label className="mb-1.5 block text-xs font-semibold text-text-muted">CTA tercihi</label>
                 <Input
                   value={outreachForm.ctaPreference}
                   onChange={(event) =>
@@ -246,8 +264,8 @@ export function SettingsPageContent() {
                 onClick={saveOutreach}
                 disabled={isSaving}
               >
-                <LoadingButtonState isLoading={isSaving} loadingText="Saving...">
-                  Save Outreach Settings
+                <LoadingButtonState isLoading={isSaving} loadingText="Kaydediliyor...">
+                  İletişim Ayarlarını Kaydet
                 </LoadingButtonState>
               </button>
               <button
@@ -255,7 +273,7 @@ export function SettingsPageContent() {
                 className="inline-flex h-10 items-center rounded-lg border border-border bg-surface px-4 text-sm font-medium text-text-secondary transition-colors hover:bg-surface-muted hover:text-text-primary"
                 onClick={resetOutreach}
               >
-                Reset
+                Sıfırla
               </button>
             </div>
           </div>
@@ -269,24 +287,28 @@ export function SettingsPageContent() {
                 className="rounded-xl border border-border-soft bg-surface-muted/40 p-4 transition-all duration-200 hover:border-border"
               >
                 <div className="mb-2 flex items-center justify-between">
-                  <p className="text-[13px] font-semibold text-text-primary">{integration.name}</p>
+                  <p className="text-[13px] font-semibold text-text-primary">
+                    {integrationNameMap[integration.name] ?? integration.name}
+                  </p>
                   <Badge variant={integration.connected ? "success" : "default"}>
-                    {integration.connected ? "Connected" : "Disconnected"}
+                    {integration.connected ? "Bağlı" : "Bağlı Değil"}
                   </Badge>
                 </div>
-                <p className="text-[13px] text-text-secondary">{integration.description}</p>
+                <p className="text-[13px] text-text-secondary">
+                  {integrationDescriptionMap[integration.description] ?? integration.description}
+                </p>
                 <button
                   type="button"
                   className="mt-3 text-[13px] font-semibold text-primary hover:text-primary-hover"
                   onClick={() => {
                     toggleIntegration(integration.id);
                     toast.success(
-                      integration.connected ? "Integration disconnected" : "Integration connected",
-                      `${integration.name} status updated.`,
+                      integration.connected ? "Entegrasyon bağlantısı kesildi" : "Entegrasyon bağlandı",
+                      `${integrationNameMap[integration.name] ?? integration.name} durumu güncellendi.`,
                     );
                   }}
                 >
-                  {integration.connected ? "Disconnect" : "Connect"}
+                  {integration.connected ? "Bağlantıyı Kes" : "Bağlan"}
                 </button>
               </div>
             ))}
@@ -296,17 +318,26 @@ export function SettingsPageContent() {
         {activeTab === "billing" && (
           <div className="max-w-md space-y-4">
             <div className="rounded-xl border border-border-soft bg-primary-soft/30 p-5">
-              <p className="text-xs font-semibold uppercase tracking-wide text-text-muted">Current plan</p>
-              <p className="mt-1 text-xl font-bold text-text-primary">{settings.billing.plan}</p>
-              <p className="mt-2 text-[13px] text-text-secondary">Usage: {settings.billing.usage}</p>
-              <p className="text-[13px] text-text-muted">Renews {settings.billing.renewalDate}</p>
+              <p className="text-xs font-semibold uppercase tracking-wide text-text-muted">Mevcut plan</p>
+              <p className="mt-1 text-xl font-bold text-text-primary">
+                {planLabelMap[settings.billing.plan] ?? settings.billing.plan}
+              </p>
+              <p className="mt-2 text-[13px] text-text-secondary">
+                Kullanım: {settings.billing.usage.replace("leads", "müşteri")}
+              </p>
+              <p className="text-[13px] text-text-muted">Yenilenme: {settings.billing.renewalDate}</p>
             </div>
             <button
               type="button"
               className="btn-campaign"
-              onClick={() => toast.info("Upgrade flow", "Upgrade flow is available in production build.")}
+              onClick={() =>
+                toast.info(
+                  "Yükseltme akışı",
+                  "Yükseltme akışı üretim sürümünde kullanılabilir.",
+                )
+              }
             >
-              Upgrade Plan
+              Planı Yükselt
             </button>
           </div>
         )}

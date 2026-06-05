@@ -63,17 +63,17 @@ export function Sidebar({ className }: SidebarProps) {
           <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary-soft-2">
             <Sparkles className="h-3.5 w-3.5" />
           </div>
-          <span className="text-sm font-semibold">AI-Powered Growth</span>
+          <span className="text-sm font-semibold">AI Destekli Büyüme</span>
         </div>
         <p className="text-xs leading-[1.55] text-text-secondary">
-          NexLead finds high-opportunity prospects, audits their websites, and helps you close
-          more clients—faster.
+          NexLead, yüksek fırsatlı potansiyel müşterileri bulur, web sitelerini analiz eder ve
+          daha hızlı daha fazla müşteri kazanmanıza yardımcı olur.
         </p>
         <button
           type="button"
           className="mt-3 text-xs font-semibold text-primary transition-colors duration-200 hover:text-primary-hover"
         >
-          Learn more →
+          Daha fazla bilgi →
         </button>
       </div>
 
@@ -84,7 +84,7 @@ export function Sidebar({ className }: SidebarProps) {
           </div>
           <div>
             <p className="text-sm font-semibold text-text-primary">Acme Marketing</p>
-            <p className="text-xs text-text-muted">Growth Plan</p>
+            <p className="text-xs text-text-muted">Büyüme Planı</p>
           </div>
         </div>
         <ChevronDown className="h-4 w-4 text-text-muted" />

@@ -32,9 +32,9 @@ export function RecentActivity({ className }: { className?: string }) {
   return (
     <div className={cn(panelClass("p-6"), "animate-fade-up", className)}>
       <div className="mb-4 flex items-center justify-between">
-        <h3 className="text-[15px] font-semibold text-text-primary">Recent Activity</h3>
+        <h3 className="text-[15px] font-semibold text-text-primary">Son Aktiviteler</h3>
         <Link href="#" className="link-section">
-          View all activity →
+          Tüm aktiviteleri gör →
         </Link>
       </div>
 

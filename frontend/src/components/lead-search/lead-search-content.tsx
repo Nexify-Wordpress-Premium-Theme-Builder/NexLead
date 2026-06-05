@@ -11,6 +11,7 @@ import { mockSearchFilterChips, mockSearchPreviewRows } from "@/data/mock-leads"
 import { useDemoData } from "@/hooks/use-demo-data";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/cn";
+import { formatIndustry, websiteStatusLabels } from "@/lib/i18n/tr-labels";
 import { panelClass } from "@/lib/panel";
 import { searchDemoLeads, type LeadSearchFilters } from "@/services/demo-leads-service";
 
@@ -29,6 +30,18 @@ const defaultFilters: LeadSearchFilters = {
   minOpportunity: 75,
   activeSignals: ["Has website"],
   query: "",
+};
+
+const signalLabelMap: Record<string, string> = {
+  "Has website": "Web sitesi var",
+  "Poor mobile experience": "Mobil deneyim zayıf",
+  "Missing tracking": "Takip eksik",
+  "Missing Tracking": "Takip eksik",
+  "Weak CTA": "CTA zayıf",
+  "Slow website": "Web sitesi yavaş",
+  "Slow Website": "Web sitesi yavaş",
+  "SEO issues": "SEO sorunları",
+  "SEO Issues": "SEO sorunları",
 };
 
 function getRandomDelay() {
@@ -89,18 +102,18 @@ export function LeadSearchContent() {
     await wait(getRandomDelay());
     setHasSearched(true);
     setIsSearching(false);
-    toast.success("Search completed", `${computedResults.length} opportunities matched your filters.`);
+    toast.success("Arama tamamlandı", `${computedResults.length} fırsat filtrelerinizle eşleşti.`);
   };
 
   const handleClear = () => {
     setFilters(defaultFilters);
     setHasSearched(false);
-    toast.info("Filters reset", "Search criteria cleared.");
+    toast.info("Filtreler sıfırlandı", "Arama kriterleri temizlendi.");
   };
 
   const handleAnalyze = async (row: (typeof mockSearchPreviewRows)[number]) => {
     if (analyzedSearchIds.includes(row.id)) {
-      toast.info("Already analyzed", `${row.company} has already been analyzed.`);
+      toast.info("Zaten analiz edildi", `${row.company} daha önce analiz edildi.`);
       return;
     }
 
@@ -128,23 +141,23 @@ export function LeadSearchContent() {
 
     addActivity({
       type: "lead",
-      message: `Search analyzed: ${row.company}`,
+      message: `Arama analizi tamamlandı: ${row.company}`,
     });
 
     setAnalyzingId(null);
-    toast.success("Lead analyzed", `${row.company} is now available in Leads.`);
+    toast.success("Müşteri analiz edildi", `${row.company} artık Potansiyel Müşteriler listesinde.`);
   };
 
   return (
     <div className="space-y-5">
       <section className="grid grid-cols-1 gap-5 lg:grid-cols-2">
         <div className={cn(panelClass("p-6"), "animate-fade-up animation-delay-100")}>
-          <h3 className="mb-4 text-[15px] font-semibold text-text-primary">Search Campaign</h3>
+          <h3 className="mb-4 text-[15px] font-semibold text-text-primary">Arama Kampanyası</h3>
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <label className="mb-1.5 block text-xs font-semibold text-text-muted">Industry</label>
+              <label className="mb-1.5 block text-xs font-semibold text-text-muted">Sektör</label>
               <Input
-                placeholder="e.g. Healthcare, SaaS"
+                placeholder="örn. Sağlık, SaaS"
                 value={filters.industry}
                 onChange={(event) =>
                   setFilters((current) => ({ ...current, industry: event.target.value }))
@@ -152,9 +165,9 @@ export function LeadSearchContent() {
               />
             </div>
             <div>
-              <label className="mb-1.5 block text-xs font-semibold text-text-muted">Location</label>
+              <label className="mb-1.5 block text-xs font-semibold text-text-muted">Konum</label>
               <Input
-                placeholder="City or region"
+                placeholder="Şehir veya bölge"
                 value={filters.location}
                 onChange={(event) =>
                   setFilters((current) => ({ ...current, location: event.target.value }))
@@ -162,9 +175,9 @@ export function LeadSearchContent() {
               />
             </div>
             <div>
-              <label className="mb-1.5 block text-xs font-semibold text-text-muted">Business Type</label>
+              <label className="mb-1.5 block text-xs font-semibold text-text-muted">İş Türü</label>
               <Input
-                placeholder="e.g. Clinic, Agency"
+                placeholder="örn. Klinik, Ajans"
                 value={filters.businessType}
                 onChange={(event) =>
                   setFilters((current) => ({ ...current, businessType: event.target.value }))
@@ -172,29 +185,29 @@ export function LeadSearchContent() {
               />
             </div>
             <div>
-              <label className="mb-1.5 block text-xs font-semibold text-text-muted">Website Status</label>
+              <label className="mb-1.5 block text-xs font-semibold text-text-muted">Web Sitesi Durumu</label>
               <Select
                 value={filters.websiteStatus}
                 onChange={(event) =>
                   setFilters((current) => ({ ...current, websiteStatus: event.target.value }))
                 }
                 options={[
-                  { label: "Any", value: "" },
-                  { label: "Needs Work", value: "needs_work" },
-                  { label: "Okay", value: "okay" },
-                  { label: "Good", value: "good" },
+                  { label: "Tümü", value: "" },
+                  { label: websiteStatusLabels.needs_work, value: "needs_work" },
+                  { label: websiteStatusLabels.okay, value: "okay" },
+                  { label: websiteStatusLabels.good, value: "good" },
                 ]}
               />
             </div>
             <div className="sm:col-span-2">
               <label className="mb-1.5 block text-xs font-semibold text-text-muted">
-                Opportunity Threshold
+                Fırsat Eşiği
               </label>
               <Input
                 type="number"
                 min={0}
                 max={100}
-                placeholder="Min score"
+                placeholder="Minimum puan"
                 value={filters.minOpportunity}
                 onChange={(event) =>
                   setFilters((current) => ({
@@ -205,9 +218,9 @@ export function LeadSearchContent() {
               />
             </div>
             <div className="sm:col-span-2">
-              <label className="mb-1.5 block text-xs font-semibold text-text-muted">Keyword</label>
+              <label className="mb-1.5 block text-xs font-semibold text-text-muted">Anahtar Kelime</label>
               <Input
-                placeholder="Search company, signal, or website"
+                placeholder="Şirket, sinyal veya web sitesi ara"
                 value={filters.query}
                 onChange={(event) =>
                   setFilters((current) => ({ ...current, query: event.target.value }))
@@ -223,8 +236,8 @@ export function LeadSearchContent() {
               className="btn-campaign inline-flex items-center gap-2 disabled:cursor-not-allowed disabled:opacity-60"
             >
               <Search className="h-4 w-4" />
-              <LoadingButtonState isLoading={isSearching} loadingText="Searching...">
-                Start Search
+              <LoadingButtonState isLoading={isSearching} loadingText="Aranıyor...">
+                Aramayı Başlat
               </LoadingButtonState>
             </button>
             <button
@@ -232,13 +245,13 @@ export function LeadSearchContent() {
               className="inline-flex h-10 items-center rounded-lg border border-border bg-surface px-4 text-sm font-medium text-text-secondary transition-colors hover:bg-surface-muted hover:text-text-primary"
               onClick={handleClear}
             >
-              Clear
+              Temizle
             </button>
           </div>
         </div>
 
         <div className={cn(panelClass("p-6"), "animate-fade-up animation-delay-200")}>
-          <h3 className="mb-4 text-[15px] font-semibold text-text-primary">Signal Filters</h3>
+          <h3 className="mb-4 text-[15px] font-semibold text-text-primary">Sinyal Filtreleri</h3>
           <div className="flex flex-wrap gap-2">
             {mockSearchFilterChips.map((chip) => (
               <button
@@ -252,33 +265,33 @@ export function LeadSearchContent() {
                     : "border border-border-soft bg-surface text-text-secondary hover:border-border",
                 )}
               >
-                {chip}
+                {signalLabelMap[chip] ?? chip}
               </button>
             ))}
           </div>
           <p className="mt-4 text-[13px] leading-relaxed text-text-secondary">
-            Combine industry, location, and website signals to surface high-opportunity companies
-            ready for outreach.
+            İletişim için hazır, yüksek fırsatlı firmaları öne çıkarmak için sektör, konum ve web
+            sitesi sinyallerini birlikte kullanın.
           </p>
           <div className="mt-4 rounded-xl border border-primary/10 bg-primary-soft/35 px-3.5 py-3">
             <p className="text-[12px] font-semibold text-primary">
-              {results.length} companies currently match your active filters.
+              Şu anda {results.length} şirket aktif filtrelerinizle eşleşiyor.
             </p>
           </div>
         </div>
       </section>
 
       <div className={cn(panelClass("p-6"), "animate-fade-up animation-delay-300")}>
-        <h3 className="mb-4 text-[15px] font-semibold text-text-primary">Search Preview</h3>
+        <h3 className="mb-4 text-[15px] font-semibold text-text-primary">Arama Önizlemesi</h3>
 
         {results.length === 0 ? (
           <EmptyState
-            title="No opportunities found"
-            description="Try lowering opportunity threshold or removing one signal filter."
+            title="Fırsat bulunamadı"
+            description="Fırsat eşiğini düşürmeyi veya bir sinyal filtresini kaldırmayı deneyin."
             action={
               <button type="button" className="btn-campaign inline-flex items-center gap-2" onClick={handleClear}>
                 <Sparkles className="h-4 w-4" />
-                Reset Filters
+                Filtreleri Sıfırla
               </button>
             }
           />
@@ -287,7 +300,7 @@ export function LeadSearchContent() {
             <table className="w-full min-w-[640px] text-left text-sm">
               <thead>
                 <tr className="border-b border-border-soft">
-                  {["Company", "Industry", "Location", "Website", "Signal", "Est. Opportunity", "Action"].map(
+                  {["Şirket", "Sektör", "Konum", "Web Sitesi", "Sinyal", "Tahmini Fırsat", "Aksiyon"].map(
                     (col) => (
                       <th
                         key={col}
@@ -310,11 +323,13 @@ export function LeadSearchContent() {
                     )}
                   >
                     <td className="py-3 pr-3 text-[13px] font-semibold text-text-primary">{row.company}</td>
-                    <td className="py-3 pr-3 text-[13px] text-text-secondary">{row.industry}</td>
+                    <td className="py-3 pr-3 text-[13px] text-text-secondary">
+                      {formatIndustry(row.industry)}
+                    </td>
                     <td className="py-3 pr-3 text-[13px] text-text-secondary">{row.location}</td>
                     <td className="py-3 pr-3 text-[13px] text-primary">{row.website}</td>
                     <td className="py-3 pr-3">
-                      <Badge variant="warning">{row.signal}</Badge>
+                      <Badge variant="warning">{signalLabelMap[row.signal] ?? row.signal}</Badge>
                     </td>
                     <td className="py-3 pr-3">
                       <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-green-soft text-[11px] font-bold text-green">
@@ -330,9 +345,9 @@ export function LeadSearchContent() {
                       >
                         <LoadingButtonState
                           isLoading={analyzingId === row.id}
-                          loadingText="Analyzing..."
+                          loadingText="Analiz ediliyor..."
                         >
-                          {analyzedSearchIds.includes(row.id) ? "Analyzed" : "Analyze"}
+                          {analyzedSearchIds.includes(row.id) ? "Analiz Edildi" : "Analiz Et"}
                         </LoadingButtonState>
                       </button>
                     </td>

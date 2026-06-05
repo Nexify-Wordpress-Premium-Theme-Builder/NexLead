@@ -15,6 +15,7 @@ import { mockMessagePreview } from "@/data/mock-outreach";
 import { useDemoData } from "@/hooks/use-demo-data";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/cn";
+import { outreachStatusLabels } from "@/lib/i18n/tr-labels";
 import { panelClass } from "@/lib/panel";
 
 const statusVariant = {
@@ -23,6 +24,27 @@ const statusVariant = {
   paused: "default",
   completed: "default",
 } as const;
+
+const toneLabelMap: Record<string, string> = {
+  Professional: "Profesyonel",
+  Friendly: "Samimi",
+  Direct: "Direkt",
+};
+
+const ctaStyleLabelMap: Record<string, string> = {
+  "Soft ask": "Yumuşak çağrı",
+  "Direct CTA": "Doğrudan CTA",
+  "Value-first": "Önce değer",
+};
+
+const defaultOutreachSubject = "TechNova Solutions için kısa bir web sitesi fırsatı";
+const defaultOutreachBody = `Merhaba John,
+
+TechNova'nın web sitesini inceledim ve mobil hız, CTA yerleşimi ve takip altyapısı tarafında birkaç dönüşüm fırsatı gördüm.
+
+Bunlar küçük ama müşteri kalitesini ve kampanya performansını etkileyebilecek önemli iyileştirmeler.
+
+Size kısa bir analiz özeti göndermemi ister misiniz?`;
 
 function getRandomDelay() {
   return 800 + Math.floor(Math.random() * 701);
@@ -60,8 +82,8 @@ export function OutreachPageContent() {
   const [ctaStyle, setCtaStyle] = useState(mockMessagePreview.ctaStyles[0]);
   const [newCampaignName, setNewCampaignName] = useState("");
   const [message, setMessage] = useState({
-    subject: mockMessagePreview.subject,
-    body: mockMessagePreview.body,
+    subject: defaultOutreachSubject,
+    body: defaultOutreachBody,
   });
 
   const selectedLead = leads.find((lead) => lead.id === selectedLeadId);
@@ -70,8 +92,8 @@ export function OutreachPageContent() {
   useEffect(() => {
     if (!selectedLeadDetail) return;
     setMessage({
-      subject: selectedLeadDetail.outreachSubject || mockMessagePreview.subject,
-      body: selectedLeadDetail.outreachBody || mockMessagePreview.body,
+      subject: selectedLeadDetail.outreachSubject || defaultOutreachSubject,
+      body: selectedLeadDetail.outreachBody || defaultOutreachBody,
     });
   }, [selectedLeadDetail]);
 
@@ -79,25 +101,25 @@ export function OutreachPageContent() {
     () => [
       {
         id: "drafts",
-        label: "Draft Campaigns",
+        label: "Taslak Kampanyalar",
         numericValue: campaigns.filter((campaign) => campaign.status === "draft").length,
         accent: "blue" as const,
       },
       {
         id: "active",
-        label: "Active Campaigns",
+        label: "Aktif Kampanyalar",
         numericValue: campaigns.filter((campaign) => campaign.status === "active").length,
         accent: "purple" as const,
       },
       {
         id: "leads",
-        label: "Leads in Outreach",
+        label: "İletişimdeki Müşteriler",
         numericValue: campaigns.reduce((total, campaign) => total + campaign.leadCount, 0),
         accent: "green" as const,
       },
       {
         id: "reply-rate",
-        label: "Avg Reply Rate",
+        label: "Ortalama Yanıt Oranı",
         numericValue: campaigns.length
           ? Math.round(campaigns.reduce((total, campaign) => total + campaign.replyRate, 0) / campaigns.length)
           : 0,
@@ -110,7 +132,7 @@ export function OutreachPageContent() {
 
   const handleCreateCampaign = async () => {
     if (!newCampaignName.trim()) {
-      toast.warning("Campaign name required", "Enter a campaign name to continue.");
+      toast.warning("Kampanya adı gerekli", "Devam etmek için bir kampanya adı girin.");
       return;
     }
 
@@ -126,15 +148,15 @@ export function OutreachPageContent() {
     setIsCreatingCampaign(false);
     setIsModalOpen(false);
     setNewCampaignName("");
-    toast.success("Campaign created", `${campaign.name} has been added.`);
+    toast.success("Kampanya oluşturuldu", `${campaign.name} eklendi.`);
   };
 
   const handleCopyMessage = async () => {
     try {
-      await navigator.clipboard.writeText(`Subject: ${message.subject}\n\n${message.body}`);
-      toast.success("Copied", "Message copied to clipboard.");
+      await navigator.clipboard.writeText(`Konu: ${message.subject}\n\n${message.body}`);
+      toast.success("Kopyalandı", "Mesaj panoya kopyalandı.");
     } catch {
-      toast.error("Copy failed", "Clipboard access is unavailable.");
+      toast.error("Kopyalama başarısız", "Pano erişimi kullanılamıyor.");
     }
   };
 
@@ -145,21 +167,21 @@ export function OutreachPageContent() {
     updateLeadDetail(selectedLeadId, {
       outreachSubject: message.subject,
       outreachBody: message.body,
-      outreachStatus: "Draft",
-      nextAction: "Send",
+      outreachStatus: "Taslak",
+      nextAction: "Gönder",
     });
     updateLeadStatus(selectedLeadId, "message_ready");
     addActivity({
       type: "outreach",
-      message: `Draft saved for ${selectedLead?.companyName ?? "lead"}`,
+      message: `${selectedLead?.companyName ?? "müşteri"} için taslak kaydedildi`,
     });
     setIsSavingDraft(false);
-    toast.success("Draft saved", "Outreach draft is ready to send.");
+    toast.success("Taslak kaydedildi", "İletişim taslağı gönderime hazır.");
   };
 
   const handleSend = async () => {
     if (!selectedLeadId) {
-      toast.warning("Lead selection required", "Select a lead before sending outreach.");
+      toast.warning("Müşteri seçimi gerekli", "Mesaj göndermeden önce bir müşteri seçin.");
       return;
     }
 
@@ -169,23 +191,23 @@ export function OutreachPageContent() {
     updateLeadDetail(selectedLeadId, {
       outreachSubject: message.subject,
       outreachBody: message.body,
-      outreachStatus: "Sent",
-      nextAction: "Follow Up",
+      outreachStatus: "Gönderildi",
+      nextAction: "Takip Et",
     });
     addActivity({
       type: "outreach",
-      message: `Outreach sent to ${selectedLead?.companyName ?? "selected lead"}`,
+      message: `Mesaj, ${selectedLead?.companyName ?? "seçilen müşteriye"} gönderildi`,
     });
     setIsSending(false);
-    toast.success("Message sent", "Outreach has been sent successfully.");
+    toast.success("Mesaj gönderildi", "Mesaj başarıyla gönderildi.");
   };
 
   return (
     <div className="space-y-5">
       <PageHeader
         className="animate-fade-up"
-        title="Outreach"
-        description="Generate, personalize, and track lead-specific outreach messages."
+        title="İletişim"
+        description="Müşteri özelinde iletişim mesajları oluşturun, kişiselleştirin ve takip edin."
         action={
           <button
             type="button"
@@ -193,7 +215,7 @@ export function OutreachPageContent() {
             onClick={() => setIsModalOpen(true)}
           >
             <Plus className="h-4 w-4" />
-            Create Campaign
+            Kampanya Oluştur
           </button>
         }
       />
@@ -214,20 +236,20 @@ export function OutreachPageContent() {
       <section className="grid grid-cols-1 gap-5 xl:grid-cols-3">
         <div className={cn(panelClass("p-6 xl:col-span-2"), "animate-fade-up animation-delay-300")}>
           <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
-            <h3 className="text-[15px] font-semibold text-text-primary">Campaigns</h3>
+            <h3 className="text-[15px] font-semibold text-text-primary">Kampanyalar</h3>
             <button
               type="button"
               className="btn-campaign inline-flex h-10 items-center gap-2 px-4"
               onClick={() => setIsModalOpen(true)}
             >
               <Plus className="h-4 w-4" />
-              Create Campaign
+              Kampanya Oluştur
             </button>
           </div>
 
           <div className="mb-4 grid gap-3 sm:grid-cols-2">
             <div>
-              <label className="mb-1.5 block text-xs font-semibold text-text-muted">Campaign</label>
+              <label className="mb-1.5 block text-xs font-semibold text-text-muted">Kampanya</label>
               <Select
                 value={selectedCampaignId}
                 onChange={(event) => setSelectedCampaignId(event.target.value)}
@@ -235,7 +257,7 @@ export function OutreachPageContent() {
               />
             </div>
             <div>
-              <label className="mb-1.5 block text-xs font-semibold text-text-muted">Lead</label>
+              <label className="mb-1.5 block text-xs font-semibold text-text-muted">Müşteri</label>
               <Select
                 value={selectedLeadId}
                 onChange={(event) => setSelectedLeadId(event.target.value)}
@@ -261,11 +283,11 @@ export function OutreachPageContent() {
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <p className="text-[13px] font-semibold text-text-primary">{campaign.name}</p>
                   <Badge variant={statusVariant[campaign.status]}>
-                    {campaign.status.charAt(0).toUpperCase() + campaign.status.slice(1)}
+                    {outreachStatusLabels[campaign.status]}
                   </Badge>
                 </div>
                 <p className="mt-1 text-xs text-text-muted">
-                  {campaign.leadCount} leads · {campaign.replyRate}% reply rate
+                  {campaign.leadCount} müşteri · %{campaign.replyRate} yanıt oranı
                 </p>
               </button>
             ))}
@@ -273,18 +295,18 @@ export function OutreachPageContent() {
         </div>
 
         <div className={cn(panelClass("p-6"), "animate-fade-up animation-delay-400")}>
-          <h3 className="mb-4 text-[15px] font-semibold text-text-primary">Message Composer</h3>
+          <h3 className="mb-4 text-[15px] font-semibold text-text-primary">Mesaj Düzenleyici</h3>
 
           <div className="space-y-3">
             <div>
-              <label className="mb-1.5 block text-xs font-semibold text-text-muted">Subject</label>
+              <label className="mb-1.5 block text-xs font-semibold text-text-muted">Konu</label>
               <Input
                 value={message.subject}
                 onChange={(event) => setMessage((current) => ({ ...current, subject: event.target.value }))}
               />
             </div>
             <div>
-              <label className="mb-1.5 block text-xs font-semibold text-text-muted">Message</label>
+              <label className="mb-1.5 block text-xs font-semibold text-text-muted">Mesaj</label>
               <Textarea
                 value={message.body}
                 onChange={(event) => setMessage((current) => ({ ...current, body: event.target.value }))}
@@ -293,19 +315,25 @@ export function OutreachPageContent() {
             </div>
             <div className="grid gap-3 sm:grid-cols-2">
               <div>
-                <label className="mb-1.5 block text-xs font-semibold text-text-muted">Tone</label>
+                <label className="mb-1.5 block text-xs font-semibold text-text-muted">Ton</label>
                 <Select
                   value={tone}
                   onChange={(event) => setTone(event.target.value)}
-                  options={mockMessagePreview.tones.map((item) => ({ label: item, value: item }))}
+                  options={mockMessagePreview.tones.map((item) => ({
+                    label: toneLabelMap[item] ?? item,
+                    value: item,
+                  }))}
                 />
               </div>
               <div>
-                <label className="mb-1.5 block text-xs font-semibold text-text-muted">CTA Style</label>
+                <label className="mb-1.5 block text-xs font-semibold text-text-muted">CTA Stili</label>
                 <Select
                   value={ctaStyle}
                   onChange={(event) => setCtaStyle(event.target.value)}
-                  options={mockMessagePreview.ctaStyles.map((item) => ({ label: item, value: item }))}
+                  options={mockMessagePreview.ctaStyles.map((item) => ({
+                    label: ctaStyleLabelMap[item] ?? item,
+                    value: item,
+                  }))}
                 />
               </div>
             </div>
@@ -319,8 +347,8 @@ export function OutreachPageContent() {
               disabled={isSending}
             >
               <Send className="h-4 w-4" />
-              <LoadingButtonState isLoading={isSending} loadingText="Sending...">
-                Send Message
+              <LoadingButtonState isLoading={isSending} loadingText="Gönderiliyor...">
+                Mesajı Gönder
               </LoadingButtonState>
             </button>
             <div className="grid grid-cols-2 gap-2">
@@ -330,10 +358,10 @@ export function OutreachPageContent() {
                 onClick={handleSaveDraft}
                 disabled={isSavingDraft}
               >
-                <LoadingButtonState isLoading={isSavingDraft} loadingText="Saving...">
+                <LoadingButtonState isLoading={isSavingDraft} loadingText="Kaydediliyor...">
                   <span className="inline-flex items-center">
                     <Save className="mr-2 h-4 w-4" />
-                    Save
+                    Kaydet
                   </span>
                 </LoadingButtonState>
               </button>
@@ -343,7 +371,7 @@ export function OutreachPageContent() {
                 onClick={handleCopyMessage}
               >
                 <Copy className="mr-2 h-4 w-4" />
-                Copy
+                Kopyala
               </button>
             </div>
           </div>
@@ -353,7 +381,7 @@ export function OutreachPageContent() {
       <Modal
         open={isModalOpen}
         onClose={() => (isCreatingCampaign ? undefined : setIsModalOpen(false))}
-        title="Create Campaign"
+        title="Kampanya Oluştur"
         footer={
           <>
             <button
@@ -362,7 +390,7 @@ export function OutreachPageContent() {
               disabled={isCreatingCampaign}
               className="inline-flex h-10 items-center justify-center rounded-lg border border-border bg-surface px-4 text-sm font-medium text-text-secondary transition-colors hover:bg-surface-muted hover:text-text-primary disabled:cursor-not-allowed disabled:opacity-60"
             >
-              Cancel
+              İptal
             </button>
             <button
               type="button"
@@ -370,8 +398,8 @@ export function OutreachPageContent() {
               disabled={isCreatingCampaign}
               className="btn-campaign inline-flex h-10 items-center justify-center px-4 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              <LoadingButtonState isLoading={isCreatingCampaign} loadingText="Creating...">
-                Create
+              <LoadingButtonState isLoading={isCreatingCampaign} loadingText="Oluşturuluyor...">
+                Oluştur
               </LoadingButtonState>
             </button>
           </>
@@ -379,15 +407,15 @@ export function OutreachPageContent() {
       >
         <div className="grid gap-3">
           <div>
-            <label className="mb-1.5 block text-xs font-semibold text-text-muted">Campaign Name</label>
+            <label className="mb-1.5 block text-xs font-semibold text-text-muted">Kampanya Adı</label>
             <Input
-              placeholder="Q3 Outreach Push"
+              placeholder="Q3 İletişim Kampanyası"
               value={newCampaignName}
               onChange={(event) => setNewCampaignName(event.target.value)}
             />
           </div>
           <p className="text-xs text-text-muted">
-            The campaign will be created in draft mode and can be sent after reviewing the message.
+            Kampanya taslak olarak oluşturulur ve mesaj gözden geçirildikten sonra gönderilebilir.
           </p>
         </div>
       </Modal>

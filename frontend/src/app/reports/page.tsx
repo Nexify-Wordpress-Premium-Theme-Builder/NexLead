@@ -6,8 +6,8 @@ export default function ReportsPage() {
     <div className="space-y-5">
       <PageHeader
         className="animate-fade-up"
-        title="Reports"
-        description="Measure lead quality, outreach performance, and meeting conversion trends."
+        title="Raporlar"
+        description="Müşteri kalitesini, outreach performansını ve görüşme dönüşüm trendlerini ölçün."
       />
       <ReportsPageContent />
     </div>

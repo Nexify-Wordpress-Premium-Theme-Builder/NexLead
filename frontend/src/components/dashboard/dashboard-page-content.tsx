@@ -42,8 +42,8 @@ export function DashboardPageContent() {
   const [formState, setFormState] = useState({
     name: "",
     industry: "SaaS",
-    location: "United States",
-    goal: "Book Meetings",
+    location: "Türkiye",
+    goal: "Görüşme Planla",
   });
 
   const canSubmit = useMemo(() => formState.name.trim().length > 2, [formState.name]);
@@ -66,13 +66,13 @@ export function DashboardPageContent() {
     setFormState({
       name: "",
       industry: "SaaS",
-      location: "United States",
-      goal: "Book Meetings",
+      location: "Türkiye",
+      goal: "Görüşme Planla",
     });
 
     toast.success(
-      "Campaign created",
-      `${campaign.name} is ready for ${formState.industry} leads in ${formState.location}.`,
+      "Kampanya oluşturuldu",
+      `${campaign.name}, ${formState.location} bölgesindeki ${formState.industry} müşterileri için hazır.`,
     );
   };
 
@@ -80,15 +80,15 @@ export function DashboardPageContent() {
     <div className="space-y-5">
       <PageHeader
         className="animate-fade-up"
-        title="Dashboard"
-        description="Track leads, audits, outreach, and opportunities in one place."
+        title="Panel"
+        description="Potansiyel müşterileri, site analizlerini, iletişimleri ve fırsatları tek yerden takip edin."
         action={
           <button
             type="button"
             className="btn-campaign inline-flex items-center justify-center"
             onClick={() => setIsModalOpen(true)}
           >
-            + New Campaign
+            + Yeni Kampanya
           </button>
         }
       />
@@ -117,7 +117,7 @@ export function DashboardPageContent() {
       <Modal
         open={isModalOpen}
         onClose={() => (isSubmitting ? undefined : setIsModalOpen(false))}
-        title="Create New Campaign"
+        title="Yeni Kampanya Oluştur"
         footer={
           <>
             <button
@@ -126,7 +126,7 @@ export function DashboardPageContent() {
               className="inline-flex h-10 items-center justify-center rounded-lg border border-border bg-surface px-4 text-sm font-medium text-text-secondary transition-colors hover:bg-surface-muted hover:text-text-primary disabled:cursor-not-allowed disabled:opacity-60"
               disabled={isSubmitting}
             >
-              Cancel
+              İptal
             </button>
             <button
               type="button"
@@ -134,8 +134,8 @@ export function DashboardPageContent() {
               onClick={handleCreateCampaign}
               disabled={!canSubmit || isSubmitting}
             >
-              <LoadingButtonState isLoading={isSubmitting} loadingText="Creating...">
-                Create Campaign
+              <LoadingButtonState isLoading={isSubmitting} loadingText="Oluşturuluyor...">
+                Kampanya Oluştur
               </LoadingButtonState>
             </button>
           </>
@@ -143,16 +143,16 @@ export function DashboardPageContent() {
       >
         <div className="grid gap-3">
           <div>
-            <label className="mb-1.5 block text-xs font-semibold text-text-muted">Campaign Name</label>
+            <label className="mb-1.5 block text-xs font-semibold text-text-muted">Kampanya Adı</label>
             <Input
               value={formState.name}
               onChange={(event) => setFormState((current) => ({ ...current, name: event.target.value }))}
-              placeholder="Q3 Website Conversion Sprint"
+              placeholder="Q3 Web Dönüşüm Sprinti"
             />
           </div>
           <div className="grid gap-3 sm:grid-cols-2">
             <div>
-              <label className="mb-1.5 block text-xs font-semibold text-text-muted">Industry</label>
+              <label className="mb-1.5 block text-xs font-semibold text-text-muted">Sektör</label>
               <Select
                 value={formState.industry}
                 onChange={(event) =>
@@ -160,37 +160,37 @@ export function DashboardPageContent() {
                 }
                 options={[
                   { label: "SaaS", value: "SaaS" },
-                  { label: "Healthcare", value: "Healthcare" },
-                  { label: "Consulting", value: "Consulting" },
-                  { label: "Real Estate", value: "Real Estate" },
+                  { label: "Sağlık", value: "Sağlık" },
+                  { label: "Danışmanlık", value: "Danışmanlık" },
+                  { label: "Gayrimenkul", value: "Gayrimenkul" },
                 ]}
               />
             </div>
             <div>
-              <label className="mb-1.5 block text-xs font-semibold text-text-muted">Location</label>
+              <label className="mb-1.5 block text-xs font-semibold text-text-muted">Konum</label>
               <Select
                 value={formState.location}
                 onChange={(event) =>
                   setFormState((current) => ({ ...current, location: event.target.value }))
                 }
                 options={[
-                  { label: "United States", value: "United States" },
-                  { label: "Europe", value: "Europe" },
+                  { label: "Türkiye", value: "Türkiye" },
+                  { label: "Avrupa", value: "Avrupa" },
                   { label: "MENA", value: "MENA" },
-                  { label: "Global", value: "Global" },
+                  { label: "Küresel", value: "Küresel" },
                 ]}
               />
             </div>
           </div>
           <div>
-            <label className="mb-1.5 block text-xs font-semibold text-text-muted">Goal</label>
+            <label className="mb-1.5 block text-xs font-semibold text-text-muted">Hedef</label>
             <Select
               value={formState.goal}
               onChange={(event) => setFormState((current) => ({ ...current, goal: event.target.value }))}
               options={[
-                { label: "Book Meetings", value: "Book Meetings" },
-                { label: "Send Audit Offer", value: "Send Audit Offer" },
-                { label: "Upsell Existing Clients", value: "Upsell Existing Clients" },
+                { label: "Görüşme Planla", value: "Görüşme Planla" },
+                { label: "Analiz Teklifi Gönder", value: "Analiz Teklifi Gönder" },
+                { label: "Mevcut Müşteriye Ek Satış", value: "Mevcut Müşteriye Ek Satış" },
               ]}
             />
           </div>

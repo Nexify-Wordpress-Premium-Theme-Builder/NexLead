@@ -6,8 +6,8 @@ export default function LeadsPage() {
     <div className="space-y-5">
       <PageHeader
         className="animate-fade-up"
-        title="Leads"
-        description="Manage, score, and prioritize your client acquisition opportunities."
+        title="Potansiyel Müşteriler"
+        description="Müşteri kazanımı fırsatlarınızı yönetin, puanlayın ve önceliklendirin."
       />
       <LeadsPageContent />
     </div>

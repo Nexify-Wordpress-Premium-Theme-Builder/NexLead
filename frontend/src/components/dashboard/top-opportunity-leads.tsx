@@ -8,9 +8,10 @@ import { LoadingButtonState } from "@/components/ui/loading-state";
 import { useDemoData } from "@/hooks/use-demo-data";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/cn";
+import { formatIndustry, leadStatusLabels, websiteStatusLabels } from "@/lib/i18n/tr-labels";
 import { panelClass } from "@/lib/panel";
 import { ROUTES } from "@/lib/routes";
-import { getLeadDisplayStatus, sortLeadsByOpportunity } from "@/services/demo-leads-service";
+import { sortLeadsByOpportunity } from "@/services/demo-leads-service";
 import type { Lead } from "@/types/lead";
 
 const companyColors = [
@@ -22,14 +23,16 @@ const companyColors = [
 ];
 
 const statusStyles: Record<string, string> = {
-  "Needs Work": "bg-orange-soft text-[#B45309]",
-  Audited: "bg-primary-soft text-primary",
-  "Message Ready": "bg-purple-soft text-purple",
-  Sent: "bg-[#EEF2FF] text-[#4338CA]",
-  Replied: "bg-[#ECFDF5] text-[#15803D]",
-  Meeting: "bg-green-soft text-green",
-  Good: "bg-green-soft text-green",
-  Okay: "bg-[#FFFBEB] text-[#A16207]",
+  new: "bg-orange-soft text-[#B45309]",
+  needs_work: "bg-orange-soft text-[#B45309]",
+  audited: "bg-primary-soft text-primary",
+  message_ready: "bg-purple-soft text-purple",
+  sent: "bg-[#EEF2FF] text-[#4338CA]",
+  replied: "bg-[#ECFDF5] text-[#15803D]",
+  meeting: "bg-green-soft text-green",
+  closed: "bg-slate-100 text-slate-600",
+  good: "bg-green-soft text-green",
+  okay: "bg-[#FFFBEB] text-[#A16207]",
 } as const;
 
 const rowDelays = [
@@ -58,13 +61,13 @@ function wait(ms: number) {
 
 function resolveAction(lead: Lead): { label: string; type: "send_audit" | "personalize" | "follow_up" } {
   if (lead.status === "message_ready") {
-    return { label: "Personalize", type: "personalize" };
+    return { label: "Kişiselleştir", type: "personalize" };
   }
   if (lead.status === "sent" || lead.status === "replied" || lead.status === "meeting") {
-    return { label: "Follow Up", type: "follow_up" };
+    return { label: "Takip Et", type: "follow_up" };
   }
 
-  return { label: "Send Audit", type: "send_audit" };
+  return { label: "Analiz Gönder", type: "send_audit" };
 }
 
 export function TopOpportunityLeads({ className }: { className?: string }) {
@@ -78,7 +81,7 @@ export function TopOpportunityLeads({ className }: { className?: string }) {
     const action = resolveAction(lead);
 
     if (action.type === "personalize") {
-      toast.info("Opening outreach composer", `${lead.companyName} message personalization is ready.`);
+      toast.info("İletişim düzenleyici açılıyor", `${lead.companyName} mesaj kişiselleştirme için hazır.`);
       router.push(`${ROUTES.app.outreach}?leadId=${lead.id}`);
       return;
     }
@@ -90,15 +93,15 @@ export function TopOpportunityLeads({ className }: { className?: string }) {
       updateLeadStatus(lead.id, "audited");
       addActivity({
         type: "audit",
-        message: `Audit sent to ${lead.companyName}`,
+        message: `${lead.companyName} için analiz gönderildi`,
       });
-      toast.success("Audit sent", `${lead.companyName} moved to Audited stage.`);
+      toast.success("Analiz gönderildi", `${lead.companyName} "Analiz Edildi" aşamasına taşındı.`);
     } else {
       addActivity({
         type: "outreach",
-        message: `Follow-up queued for ${lead.companyName}`,
+        message: `${lead.companyName} için takip planlandı`,
       });
-      toast.info("Follow-up queued", `Reminder added for ${lead.companyName}.`);
+      toast.info("Takip planlandı", `${lead.companyName} için hatırlatma eklendi.`);
     }
 
     setLoadingLeadId(null);
@@ -107,9 +110,9 @@ export function TopOpportunityLeads({ className }: { className?: string }) {
   return (
     <div className={cn(panelClass("flex h-full flex-col p-6"), "animate-fade-up", className)}>
       <div className="mb-4 flex items-center justify-between">
-        <h3 className="text-[15px] font-semibold text-text-primary">Top Opportunity Leads</h3>
+        <h3 className="text-[15px] font-semibold text-text-primary">En Yüksek Fırsatlı Müşteriler</h3>
         <Link href={ROUTES.app.leads} className="link-section">
-          View all →
+          Tümünü gör →
         </Link>
       </div>
 
@@ -118,26 +121,30 @@ export function TopOpportunityLeads({ className }: { className?: string }) {
           <thead>
             <tr className="border-b border-border-soft">
               <th className="pb-2.5 pr-3 text-[11px] font-semibold uppercase tracking-wide text-text-muted">
-                Company
+                Şirket
               </th>
               <th className="pb-2.5 pr-3 text-[11px] font-semibold uppercase tracking-wide text-text-muted">
-                Industry
+                Sektör
               </th>
               <th className="pb-2.5 pr-3 text-[11px] font-semibold uppercase tracking-wide text-text-muted">
-                Status
+                Durum
               </th>
               <th className="pb-2.5 pr-3 text-[11px] font-semibold uppercase tracking-wide text-text-muted">
-                Score
+                Puan
               </th>
               <th className="pb-2.5 text-[11px] font-semibold uppercase tracking-wide text-text-muted">
-                Next Action
+                Sonraki Aksiyon
               </th>
             </tr>
           </thead>
           <tbody>
             {rankedLeads.map((lead, index) => {
               const action = resolveAction(lead);
-              const leadStatus = getLeadDisplayStatus(lead);
+              const statusKey = lead.status === "new" ? lead.websiteStatus : lead.status;
+              const statusLabel =
+                lead.status === "new"
+                  ? websiteStatusLabels[lead.websiteStatus]
+                  : leadStatusLabels[lead.status];
               return (
                 <tr
                   key={lead.id}
@@ -165,15 +172,15 @@ export function TopOpportunityLeads({ className }: { className?: string }) {
                     </Link>
                   </div>
                 </td>
-                <td className="py-3 pr-3 text-[13px] text-text-secondary">{lead.industry}</td>
+                <td className="py-3 pr-3 text-[13px] text-text-secondary">{formatIndustry(lead.industry)}</td>
                 <td className="py-3 pr-3">
                   <span
                     className={cn(
                       "inline-flex h-[22px] items-center rounded-full px-2 text-[11px] font-semibold",
-                      statusStyles[leadStatus] ?? "bg-slate-100 text-slate-600",
+                      statusStyles[statusKey] ?? "bg-slate-100 text-slate-600",
                     )}
                   >
-                    {leadStatus}
+                    {statusLabel}
                   </span>
                 </td>
                 <td className="py-3 pr-3">
@@ -191,7 +198,7 @@ export function TopOpportunityLeads({ className }: { className?: string }) {
                     <ActionIcon type={action.type} />
                     <LoadingButtonState
                       isLoading={loadingLeadId === lead.id}
-                      loadingText="Working..."
+                      loadingText="İşleniyor..."
                     >
                       {action.label}
                     </LoadingButtonState>

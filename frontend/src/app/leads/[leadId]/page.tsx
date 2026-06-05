@@ -12,8 +12,8 @@ export default async function LeadDetailPage({ params }: LeadDetailPageProps) {
     <div className="space-y-5">
       <PageHeader
         className="animate-fade-up"
-        title="Lead Detail"
-        description="Review profile, outreach draft, and progression actions for this lead."
+        title="Müşteri Detayı"
+        description="Bu müşteri için profil, outreach taslağı ve ilerleme aksiyonlarını inceleyin."
       />
       <LeadDetailPageContent leadId={leadId} />
     </div>

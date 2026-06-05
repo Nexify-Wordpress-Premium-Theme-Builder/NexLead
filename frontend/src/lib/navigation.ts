@@ -20,13 +20,13 @@ export interface NavItem {
 }
 
 export const MAIN_NAV_ITEMS: NavItem[] = [
-  { id: "dashboard", label: "Dashboard", href: ROUTES.app.dashboard, icon: LayoutDashboard },
-  { id: "lead-search", label: "Lead Search", href: ROUTES.app.leadSearch, icon: Search },
-  { id: "leads", label: "Leads", href: ROUTES.app.leads, icon: Users },
-  { id: "website-audit", label: "Website Audit", href: ROUTES.app.websiteAudit, icon: Globe },
-  { id: "outreach", label: "Outreach", href: ROUTES.app.outreach, icon: Send },
-  { id: "pipeline", label: "Pipeline", href: ROUTES.app.pipeline, icon: Funnel },
-  { id: "meetings", label: "Meetings", href: ROUTES.app.meetings, icon: Calendar },
-  { id: "reports", label: "Reports", href: ROUTES.app.reports, icon: BarChart3 },
-  { id: "settings", label: "Settings", href: ROUTES.app.settings, icon: Settings },
+  { id: "dashboard", label: "Panel", href: ROUTES.app.dashboard, icon: LayoutDashboard },
+  { id: "lead-search", label: "Müşteri Bul", href: ROUTES.app.leadSearch, icon: Search },
+  { id: "leads", label: "Potansiyel Müşteriler", href: ROUTES.app.leads, icon: Users },
+  { id: "website-audit", label: "Site Analizi", href: ROUTES.app.websiteAudit, icon: Globe },
+  { id: "outreach", label: "İletişim", href: ROUTES.app.outreach, icon: Send },
+  { id: "pipeline", label: "Satış Süreci", href: ROUTES.app.pipeline, icon: Funnel },
+  { id: "meetings", label: "Görüşmeler", href: ROUTES.app.meetings, icon: Calendar },
+  { id: "reports", label: "Raporlar", href: ROUTES.app.reports, icon: BarChart3 },
+  { id: "settings", label: "Ayarlar", href: ROUTES.app.settings, icon: Settings },
 ];

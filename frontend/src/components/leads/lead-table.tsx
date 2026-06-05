@@ -6,9 +6,9 @@ export function LeadTable({ leads }: { leads: Lead[] }) {
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead>Company</TableHead>
-          <TableHead>Industry</TableHead>
-          <TableHead>Score</TableHead>
+          <TableHead>Firma</TableHead>
+          <TableHead>Sektör</TableHead>
+          <TableHead>Skor</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>

@@ -24,6 +24,33 @@ function wait(ms: number) {
   });
 }
 
+const rangeLabelMap: Record<ReportRange, string> = {
+  "7d": "Son 7 gün",
+  "30d": "Son 30 gün",
+  "90d": "Son 90 gün",
+};
+
+const reportLabelMap: Record<string, string> = {
+  "Lead Growth": "Müşteri Artışı",
+  "Audit Completion": "Analiz Tamamlama",
+  "Reply Rate": "Yanıt Oranı",
+  "Meeting Conversion": "Görüşme Dönüşümü",
+  "High Opportunity": "Yüksek Fırsat",
+  Audited: "Analiz Edildi",
+  "Message Ready": "Mesaj Hazır",
+  "Meeting Booked": "Planlanan Görüşme",
+  Sent: "Gönderildi",
+  Opened: "Açıldı",
+  Replied: "Yanıt Geldi",
+  Booked: "Planlandı",
+  Consulting: "Danışmanlık",
+  Marketing: "Pazarlama",
+  Logistics: "Lojistik",
+  Healthcare: "Sağlık",
+};
+
+const tr = (value: string) => reportLabelMap[value] ?? value;
+
 export function ReportsPageContent() {
   const toast = useToast();
   const [selectedRange, setSelectedRange] = useState<ReportRange>("30d");
@@ -32,27 +59,26 @@ export function ReportsPageContent() {
 
   const reportData = reportDataByRange[selectedRange];
   const maxOutreach = Math.max(...reportData.outreach.map((item) => item.value), 1);
-
   const summaryText = useMemo(() => {
     return [
-      `NexLead Summary Report (${reportRangeOptions.find((option) => option.id === selectedRange)?.label})`,
+      `NexLead Özet Raporu (${rangeLabelMap[selectedRange]})`,
       "",
-      "KPIs:",
+      "KPI'lar:",
       ...reportData.kpis.map((kpi) => {
         const value = kpi.decimals
           ? `${(kpi.numericValue / Math.pow(10, kpi.decimals)).toFixed(kpi.decimals)}`
           : `${kpi.numericValue}`;
-        return `- ${kpi.label}: ${kpi.prefix ?? ""}${value}${kpi.suffix ?? ""}`;
+        return `- ${tr(kpi.label)}: ${kpi.prefix ?? ""}${value}${kpi.suffix ?? ""}`;
       }),
       "",
-      "Lead Quality:",
-      ...reportData.leadQuality.map((item) => `- ${item.label}: ${item.value}`),
+      "Müşteri Kalitesi:",
+      ...reportData.leadQuality.map((item) => `- ${tr(item.label)}: ${item.value}`),
       "",
-      "Outreach Performance:",
-      ...reportData.outreach.map((item) => `- ${item.label}: ${item.value}`),
+      "İletişim Performansı:",
+      ...reportData.outreach.map((item) => `- ${tr(item.label)}: ${item.value}`),
       "",
-      "Industry Reply Rate:",
-      ...reportData.industries.map((item) => `- ${item.industry}: ${item.replyRate}%`),
+      "Sektör Yanıt Oranı:",
+      ...reportData.industries.map((item) => `- ${tr(item.industry)}: ${item.replyRate}%`),
     ].join("\n");
   }, [reportData, selectedRange]);
 
@@ -63,11 +89,11 @@ export function ReportsPageContent() {
     const url = URL.createObjectURL(blob);
     const anchor = document.createElement("a");
     anchor.href = url;
-    anchor.download = `nexlead-report-${selectedRange}.txt`;
+    anchor.download = `nexlead-rapor-${selectedRange}.txt`;
     anchor.click();
     URL.revokeObjectURL(url);
     setIsExporting(false);
-    toast.success("Report exported", "Summary report downloaded successfully.");
+    toast.success("Rapor dışa aktarıldı", "Özet rapor başarıyla indirildi.");
   };
 
   const handleCopySummary = async () => {
@@ -75,9 +101,9 @@ export function ReportsPageContent() {
     await wait(getRandomDelay());
     try {
       await navigator.clipboard.writeText(summaryText);
-      toast.success("Summary copied", "Report summary copied to clipboard.");
+      toast.success("Özet kopyalandı", "Rapor özeti panoya kopyalandı.");
     } catch {
-      toast.error("Copy failed", "Clipboard access is unavailable.");
+      toast.error("Kopyalama başarısız", "Pano erişimi kullanılamıyor.");
     }
     setIsCopying(false);
   };
@@ -87,11 +113,14 @@ export function ReportsPageContent() {
       <div className={cn(panelClass("p-5"), "animate-fade-up animation-delay-100")}>
         <div className="flex flex-wrap items-end gap-3">
           <div className="min-w-[220px] flex-1">
-            <label className="mb-1.5 block text-xs font-semibold text-text-muted">Report Range</label>
+            <label className="mb-1.5 block text-xs font-semibold text-text-muted">Rapor Aralığı</label>
             <Select
               value={selectedRange}
               onChange={(event) => setSelectedRange(event.target.value as ReportRange)}
-              options={reportRangeOptions.map((option) => ({ label: option.label, value: option.id }))}
+              options={reportRangeOptions.map((option) => ({
+                label: rangeLabelMap[option.id],
+                value: option.id,
+              }))}
             />
           </div>
           <button
@@ -101,8 +130,8 @@ export function ReportsPageContent() {
             className="btn-campaign inline-flex h-10 items-center gap-2 px-4 disabled:cursor-not-allowed disabled:opacity-60"
           >
             <Download className="h-4 w-4" />
-            <LoadingButtonState isLoading={isExporting} loadingText="Exporting...">
-              Download Summary
+            <LoadingButtonState isLoading={isExporting} loadingText="Dışa aktarılıyor...">
+              Özeti İndir
             </LoadingButtonState>
           </button>
           <button
@@ -112,8 +141,8 @@ export function ReportsPageContent() {
             className="inline-flex h-10 items-center rounded-lg border border-border bg-surface px-4 text-sm font-medium text-text-secondary transition-colors hover:bg-surface-muted hover:text-text-primary disabled:cursor-not-allowed disabled:opacity-60"
           >
             <Copy className="mr-2 h-4 w-4" />
-            <LoadingButtonState isLoading={isCopying} loadingText="Copying...">
-              Copy Summary
+            <LoadingButtonState isLoading={isCopying} loadingText="Kopyalanıyor...">
+              Özeti Kopyala
             </LoadingButtonState>
           </button>
         </div>
@@ -123,7 +152,7 @@ export function ReportsPageContent() {
         {reportData.kpis.map((kpi, index) => (
           <StatKpiCard
             key={kpi.id}
-            label={kpi.label}
+            label={tr(kpi.label)}
             numericValue={kpi.numericValue}
             prefix={kpi.prefix}
             suffix={kpi.suffix}
@@ -136,12 +165,12 @@ export function ReportsPageContent() {
 
       <section className="grid grid-cols-1 gap-5 lg:grid-cols-2">
         <div className={cn(panelClass("p-6"), "animate-fade-up animation-delay-300")}>
-          <h3 className="mb-4 text-[15px] font-semibold text-text-primary">Lead Quality Overview</h3>
+          <h3 className="mb-4 text-[15px] font-semibold text-text-primary">Müşteri Kalitesi Özeti</h3>
           <div className="space-y-3">
             {reportData.leadQuality.map((item, index) => (
               <div key={item.label}>
                 <div className="mb-1 flex justify-between text-[13px]">
-                  <span className="text-text-secondary">{item.label}</span>
+                  <span className="text-text-secondary">{tr(item.label)}</span>
                   <span className="font-semibold text-text-primary">{item.value.toLocaleString()}</span>
                 </div>
                 <div className="h-1.5 overflow-hidden rounded-full bg-slate-100">
@@ -159,7 +188,7 @@ export function ReportsPageContent() {
         </div>
 
         <div className={cn(panelClass("p-6"), "animate-fade-up animation-delay-350")}>
-          <h3 className="mb-4 text-[15px] font-semibold text-text-primary">Outreach Performance</h3>
+          <h3 className="mb-4 text-[15px] font-semibold text-text-primary">İletişim Performansı</h3>
           <div className="flex h-[140px] items-end gap-3">
             {reportData.outreach.map((item, index) => (
               <div key={item.label} className="flex flex-1 flex-col items-center gap-1">
@@ -170,7 +199,7 @@ export function ReportsPageContent() {
                     animationDelay: `${350 + index * 60}ms`,
                   }}
                 />
-                <span className="text-[10px] font-medium text-text-muted">{item.label}</span>
+                <span className="text-[10px] font-medium text-text-muted">{tr(item.label)}</span>
               </div>
             ))}
           </div>
@@ -178,7 +207,7 @@ export function ReportsPageContent() {
       </section>
 
       <div className={cn(panelClass("p-6"), "animate-fade-up animation-delay-400")}>
-        <h3 className="mb-4 text-[15px] font-semibold text-text-primary">Best Performing Industries</h3>
+        <h3 className="mb-4 text-[15px] font-semibold text-text-primary">En İyi Performans Gösteren Sektörler</h3>
         <div className="grid gap-2.5 md:grid-cols-2">
           {reportData.industries.map((item, index) => (
             <div
@@ -189,7 +218,7 @@ export function ReportsPageContent() {
                 index < 5 ? `animation-delay-${(index + 2) * 100}` : "animation-delay-300",
               )}
             >
-              <span className="text-[13px] font-medium text-text-primary">{item.industry}</span>
+              <span className="text-[13px] font-medium text-text-primary">{tr(item.industry)}</span>
               <span className="text-[13px] font-bold text-green">{item.replyRate}%</span>
             </div>
           ))}

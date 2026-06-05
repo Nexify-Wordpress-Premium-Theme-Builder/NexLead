@@ -2,13 +2,13 @@ import type { PipelineCard, PipelineStage } from "@shared/types/pipeline";
 import type { PipelineColumnData } from "@/types/pages";
 
 export const mockPipelineStages: PipelineStage[] = [
-  { id: "stage-new", label: "New", status: "new", order: 1 },
-  { id: "stage-audited", label: "Audited", status: "audited", order: 2 },
-  { id: "stage-message", label: "Message Ready", status: "message_ready", order: 3 },
-  { id: "stage-sent", label: "Sent", status: "sent", order: 4 },
-  { id: "stage-replied", label: "Replied", status: "replied", order: 5 },
-  { id: "stage-meeting", label: "Meeting", status: "meeting", order: 6 },
-  { id: "stage-closed", label: "Closed", status: "closed", order: 7 },
+  { id: "stage-new", label: "Yeni", status: "new", order: 1 },
+  { id: "stage-audited", label: "Analiz Edildi", status: "audited", order: 2 },
+  { id: "stage-message", label: "Mesaj Hazır", status: "message_ready", order: 3 },
+  { id: "stage-sent", label: "Gönderildi", status: "sent", order: 4 },
+  { id: "stage-replied", label: "Yanıt Geldi", status: "replied", order: 5 },
+  { id: "stage-meeting", label: "Görüşme", status: "meeting", order: 6 },
+  { id: "stage-closed", label: "Kapandı", status: "closed", order: 7 },
 ];
 
 export const mockPipelineCards: PipelineCard[] = [
@@ -31,22 +31,22 @@ export const mockPipelineCards: PipelineCard[] = [
 export const mockPipelineColumns: PipelineColumnData[] = [
   {
     id: "new",
-    label: "New",
+    label: "Yeni",
     count: 512,
     cards: [
       {
         id: "p1",
         company: "Nova Dental Clinic",
-        industry: "Healthcare",
+        industry: "Sağlık",
         score: 91,
-        nextAction: "Run Audit",
-        badge: "New",
+        nextAction: "Analizi Başlat",
+        badge: "Yeni",
       },
     ],
   },
   {
     id: "audited",
-    label: "Audited",
+    label: "Analiz Edildi",
     count: 312,
     cards: [
       {
@@ -54,73 +54,73 @@ export const mockPipelineColumns: PipelineColumnData[] = [
         company: "TechNova Solutions",
         industry: "SaaS",
         score: 92,
-        nextAction: "Send Audit",
-        badge: "Audited",
+        nextAction: "Analiz Gönder",
+        badge: "Analiz Edildi",
       },
       {
         id: "p3",
         company: "BrightPath Consulting",
-        industry: "Consulting",
+        industry: "Danışmanlık",
         score: 87,
-        nextAction: "Send Audit",
-        badge: "Audited",
+        nextAction: "Analiz Gönder",
+        badge: "Analiz Edildi",
       },
     ],
   },
   {
     id: "message_ready",
-    label: "Message Ready",
+    label: "Mesaj Hazır",
     count: 246,
     cards: [
       {
         id: "p4",
         company: "GrowthLab Marketing",
-        industry: "Marketing",
+        industry: "Pazarlama",
         score: 84,
-        nextAction: "Personalize",
-        badge: "Ready",
+        nextAction: "Kişiselleştir",
+        badge: "Hazır",
       },
     ],
   },
   {
     id: "sent",
-    label: "Sent",
+    label: "Gönderildi",
     count: 1014,
     cards: [],
   },
   {
     id: "replied",
-    label: "Replied",
+    label: "Yanıt Geldi",
     count: 186,
     cards: [
       {
         id: "p5",
         company: "Pinnacle Logistics",
-        industry: "Logistics",
+        industry: "Lojistik",
         score: 78,
-        nextAction: "Follow Up",
-        badge: "Replied",
+        nextAction: "Takip Et",
+        badge: "Yanıt Geldi",
       },
     ],
   },
   {
     id: "meeting",
-    label: "Meeting",
+    label: "Görüşme",
     count: 86,
     cards: [
       {
         id: "p6",
         company: "Elevate HR Advisors",
-        industry: "HR Services",
+        industry: "İK Hizmetleri",
         score: 72,
-        nextAction: "View Brief",
-        badge: "Meeting",
+        nextAction: "Özeti görüntüle",
+        badge: "Görüşme",
       },
     ],
   },
   {
     id: "closed",
-    label: "Closed",
+    label: "Kapandı",
     count: 24,
     cards: [],
   },

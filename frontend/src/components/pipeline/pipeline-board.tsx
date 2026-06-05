@@ -7,19 +7,10 @@ import { LoadingButtonState } from "@/components/ui/loading-state";
 import { useDemoData } from "@/hooks/use-demo-data";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/cn";
+import { formatIndustry, pipelineStageLabels } from "@/lib/i18n/tr-labels";
 import { panelClass } from "@/lib/panel";
 import { ROUTES } from "@/lib/routes";
-import { PIPELINE_STAGE_ORDER, type PipelineStageId } from "@/types/pipeline";
-
-const stageLabels: Record<PipelineStageId, string> = {
-  new: "New",
-  audited: "Audited",
-  message_ready: "Message Ready",
-  sent: "Sent",
-  replied: "Replied",
-  meeting: "Meeting",
-  closed: "Closed",
-};
+import { PIPELINE_STAGE_ORDER } from "@/types/pipeline";
 
 const columnDelays = [
   "animation-delay-200",
@@ -76,7 +67,7 @@ export function PipelineBoard({ extraStages = [] }: PipelineBoardProps) {
     return [
       ...PIPELINE_STAGE_ORDER.map((stageId) => ({
         id: stageId,
-        label: stageLabels[stageId],
+        label: pipelineStageLabels[stageId],
         cards: grouped.get(stageId) ?? [],
       })),
       ...extraStages.map((stage) => ({
@@ -108,7 +99,7 @@ export function PipelineBoard({ extraStages = [] }: PipelineBoardProps) {
     if (!card) return;
     const currentIndex = PIPELINE_STAGE_ORDER.indexOf(card.stageId);
     if (currentIndex < 0 || currentIndex >= PIPELINE_STAGE_ORDER.length - 1) {
-      toast.info("Final stage reached", "This lead is already at the last stage.");
+      toast.info("Son aşamaya ulaşıldı", "Bu müşteri zaten son aşamada.");
       return;
     }
     const nextStage = PIPELINE_STAGE_ORDER[currentIndex + 1];
@@ -116,21 +107,21 @@ export function PipelineBoard({ extraStages = [] }: PipelineBoardProps) {
       cardId,
       "next",
       () => movePipelineCard(cardId, nextStage),
-      `${card.company} moved to ${stageLabels[nextStage]}`,
+      `${card.company}, ${pipelineStageLabels[nextStage]} aşamasına taşındı`,
     );
   };
 
   const moveBack = (cardId: string) => {
     const card = pipelineCards.find((item) => item.id === cardId);
     if (!card || card.stageId === "new") {
-      toast.info("Already at first stage", "This lead cannot move further back.");
+      toast.info("Zaten ilk aşamada", "Bu müşteri daha geri taşınamaz.");
       return;
     }
     void runCardAction(
       cardId,
       "back",
       () => movePipelineBack(cardId),
-      `${card.company} moved back in pipeline`,
+      `${card.company} satış sürecinde geri taşındı`,
     );
   };
 
@@ -141,14 +132,14 @@ export function PipelineBoard({ extraStages = [] }: PipelineBoardProps) {
       cardId,
       "meeting",
       () => markPipelineMeeting(cardId),
-      `Meeting stage set for ${card.company}`,
+      `${card.company} için görüşme aşaması seçildi`,
     );
   };
 
   const closeCard = (cardId: string) => {
     const card = pipelineCards.find((item) => item.id === cardId);
     if (!card) return;
-    void runCardAction(cardId, "close", () => closePipelineCard(cardId), `${card.company} was closed`);
+    void runCardAction(cardId, "close", () => closePipelineCard(cardId), `${card.company} kapatıldı`);
   };
 
   return (
@@ -203,7 +194,7 @@ export function PipelineBoard({ extraStages = [] }: PipelineBoardProps) {
                         {card.badge}
                       </Badge>
                     </div>
-                    <p className="truncate text-xs text-text-muted">{card.industry}</p>
+                    <p className="truncate text-xs text-text-muted">{formatIndustry(card.industry)}</p>
                     <div className="mt-2 flex items-center justify-between gap-2">
                       <span className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-green-soft text-[10px] font-bold text-green">
                         {card.score}
@@ -222,7 +213,7 @@ export function PipelineBoard({ extraStages = [] }: PipelineBoardProps) {
                           isLoading={busyCardAction === `${card.id}-back`}
                           loadingText="..."
                         >
-                          Back
+                          Geri
                         </LoadingButtonState>
                       </button>
                       <button
@@ -235,7 +226,7 @@ export function PipelineBoard({ extraStages = [] }: PipelineBoardProps) {
                           isLoading={busyCardAction === `${card.id}-next`}
                           loadingText="..."
                         >
-                          Next
+                          İleri
                         </LoadingButtonState>
                       </button>
                       <button
@@ -248,7 +239,7 @@ export function PipelineBoard({ extraStages = [] }: PipelineBoardProps) {
                           isLoading={busyCardAction === `${card.id}-meeting`}
                           loadingText="..."
                         >
-                          Meeting
+                          Görüşme
                         </LoadingButtonState>
                       </button>
                       <button
@@ -261,14 +252,14 @@ export function PipelineBoard({ extraStages = [] }: PipelineBoardProps) {
                           isLoading={busyCardAction === `${card.id}-close`}
                           loadingText="..."
                         >
-                          Close
+                          Kapat
                         </LoadingButtonState>
                       </button>
                     </div>
                   </div>
                 ))}
                 {column.cards.length === 0 && (
-                  <p className="px-1 py-4 text-center text-xs text-text-muted">No leads</p>
+                  <p className="px-1 py-4 text-center text-xs text-text-muted">Müşteri yok</p>
                 )}
               </div>
             </div>

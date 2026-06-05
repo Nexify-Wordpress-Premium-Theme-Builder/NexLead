@@ -10,6 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useDemoData } from "@/hooks/use-demo-data";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/cn";
+import { websiteStatusLabels } from "@/lib/i18n/tr-labels";
 import { panelClass } from "@/lib/panel";
 import { ROUTES } from "@/lib/routes";
 
@@ -21,6 +22,25 @@ function wait(ms: number) {
   return new Promise<void>((resolve) => {
     window.setTimeout(resolve, ms);
   });
+}
+
+const detailLabelMap: Record<string, string> = {
+  "Not Sent": "Gönderilmedi",
+  Draft: "Taslak",
+  Sent: "Gönderildi",
+  Closed: "Kapandı",
+  Personalize: "Kişiselleştir",
+  Archived: "Arşivlendi",
+  "Send Audit": "Analiz Gönder",
+  "Follow Up": "Takip Et",
+  "View Brief": "Brifi Gör",
+  "Needs Work": websiteStatusLabels.needs_work,
+  Okay: websiteStatusLabels.okay,
+  Good: websiteStatusLabels.good,
+};
+
+function toTrDetailLabel(value: string) {
+  return detailLabelMap[value] ?? value;
 }
 
 interface LeadDetailPageContentProps {
@@ -72,11 +92,11 @@ export function LeadDetailPageContent({ leadId }: LeadDetailPageContentProps) {
   if (!lead || !detail) {
     return (
       <EmptyState
-        title="Lead not found"
-        description="This lead does not exist in the current demo state."
+        title="Müşteri bulunamadı"
+        description="Bu müşteri mevcut demo durumunda bulunmuyor."
         action={
           <button type="button" className="btn-campaign" onClick={() => router.push(ROUTES.app.leads)}>
-            Back to Leads
+            Müşterilere Dön
           </button>
         }
       />
@@ -99,10 +119,10 @@ export function LeadDetailPageContent({ leadId }: LeadDetailPageContentProps) {
 
     addActivity({
       type: "lead",
-      message: `Profile updated for ${companyForm.company.trim()}`,
+      message: `${companyForm.company.trim()} için profil güncellendi`,
     });
     setIsSavingProfile(false);
-    toast.success("Lead profile saved", `${companyForm.company.trim()} details updated.`);
+    toast.success("Müşteri profili kaydedildi", `${companyForm.company.trim()} detayları güncellendi.`);
   };
 
   const handleSaveMessage = async () => {
@@ -114,31 +134,31 @@ export function LeadDetailPageContent({ leadId }: LeadDetailPageContentProps) {
     });
     addActivity({
       type: "outreach",
-      message: `Outreach draft updated for ${companyForm.company}`,
+      message: `${companyForm.company} için iletişim taslağı güncellendi`,
     });
     setIsSavingMessage(false);
-    toast.success("Message saved", "Outreach draft updated.");
+    toast.success("Mesaj kaydedildi", "İletişim taslağı güncellendi.");
   };
 
   const handleCopyMessage = async () => {
-    const previewText = `Subject: ${messageForm.outreachSubject}\n\n${messageForm.outreachBody}`;
+    const previewText = `Konu: ${messageForm.outreachSubject}\n\n${messageForm.outreachBody}`;
     try {
       await navigator.clipboard.writeText(previewText);
-      toast.success("Copied", "Outreach draft copied to clipboard.");
+      toast.success("Kopyalandı", "İletişim taslağı panoya kopyalandı.");
     } catch {
-      toast.error("Copy failed", "Clipboard access is not available.");
+      toast.error("Kopyalama başarısız", "Pano erişimi kullanılamıyor.");
     }
   };
 
   const runLeadAction = async (action: "audit" | "personalize" | "meeting" | "close") => {
     if (action === "personalize") {
       router.push(`${ROUTES.app.outreach}?leadId=${leadId}`);
-      toast.info("Opening outreach", `${lead.companyName} personalization view opened.`);
+      toast.info("İletişim açılıyor", `${lead.companyName} kişiselleştirme görünümü açıldı.`);
       return;
     }
     if (action === "meeting") {
       router.push(`${ROUTES.app.meetings}?leadId=${leadId}`);
-      toast.info("Opening meetings", `${lead.companyName} meeting workflow opened.`);
+      toast.info("Görüşmeler açılıyor", `${lead.companyName} görüşme akışı açıldı.`);
       return;
     }
 
@@ -147,16 +167,16 @@ export function LeadDetailPageContent({ leadId }: LeadDetailPageContentProps) {
 
     if (action === "audit") {
       updateLeadStatus(leadId, "audited");
-      updateLeadDetail(leadId, { nextAction: "Personalize", outreachStatus: "Draft" });
-      addActivity({ type: "audit", message: `Audit sent to ${lead.companyName}` });
-      toast.success("Audit sent", `${lead.companyName} moved to audited.`);
+      updateLeadDetail(leadId, { nextAction: "Kişiselleştir", outreachStatus: "Taslak" });
+      addActivity({ type: "audit", message: `${lead.companyName} için analiz gönderildi` });
+      toast.success("Analiz gönderildi", `${lead.companyName} analiz edildi aşamasına taşındı.`);
     }
 
     if (action === "close") {
       updateLeadStatus(leadId, "closed");
-      updateLeadDetail(leadId, { nextAction: "Archived", outreachStatus: "Closed" });
-      addActivity({ type: "lead", message: `${lead.companyName} marked as closed` });
-      toast.success("Lead closed", `${lead.companyName} is now archived.`);
+      updateLeadDetail(leadId, { nextAction: "Arşivlendi", outreachStatus: "Kapandı" });
+      addActivity({ type: "lead", message: `${lead.companyName} kapalı olarak işaretlendi` });
+      toast.success("Müşteri kapatıldı", `${lead.companyName} arşive alındı.`);
     }
 
     setBusyAction(null);
@@ -167,13 +187,13 @@ export function LeadDetailPageContent({ leadId }: LeadDetailPageContentProps) {
       <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {[
           {
-            label: "Opportunity Score",
+            label: "Fırsat Skoru",
             value: `${companyForm.opportunityScore}/100`,
             accent: "text-green",
           },
-          { label: "Website Status", value: detail.websiteStatus, accent: "text-orange" },
-          { label: "Outreach Status", value: detail.outreachStatus, accent: "text-primary" },
-          { label: "Next Action", value: detail.nextAction, accent: "text-purple" },
+          { label: "Site Durumu", value: toTrDetailLabel(detail.websiteStatus), accent: "text-orange" },
+          { label: "İletişim Durumu", value: toTrDetailLabel(detail.outreachStatus), accent: "text-primary" },
+          { label: "Sonraki Aksiyon", value: toTrDetailLabel(detail.nextAction), accent: "text-purple" },
         ].map((card, index) => (
           <div
             key={card.label}
@@ -193,8 +213,8 @@ export function LeadDetailPageContent({ leadId }: LeadDetailPageContentProps) {
             onClick={() => runLeadAction("audit")}
             disabled={busyAction === "audit"}
           >
-            <LoadingButtonState isLoading={busyAction === "audit"} loadingText="Sending...">
-              Send Audit
+            <LoadingButtonState isLoading={busyAction === "audit"} loadingText="Gönderiliyor...">
+              Analiz Gönder
             </LoadingButtonState>
           </button>
           <button
@@ -202,14 +222,14 @@ export function LeadDetailPageContent({ leadId }: LeadDetailPageContentProps) {
             className="inline-flex h-10 items-center rounded-lg border border-border bg-surface px-4 text-sm font-medium text-text-secondary transition-colors hover:bg-surface-muted hover:text-text-primary"
             onClick={() => runLeadAction("personalize")}
           >
-            Personalize
+            Kişiselleştir
           </button>
           <button
             type="button"
             className="inline-flex h-10 items-center rounded-lg border border-border bg-surface px-4 text-sm font-medium text-text-secondary transition-colors hover:bg-surface-muted hover:text-text-primary"
             onClick={() => runLeadAction("meeting")}
           >
-            Schedule Meeting
+            Görüşme Planla
           </button>
           <button
             type="button"
@@ -217,8 +237,8 @@ export function LeadDetailPageContent({ leadId }: LeadDetailPageContentProps) {
             onClick={() => runLeadAction("close")}
             disabled={busyAction === "close"}
           >
-            <LoadingButtonState isLoading={busyAction === "close"} loadingText="Closing...">
-              Mark Closed
+            <LoadingButtonState isLoading={busyAction === "close"} loadingText="Kapatılıyor...">
+              Kapalı Olarak İşaretle
             </LoadingButtonState>
           </button>
         </div>
@@ -226,10 +246,10 @@ export function LeadDetailPageContent({ leadId }: LeadDetailPageContentProps) {
 
       <section className="grid grid-cols-1 gap-5 lg:grid-cols-2">
         <div className={cn(panelClass("p-6"), "animate-fade-up animation-delay-350")}>
-          <h3 className="mb-4 text-[15px] font-semibold text-text-primary">Company Overview</h3>
+          <h3 className="mb-4 text-[15px] font-semibold text-text-primary">Şirket Özeti</h3>
           <div className="grid gap-3 sm:grid-cols-2">
             <div className="sm:col-span-2">
-              <label className="mb-1.5 block text-xs font-semibold text-text-muted">Company</label>
+              <label className="mb-1.5 block text-xs font-semibold text-text-muted">Şirket</label>
               <Input
                 value={companyForm.company}
                 onChange={(event) =>
@@ -238,7 +258,7 @@ export function LeadDetailPageContent({ leadId }: LeadDetailPageContentProps) {
               />
             </div>
             <div>
-              <label className="mb-1.5 block text-xs font-semibold text-text-muted">Industry</label>
+              <label className="mb-1.5 block text-xs font-semibold text-text-muted">Sektör</label>
               <Input
                 value={companyForm.industry}
                 onChange={(event) =>
@@ -247,7 +267,7 @@ export function LeadDetailPageContent({ leadId }: LeadDetailPageContentProps) {
               />
             </div>
             <div>
-              <label className="mb-1.5 block text-xs font-semibold text-text-muted">Website</label>
+              <label className="mb-1.5 block text-xs font-semibold text-text-muted">Web Sitesi</label>
               <Input
                 value={companyForm.website}
                 onChange={(event) =>
@@ -256,7 +276,7 @@ export function LeadDetailPageContent({ leadId }: LeadDetailPageContentProps) {
               />
             </div>
             <div>
-              <label className="mb-1.5 block text-xs font-semibold text-text-muted">Location</label>
+              <label className="mb-1.5 block text-xs font-semibold text-text-muted">Konum</label>
               <Input
                 value={companyForm.location}
                 onChange={(event) =>
@@ -265,7 +285,7 @@ export function LeadDetailPageContent({ leadId }: LeadDetailPageContentProps) {
               />
             </div>
             <div>
-              <label className="mb-1.5 block text-xs font-semibold text-text-muted">Company Size</label>
+              <label className="mb-1.5 block text-xs font-semibold text-text-muted">Şirket Büyüklüğü</label>
               <Input
                 value={companyForm.companySize}
                 onChange={(event) =>
@@ -274,7 +294,7 @@ export function LeadDetailPageContent({ leadId }: LeadDetailPageContentProps) {
               />
             </div>
             <div>
-              <label className="mb-1.5 block text-xs font-semibold text-text-muted">Contact Status</label>
+              <label className="mb-1.5 block text-xs font-semibold text-text-muted">İletişim Durumu</label>
               <Input
                 value={companyForm.contactStatus}
                 onChange={(event) =>
@@ -283,7 +303,7 @@ export function LeadDetailPageContent({ leadId }: LeadDetailPageContentProps) {
               />
             </div>
             <div>
-              <label className="mb-1.5 block text-xs font-semibold text-text-muted">Opportunity Score</label>
+              <label className="mb-1.5 block text-xs font-semibold text-text-muted">Fırsat Puanı</label>
               <Input
                 type="number"
                 min={1}
@@ -305,8 +325,8 @@ export function LeadDetailPageContent({ leadId }: LeadDetailPageContentProps) {
               onClick={handleSaveProfile}
               disabled={isSavingProfile}
             >
-              <LoadingButtonState isLoading={isSavingProfile} loadingText="Saving...">
-                Save Profile
+              <LoadingButtonState isLoading={isSavingProfile} loadingText="Kaydediliyor...">
+                Profili Kaydet
               </LoadingButtonState>
             </button>
             <button
@@ -324,13 +344,13 @@ export function LeadDetailPageContent({ leadId }: LeadDetailPageContentProps) {
                 });
               }}
             >
-              Reset
+              Sıfırla
             </button>
           </div>
         </div>
 
         <div className={cn(panelClass("p-6"), "animate-fade-up animation-delay-400")}>
-          <h3 className="mb-4 text-[15px] font-semibold text-text-primary">Website Audit Summary</h3>
+          <h3 className="mb-4 text-[15px] font-semibold text-text-primary">Web Sitesi Analiz Özeti</h3>
           <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3">
             {detail.auditSummary.map((item) => (
               <div
@@ -339,14 +359,14 @@ export function LeadDetailPageContent({ leadId }: LeadDetailPageContentProps) {
               >
                 <p className="text-[11px] font-semibold text-text-muted">{item.label}</p>
                 <p className="mt-0.5 text-lg font-bold text-red">{item.issues}</p>
-                <p className="text-[10px] text-text-muted">issues</p>
+                <p className="text-[10px] text-text-muted">sorun</p>
               </div>
             ))}
           </div>
 
           <div className="mt-4">
             <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-text-muted">
-              Suggested Services
+              Önerilen Hizmetler
             </p>
             <div className="flex flex-wrap gap-2">
               {detail.suggestedServices.map((service) => (
@@ -360,10 +380,10 @@ export function LeadDetailPageContent({ leadId }: LeadDetailPageContentProps) {
       </section>
 
       <div className={cn(panelClass("p-6"), "animate-fade-up animation-delay-450")}>
-        <h3 className="mb-4 text-[15px] font-semibold text-text-primary">Outreach Message Preview</h3>
+        <h3 className="mb-4 text-[15px] font-semibold text-text-primary">İletişim Mesajı Önizlemesi</h3>
         <div className="grid gap-3">
           <div>
-            <label className="mb-1.5 block text-xs font-semibold text-text-muted">Subject</label>
+            <label className="mb-1.5 block text-xs font-semibold text-text-muted">Konu</label>
             <Input
               value={messageForm.outreachSubject}
               onChange={(event) =>
@@ -372,7 +392,7 @@ export function LeadDetailPageContent({ leadId }: LeadDetailPageContentProps) {
             />
           </div>
           <div>
-            <label className="mb-1.5 block text-xs font-semibold text-text-muted">Message Body</label>
+            <label className="mb-1.5 block text-xs font-semibold text-text-muted">Mesaj İçeriği</label>
             <Textarea
               value={messageForm.outreachBody}
               onChange={(event) =>
@@ -389,8 +409,8 @@ export function LeadDetailPageContent({ leadId }: LeadDetailPageContentProps) {
             onClick={handleSaveMessage}
             disabled={isSavingMessage}
           >
-            <LoadingButtonState isLoading={isSavingMessage} loadingText="Saving...">
-              Save Message
+            <LoadingButtonState isLoading={isSavingMessage} loadingText="Kaydediliyor...">
+              Mesajı Kaydet
             </LoadingButtonState>
           </button>
           <button
@@ -398,13 +418,13 @@ export function LeadDetailPageContent({ leadId }: LeadDetailPageContentProps) {
             className="inline-flex h-10 items-center rounded-lg border border-border bg-surface px-4 text-sm font-medium text-text-secondary transition-colors hover:bg-surface-muted hover:text-text-primary"
             onClick={handleCopyMessage}
           >
-            Copy Message
+            Mesajı Kopyala
           </button>
         </div>
       </div>
 
       <div className={cn(panelClass("p-6"), "animate-fade-up animation-delay-500")}>
-        <h3 className="mb-4 text-[15px] font-semibold text-text-primary">Activity Timeline</h3>
+        <h3 className="mb-4 text-[15px] font-semibold text-text-primary">Aktivite Zaman Çizelgesi</h3>
         <ul className="space-y-0">
           {detail.timeline.map((item, index) => (
             <li key={`${item.label}-${index}`} className="relative flex gap-4 pb-5 pl-6 last:pb-0">

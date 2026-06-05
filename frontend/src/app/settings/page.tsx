@@ -6,8 +6,8 @@ export default function SettingsPage() {
     <div className="space-y-5">
       <PageHeader
         className="animate-fade-up"
-        title="Settings"
-        description="Manage your profile, workspace, outreach preferences, and integrations."
+        title="Ayarlar"
+        description="Profilinizi, çalışma alanınızı, outreach tercihlerinizi ve entegrasyonları yönetin."
       />
       <SettingsPageContent />
     </div>

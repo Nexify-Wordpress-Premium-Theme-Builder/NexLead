@@ -20,8 +20,8 @@ export function ConfirmationDialog({
   open,
   title,
   description,
-  confirmLabel = "Confirm",
-  cancelLabel = "Cancel",
+  confirmLabel = "Onayla",
+  cancelLabel = "İptal",
   loading = false,
   destructive = false,
   onConfirm,
@@ -50,7 +50,7 @@ export function ConfirmationDialog({
               destructive ? "bg-red hover:bg-red/90" : "btn-campaign",
             )}
           >
-            <LoadingButtonState isLoading={loading} loadingText="Processing...">
+            <LoadingButtonState isLoading={loading} loadingText="İşleniyor...">
               {confirmLabel}
             </LoadingButtonState>
           </button>

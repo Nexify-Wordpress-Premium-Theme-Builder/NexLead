@@ -13,7 +13,7 @@ export interface LoadingButtonStateProps {
 
 export function LoadingButtonState({
   isLoading = false,
-  loadingText = "Loading...",
+  loadingText = "Yükleniyor...",
   children,
   className,
 }: LoadingButtonStateProps) {

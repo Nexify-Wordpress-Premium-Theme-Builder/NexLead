@@ -6,8 +6,8 @@ export default function LeadSearchPage() {
     <div className="space-y-5">
       <PageHeader
         className="animate-fade-up"
-        title="Lead Search"
-        description="Find high-opportunity companies by industry, location, and website signals."
+        title="Müşteri Bul"
+        description="Sektör, konum ve web sitesi sinyallerine göre yüksek fırsatlı şirketleri bulun."
       />
       <LeadSearchContent />
     </div>

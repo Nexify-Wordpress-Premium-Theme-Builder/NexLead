@@ -27,7 +27,7 @@ export default function PipelinePage() {
 
   const handleAddStage = async () => {
     if (!newStageName.trim()) {
-      toast.warning("Stage name required", "Please enter a stage name.");
+      toast.warning("Aşama adı gerekli", "Lütfen bir aşama adı girin.");
       return;
     }
 
@@ -39,18 +39,18 @@ export default function PipelinePage() {
     setNewStageName("");
     setIsSubmitting(false);
     setIsModalOpen(false);
-    toast.success("Stage added", `${label} stage has been added to the board.`);
+    toast.success("Aşama eklendi", `${label} aşaması panoya eklendi.`);
   };
 
   return (
     <div className="min-w-0 space-y-5">
       <PageHeader
         className="animate-fade-up"
-        title="Pipeline"
-        description="Track every lead from discovery to meeting and close."
+        title="Satış Süreci"
+        description="Her müşteriyi keşiften toplantıya ve kapanışa kadar takip edin."
         action={
           <button type="button" className="btn-campaign" onClick={() => setIsModalOpen(true)}>
-            Add Stage
+            Aşama Ekle
           </button>
         }
       />
@@ -59,7 +59,7 @@ export default function PipelinePage() {
       <Modal
         open={isModalOpen}
         onClose={() => (isSubmitting ? undefined : setIsModalOpen(false))}
-        title="Add Custom Stage"
+        title="Özel Aşama Ekle"
         footer={
           <>
             <button
@@ -68,7 +68,7 @@ export default function PipelinePage() {
               disabled={isSubmitting}
               className="inline-flex h-10 items-center justify-center rounded-lg border border-border bg-surface px-4 text-sm font-medium text-text-secondary transition-colors hover:bg-surface-muted hover:text-text-primary disabled:cursor-not-allowed disabled:opacity-60"
             >
-              Cancel
+              İptal
             </button>
             <button
               type="button"
@@ -76,8 +76,8 @@ export default function PipelinePage() {
               disabled={isSubmitting}
               className="btn-campaign inline-flex h-10 items-center justify-center px-4 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              <LoadingButtonState isLoading={isSubmitting} loadingText="Adding...">
-                Add Stage
+              <LoadingButtonState isLoading={isSubmitting} loadingText="Ekleniyor...">
+                Aşama Ekle
               </LoadingButtonState>
             </button>
           </>
@@ -85,15 +85,15 @@ export default function PipelinePage() {
       >
         <div className="grid gap-3">
           <div>
-            <label className="mb-1.5 block text-xs font-semibold text-text-muted">Stage Name</label>
+            <label className="mb-1.5 block text-xs font-semibold text-text-muted">Aşama Adı</label>
             <Input
               value={newStageName}
               onChange={(event) => setNewStageName(event.target.value)}
-              placeholder="Negotiation"
+              placeholder="Müzakere"
             />
           </div>
           <p className="text-xs text-text-muted">
-            Custom stages are added for demo display and appear after default pipeline columns.
+            Özel aşamalar demo görünümü için eklenir ve varsayılan süreç sütunlarından sonra görünür.
           </p>
         </div>
       </Modal>

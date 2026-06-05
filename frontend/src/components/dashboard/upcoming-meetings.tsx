@@ -9,9 +9,9 @@ export function UpcomingMeetings({ className }: { className?: string }) {
   return (
     <div className={cn(panelClass("flex h-full flex-col p-6"), "animate-fade-up", className)}>
       <div className="mb-3 flex items-center justify-between">
-        <h3 className="text-[15px] font-semibold text-text-primary">Upcoming Meetings</h3>
+        <h3 className="text-[15px] font-semibold text-text-primary">Yaklaşan Görüşmeler</h3>
         <Link href={ROUTES.app.meetings} className="link-section">
-          View calendar →
+          Takvimi gör →
         </Link>
       </div>
 
@@ -43,7 +43,7 @@ export function UpcomingMeetings({ className }: { className?: string }) {
               <button
                 type="button"
                 className="flex h-8 w-8 items-center justify-center rounded-lg border border-border-soft text-text-muted transition-all duration-200 hover:border-primary/15 hover:bg-primary-soft hover:text-primary"
-                aria-label={`Open calendar for ${meeting.company}`}
+                aria-label={`${meeting.company} için takvimi aç`}
               >
                 <Calendar className="h-3.5 w-3.5" />
               </button>

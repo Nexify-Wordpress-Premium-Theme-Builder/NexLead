@@ -17,10 +17,10 @@ export function LeadDetailContent({ lead }: { lead: LeadDetailProfile }) {
     <div className="space-y-5">
       <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {[
-          { label: "Opportunity Score", value: `${lead.opportunityScore}/100`, accent: "text-green" },
-          { label: "Website Status", value: lead.websiteStatus, accent: "text-orange" },
-          { label: "Outreach Status", value: lead.outreachStatus, accent: "text-primary" },
-          { label: "Next Action", value: lead.nextAction, accent: "text-purple" },
+          { label: "Fırsat Skoru", value: `${lead.opportunityScore}/100`, accent: "text-green" },
+          { label: "Site Durumu", value: lead.websiteStatus, accent: "text-orange" },
+          { label: "İletişim Durumu", value: lead.outreachStatus, accent: "text-primary" },
+          { label: "Sonraki Aksiyon", value: lead.nextAction, accent: "text-purple" },
         ].map((card, i) => (
           <div
             key={card.label}
@@ -38,14 +38,14 @@ export function LeadDetailContent({ lead }: { lead: LeadDetailProfile }) {
 
       <section className="grid grid-cols-1 gap-5 lg:grid-cols-2">
         <div className={cn(panelClass("p-6"), "animate-fade-up animation-delay-200")}>
-          <h3 className="mb-4 text-[15px] font-semibold text-text-primary">Company Overview</h3>
+          <h3 className="mb-4 text-[15px] font-semibold text-text-primary">Firma Özeti</h3>
           <dl className="grid gap-3 sm:grid-cols-2">
             {[
-              ["Industry", lead.industry],
-              ["Website", lead.website],
-              ["Location", lead.location],
-              ["Company Size", lead.companySize],
-              ["Contact Status", lead.contactStatus],
+              ["Sektör", lead.industry],
+              ["Web Sitesi", lead.website],
+              ["Konum", lead.location],
+              ["Firma Ölçeği", lead.companySize],
+              ["İletişim Durumu", lead.contactStatus],
             ].map(([key, val]) => (
               <div key={key} className="rounded-xl border border-border-soft bg-surface-muted/40 px-3.5 py-3">
                 <dt className="text-[11px] font-semibold uppercase tracking-wide text-text-muted">{key}</dt>
@@ -56,7 +56,7 @@ export function LeadDetailContent({ lead }: { lead: LeadDetailProfile }) {
         </div>
 
         <div className={cn(panelClass("p-6"), "animate-fade-up animation-delay-250")}>
-          <h3 className="mb-4 text-[15px] font-semibold text-text-primary">Website Audit Summary</h3>
+          <h3 className="mb-4 text-[15px] font-semibold text-text-primary">Site Analizi Özeti</h3>
           <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3">
             {lead.auditSummary.map((item) => (
               <div
@@ -65,7 +65,7 @@ export function LeadDetailContent({ lead }: { lead: LeadDetailProfile }) {
               >
                 <p className="text-[11px] font-semibold text-text-muted">{item.label}</p>
                 <p className="mt-0.5 text-lg font-bold text-red">{item.issues}</p>
-                <p className="text-[10px] text-text-muted">issues</p>
+                <p className="text-[10px] text-text-muted">sorun</p>
               </div>
             ))}
           </div>
@@ -74,7 +74,7 @@ export function LeadDetailContent({ lead }: { lead: LeadDetailProfile }) {
 
       <section className="grid grid-cols-1 gap-5 lg:grid-cols-2">
         <div className={cn(panelClass("p-6"), "animate-fade-up animation-delay-300")}>
-          <h3 className="mb-4 text-[15px] font-semibold text-text-primary">Opportunity Reasons</h3>
+          <h3 className="mb-4 text-[15px] font-semibold text-text-primary">Fırsat Nedenleri</h3>
           <ul className="space-y-2.5">
             {lead.opportunityReasons.map((reason) => (
               <li
@@ -89,7 +89,7 @@ export function LeadDetailContent({ lead }: { lead: LeadDetailProfile }) {
         </div>
 
         <div className={cn(panelClass("p-6"), "animate-fade-up animation-delay-350")}>
-          <h3 className="mb-4 text-[15px] font-semibold text-text-primary">Suggested Services</h3>
+          <h3 className="mb-4 text-[15px] font-semibold text-text-primary">Önerilen Hizmetler</h3>
           <div className="flex flex-wrap gap-2">
             {lead.suggestedServices.map((service) => (
               <Badge key={service} variant="default">
@@ -101,9 +101,9 @@ export function LeadDetailContent({ lead }: { lead: LeadDetailProfile }) {
       </section>
 
       <div className={cn(panelClass("p-6"), "animate-fade-up animation-delay-400")}>
-        <h3 className="mb-4 text-[15px] font-semibold text-text-primary">Outreach Message Preview</h3>
+        <h3 className="mb-4 text-[15px] font-semibold text-text-primary">İletişim Mesajı Önizlemesi</h3>
         <div className="rounded-xl border border-border-soft bg-surface-muted/30 p-5">
-          <p className="text-[13px] font-semibold text-text-primary">Subject: {lead.outreachSubject}</p>
+          <p className="text-[13px] font-semibold text-text-primary">Konu: {lead.outreachSubject}</p>
           <pre className="mt-3 whitespace-pre-wrap font-sans text-[13px] leading-relaxed text-text-secondary">
             {lead.outreachBody}
           </pre>
@@ -111,7 +111,7 @@ export function LeadDetailContent({ lead }: { lead: LeadDetailProfile }) {
       </div>
 
       <div className={cn(panelClass("p-6"), "animate-fade-up animation-delay-450")}>
-        <h3 className="mb-4 text-[15px] font-semibold text-text-primary">Activity Timeline</h3>
+        <h3 className="mb-4 text-[15px] font-semibold text-text-primary">Hareket Geçmişi</h3>
         <ul className="space-y-0">
           {lead.timeline.map((item, index) => (
             <li

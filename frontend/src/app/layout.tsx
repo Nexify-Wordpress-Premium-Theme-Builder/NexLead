@@ -9,7 +9,7 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: "NexLead",
-  description: "AI-powered client acquisition platform for agencies and B2B teams",
+  description: "Potansiyel müşteri bulma, site analizi, iletişim ve satış süreci yönetimi platformu",
 };
 
 export default function RootLayout({
@@ -18,8 +18,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${inter.variable} font-sans antialiased`}>
+    <html lang="tr" suppressHydrationWarning>
+      <body
+        className={`${inter.variable} font-sans antialiased`}
+        suppressHydrationWarning
+      >
         {children}
       </body>
     </html>
