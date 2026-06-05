@@ -1,10 +1,17 @@
+"use client";
+
 import Link from "next/link";
+import { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Mail, Pencil, Phone } from "lucide-react";
-import { mockOpportunityLeads } from "@/data/mock-dashboard";
-import type { OpportunityLeadRow } from "@/types/dashboard";
+import { LoadingButtonState } from "@/components/ui/loading-state";
+import { useDemoData } from "@/hooks/use-demo-data";
+import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/cn";
 import { panelClass } from "@/lib/panel";
 import { ROUTES } from "@/lib/routes";
+import { getLeadDisplayStatus, sortLeadsByOpportunity } from "@/services/demo-leads-service";
+import type { Lead } from "@/types/lead";
 
 const companyColors = [
   "bg-primary-soft text-primary",
@@ -14,16 +21,15 @@ const companyColors = [
   "bg-[#EEF2FF] text-[#4338CA]",
 ];
 
-const statusStyles = {
-  needs_work: "bg-orange-soft text-[#B45309]",
-  okay: "bg-[#FFFBEB] text-[#A16207]",
-  good: "bg-green-soft text-green",
-} as const;
-
-const statusLabels = {
-  needs_work: "Needs Work",
-  okay: "Okay",
-  good: "Good",
+const statusStyles: Record<string, string> = {
+  "Needs Work": "bg-orange-soft text-[#B45309]",
+  Audited: "bg-primary-soft text-primary",
+  "Message Ready": "bg-purple-soft text-purple",
+  Sent: "bg-[#EEF2FF] text-[#4338CA]",
+  Replied: "bg-[#ECFDF5] text-[#15803D]",
+  Meeting: "bg-green-soft text-green",
+  Good: "bg-green-soft text-green",
+  Okay: "bg-[#FFFBEB] text-[#A16207]",
 } as const;
 
 const rowDelays = [
@@ -34,13 +40,70 @@ const rowDelays = [
   "animation-delay-300",
 ] as const;
 
-function ActionIcon({ type }: { type: OpportunityLeadRow["actionType"] }) {
+function ActionIcon({ type }: { type: "send_audit" | "personalize" | "follow_up" }) {
   if (type === "personalize") return <Pencil className="h-3 w-3" />;
   if (type === "follow_up") return <Phone className="h-3 w-3" />;
   return <Mail className="h-3 w-3" />;
 }
 
+function getRandomDelay() {
+  return 800 + Math.floor(Math.random() * 701);
+}
+
+function wait(ms: number) {
+  return new Promise<void>((resolve) => {
+    window.setTimeout(resolve, ms);
+  });
+}
+
+function resolveAction(lead: Lead): { label: string; type: "send_audit" | "personalize" | "follow_up" } {
+  if (lead.status === "message_ready") {
+    return { label: "Personalize", type: "personalize" };
+  }
+  if (lead.status === "sent" || lead.status === "replied" || lead.status === "meeting") {
+    return { label: "Follow Up", type: "follow_up" };
+  }
+
+  return { label: "Send Audit", type: "send_audit" };
+}
+
 export function TopOpportunityLeads({ className }: { className?: string }) {
+  const router = useRouter();
+  const toast = useToast();
+  const { leads, updateLeadStatus, addActivity } = useDemoData();
+  const [loadingLeadId, setLoadingLeadId] = useState<string | null>(null);
+  const rankedLeads = useMemo(() => sortLeadsByOpportunity(leads).slice(0, 5), [leads]);
+
+  const handleAction = async (lead: Lead) => {
+    const action = resolveAction(lead);
+
+    if (action.type === "personalize") {
+      toast.info("Opening outreach composer", `${lead.companyName} message personalization is ready.`);
+      router.push(`${ROUTES.app.outreach}?leadId=${lead.id}`);
+      return;
+    }
+
+    setLoadingLeadId(lead.id);
+    await wait(getRandomDelay());
+
+    if (action.type === "send_audit") {
+      updateLeadStatus(lead.id, "audited");
+      addActivity({
+        type: "audit",
+        message: `Audit sent to ${lead.companyName}`,
+      });
+      toast.success("Audit sent", `${lead.companyName} moved to Audited stage.`);
+    } else {
+      addActivity({
+        type: "outreach",
+        message: `Follow-up queued for ${lead.companyName}`,
+      });
+      toast.info("Follow-up queued", `Reminder added for ${lead.companyName}.`);
+    }
+
+    setLoadingLeadId(null);
+  };
+
   return (
     <div className={cn(panelClass("flex h-full flex-col p-6"), "animate-fade-up", className)}>
       <div className="mb-4 flex items-center justify-between">
@@ -72,15 +135,18 @@ export function TopOpportunityLeads({ className }: { className?: string }) {
             </tr>
           </thead>
           <tbody>
-            {mockOpportunityLeads.map((lead, index) => (
-              <tr
-                key={lead.id}
-                className={cn(
-                  "group border-b border-border-soft transition-colors duration-200 last:border-0 hover:bg-surface-muted/70",
-                  "animate-fade-up-row",
-                  rowDelays[index],
-                )}
-              >
+            {rankedLeads.map((lead, index) => {
+              const action = resolveAction(lead);
+              const leadStatus = getLeadDisplayStatus(lead);
+              return (
+                <tr
+                  key={lead.id}
+                  className={cn(
+                    "group border-b border-border-soft transition-colors duration-200 last:border-0 hover:bg-surface-muted/70",
+                    "animate-fade-up-row",
+                    rowDelays[index],
+                  )}
+                >
                 <td className="py-3 pr-3">
                   <div className="flex items-center gap-2">
                     <div
@@ -89,9 +155,14 @@ export function TopOpportunityLeads({ className }: { className?: string }) {
                         companyColors[index % companyColors.length],
                       )}
                     >
-                      {lead.company.charAt(0)}
+                      {lead.companyName.charAt(0)}
                     </div>
-                    <span className="text-[13px] font-semibold text-text-primary">{lead.company}</span>
+                    <Link
+                      href={ROUTES.app.leadDetail(lead.id)}
+                      className="text-[13px] font-semibold text-text-primary transition-colors hover:text-primary"
+                    >
+                      {lead.companyName}
+                    </Link>
                   </div>
                 </td>
                 <td className="py-3 pr-3 text-[13px] text-text-secondary">{lead.industry}</td>
@@ -99,10 +170,10 @@ export function TopOpportunityLeads({ className }: { className?: string }) {
                   <span
                     className={cn(
                       "inline-flex h-[22px] items-center rounded-full px-2 text-[11px] font-semibold",
-                      statusStyles[lead.websiteStatus],
+                      statusStyles[leadStatus] ?? "bg-slate-100 text-slate-600",
                     )}
                   >
-                    {statusLabels[lead.websiteStatus]}
+                    {leadStatus}
                   </span>
                 </td>
                 <td className="py-3 pr-3">
@@ -113,14 +184,22 @@ export function TopOpportunityLeads({ className }: { className?: string }) {
                 <td className="py-3">
                   <button
                     type="button"
+                    onClick={() => handleAction(lead)}
+                    disabled={loadingLeadId === lead.id}
                     className="inline-flex items-center gap-1 text-[13px] font-semibold text-primary transition-colors duration-200 group-hover:text-primary-hover"
                   >
-                    <ActionIcon type={lead.actionType} />
-                    {lead.nextAction}
+                    <ActionIcon type={action.type} />
+                    <LoadingButtonState
+                      isLoading={loadingLeadId === lead.id}
+                      loadingText="Working..."
+                    >
+                      {action.label}
+                    </LoadingButtonState>
                   </button>
                 </td>
-              </tr>
-            ))}
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>

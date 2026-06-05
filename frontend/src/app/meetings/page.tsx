@@ -8,11 +8,6 @@ export default function MeetingsPage() {
         className="animate-fade-up"
         title="Meetings"
         description="Review booked meetings and prepare with lead-specific opportunity briefs."
-        action={
-          <button type="button" className="btn-campaign">
-            Schedule Meeting
-          </button>
-        }
       />
       <MeetingsPageContent />
     </div>

@@ -8,11 +8,6 @@ export default function LeadSearchPage() {
         className="animate-fade-up"
         title="Lead Search"
         description="Find high-opportunity companies by industry, location, and website signals."
-        action={
-          <button type="button" className="btn-campaign">
-            Start Search
-          </button>
-        }
       />
       <LeadSearchContent />
     </div>

@@ -8,11 +8,6 @@ export default function WebsiteAuditPage() {
         className="animate-fade-up"
         title="Website Audit"
         description="Analyze any website and identify conversion, SEO, speed, and tracking opportunities."
-        action={
-          <button type="button" className="btn-campaign">
-            Run Audit
-          </button>
-        }
       />
       <WebsiteAuditContent />
     </div>

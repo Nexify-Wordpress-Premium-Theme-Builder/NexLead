@@ -1,6 +1,8 @@
+"use client";
+
 import Link from "next/link";
 import { Calendar, Check, MessageCircle, Send, UserPlus } from "lucide-react";
-import { mockActivityFeed } from "@/data/mock-dashboard";
+import { useDemoData } from "@/hooks/use-demo-data";
 import type { ActivityFeedItem } from "@/types/dashboard";
 import { cn } from "@/lib/cn";
 import { panelClass } from "@/lib/panel";
@@ -25,6 +27,8 @@ const itemDelays = [
 ] as const;
 
 export function RecentActivity({ className }: { className?: string }) {
+  const { activityFeed } = useDemoData();
+
   return (
     <div className={cn(panelClass("p-6"), "animate-fade-up", className)}>
       <div className="mb-4 flex items-center justify-between">
@@ -35,7 +39,7 @@ export function RecentActivity({ className }: { className?: string }) {
       </div>
 
       <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-        {mockActivityFeed.map((item, index) => {
+        {activityFeed.slice(0, 5).map((item, index) => {
           const style = activityStyles[item.type];
           const Icon = style.icon;
           return (

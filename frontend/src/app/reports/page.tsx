@@ -8,11 +8,6 @@ export default function ReportsPage() {
         className="animate-fade-up"
         title="Reports"
         description="Measure lead quality, outreach performance, and meeting conversion trends."
-        action={
-          <button type="button" className="btn-campaign">
-            Export Summary
-          </button>
-        }
       />
       <ReportsPageContent />
     </div>

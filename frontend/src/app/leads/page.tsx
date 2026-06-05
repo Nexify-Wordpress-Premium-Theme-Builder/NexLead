@@ -8,11 +8,6 @@ export default function LeadsPage() {
         className="animate-fade-up"
         title="Leads"
         description="Manage, score, and prioritize your client acquisition opportunities."
-        action={
-          <button type="button" className="btn-campaign">
-            Add Lead
-          </button>
-        }
       />
       <LeadsPageContent />
     </div>
