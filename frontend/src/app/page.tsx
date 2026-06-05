@@ -1,9 +1,14 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { ROUTES } from "@/lib/routes";
 
 export default function HomePage() {
+  if (process.env.NODE_ENV === "production") {
+    redirect(ROUTES.app.dashboard);
+  }
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center gap-4 p-8">
+    <main className="app-premium-bg flex min-h-screen flex-col items-center justify-center gap-4 p-8">
       <h1 className="text-3xl font-semibold text-text-primary">NexLead</h1>
       <p className="max-w-lg text-center text-text-secondary">
         AI-powered client acquisition, website audit, outreach, and meeting preparation

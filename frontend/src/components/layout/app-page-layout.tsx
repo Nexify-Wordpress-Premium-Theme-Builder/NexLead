@@ -1,3 +1,5 @@
+"use client";
+
 import { AppShell } from "./app-shell";
 import { AppProviders } from "@/components/providers/app-providers";
 
