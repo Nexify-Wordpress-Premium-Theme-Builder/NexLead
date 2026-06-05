@@ -14,7 +14,7 @@ export function AppShell({ children }: AppShellProps) {
       </div>
       <div className="flex min-h-screen flex-1 flex-col md:pl-[260px]">
         <TopHeader />
-        <main className="flex-1 px-6 py-7 pb-24 md:px-8 md:py-7 md:pb-8">{children}</main>
+        <main className="flex-1 overflow-x-hidden px-6 py-7 pb-24 md:px-8 md:py-[28px] md:pb-8">{children}</main>
       </div>
       <MobileNav />
     </div>

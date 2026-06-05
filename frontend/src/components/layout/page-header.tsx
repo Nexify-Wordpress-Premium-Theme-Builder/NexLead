@@ -17,11 +17,11 @@ export function PageHeader({ title, description, action, className }: PageHeader
       )}
     >
       <div>
-        <h1 className="text-[30px] font-extrabold leading-tight tracking-[-0.02em] text-text-primary md:text-[32px]">
+        <h1 className="text-[28px] font-bold leading-tight tracking-[-0.02em] text-text-primary md:text-[30px]">
           {title}
         </h1>
         {description ? (
-          <p className="mt-1.5 text-[15px] leading-relaxed text-[#64748B]">{description}</p>
+          <p className="mt-1 text-[14px] leading-relaxed text-text-secondary">{description}</p>
         ) : null}
       </div>
       {action ? <div className="shrink-0">{action}</div> : null}

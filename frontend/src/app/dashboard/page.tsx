@@ -9,15 +9,15 @@ import { PageHeader } from "@/components/layout/page-header";
 import { mockDashboardKpis } from "@/data/mock-dashboard";
 
 const kpiDelays = [
-  "animation-delay-75",
-  "animation-delay-150",
-  "animation-delay-225",
+  "animation-delay-100",
+  "animation-delay-200",
   "animation-delay-300",
+  "animation-delay-400",
 ] as const;
 
 export default function DashboardPage() {
   return (
-    <div className="space-y-5 md:space-y-5">
+    <div className="space-y-5">
       <PageHeader
         className="animate-fade-up"
         title="Dashboard"
@@ -41,14 +41,14 @@ export default function DashboardPage() {
 
       <section className="grid grid-cols-1 gap-5 xl:grid-cols-3">
         <div className="xl:col-span-2">
-          <DashboardChart className="animation-delay-375" />
+          <DashboardChart className="animation-delay-450" />
         </div>
-        <TopOpportunityLeads className="animation-delay-450" />
+        <TopOpportunityLeads className="animation-delay-500" />
       </section>
 
       <section className="grid grid-cols-1 gap-5 lg:grid-cols-3">
         <WebsiteAuditInsights className="animation-delay-450" />
-        <OutreachPipeline className="animation-delay-525" />
+        <OutreachPipeline className="animation-delay-500" />
         <UpcomingMeetings className="animation-delay-600" />
       </section>
 

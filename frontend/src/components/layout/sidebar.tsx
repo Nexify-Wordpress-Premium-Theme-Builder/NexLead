@@ -16,15 +16,15 @@ export function Sidebar({ className }: SidebarProps) {
   return (
     <aside
       className={cn(
-        "animate-fade-left flex h-screen w-[260px] flex-col border-r border-border-soft bg-[rgba(255,255,255,0.88)] px-5 py-5 backdrop-blur-md",
+        "animate-fade-left flex h-screen w-[260px] flex-col border-r border-border-soft bg-[rgba(255,255,255,0.92)] px-5 py-5 backdrop-blur-md",
         className,
       )}
     >
-      <div className="mb-7 flex items-center gap-3 px-0.5">
-        <div className="flex h-9 w-9 items-center justify-center rounded-[10px] bg-gradient-to-br from-[#2563EB] to-[#4F46E5] text-[15px] font-bold text-white shadow-[0_4px_14px_rgba(37,99,235,0.28)]">
+      <div className="mb-8 flex items-center gap-3 px-0.5">
+        <div className="flex h-10 w-10 items-center justify-center rounded-[11px] bg-gradient-to-br from-[#2563EB] to-[#4F46E5] text-[16px] font-bold text-white shadow-[0_4px_14px_rgba(37,99,235,0.22)]">
           N
         </div>
-        <span className="text-[18px] font-bold tracking-tight text-text-primary">NexLead</span>
+        <span className="text-[17px] font-bold tracking-tight text-text-primary">NexLead</span>
       </div>
 
       <nav className="flex flex-1 flex-col gap-1.5">

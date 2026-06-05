@@ -34,29 +34,30 @@ body {
 
 .app-premium-bg {
   background:
-    radial-gradient(circle at top left, rgba(37, 99, 235, 0.055), transparent 32%),
+    radial-gradient(circle at top left, rgba(37, 99, 235, 0.045), transparent 30%),
     linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
 }
 
 .panel-premium {
-  background: rgba(255, 255, 255, 0.92);
+  background: rgba(255, 255, 255, 0.94);
   border: 1px solid rgba(226, 232, 240, 0.9);
   border-radius: 18px;
   box-shadow:
-    0 1px 2px rgba(15, 23, 42, 0.04),
+    0 1px 2px rgba(15, 23, 42, 0.035),
     0 12px 32px rgba(15, 23, 42, 0.045);
   backdrop-filter: blur(10px);
   transition:
-    transform 200ms ease,
-    box-shadow 200ms ease,
-    border-color 200ms ease;
+    transform 220ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 220ms cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 220ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .panel-premium:hover {
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  border-color: rgba(226, 232, 240, 1);
   box-shadow:
     0 1px 2px rgba(15, 23, 42, 0.04),
-    0 18px 42px rgba(15, 23, 42, 0.065);
+    0 18px 42px rgba(15, 23, 42, 0.06);
 }
 
 .btn-campaign {
@@ -71,8 +72,8 @@ body {
     0 8px 20px rgba(37, 99, 235, 0.22),
     inset 0 1px 0 rgba(255, 255, 255, 0.18);
   transition:
-    transform 200ms ease,
-    box-shadow 200ms ease;
+    transform 220ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 220ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .btn-campaign:hover {
@@ -87,10 +88,10 @@ body {
 }
 
 .link-section {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
   color: var(--primary);
-  transition: color 200ms ease;
+  transition: color 200ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .link-section:hover {
@@ -100,7 +101,7 @@ body {
 @keyframes fade-up {
   from {
     opacity: 0;
-    transform: translateY(12px);
+    transform: translateY(10px);
     filter: blur(2px);
   }
   to {
@@ -113,7 +114,7 @@ body {
 @keyframes fade-left {
   from {
     opacity: 0;
-    transform: translateX(-12px);
+    transform: translateX(-10px);
     filter: blur(2px);
   }
   to {
@@ -126,7 +127,7 @@ body {
 @keyframes fade-down {
   from {
     opacity: 0;
-    transform: translateY(-10px);
+    transform: translateY(-8px);
     filter: blur(2px);
   }
   to {
@@ -136,11 +137,11 @@ body {
   }
 }
 
-@keyframes chart-bar-grow {
+@keyframes bar-grow {
   from {
     transform: scaleY(0);
     transform-origin: bottom;
-    opacity: 0.6;
+    opacity: 0.5;
   }
   to {
     transform: scaleY(1);
@@ -149,49 +150,112 @@ body {
   }
 }
 
-@keyframes chart-line-in {
+@keyframes chart-line {
+  from {
+    stroke-dashoffset: 600;
+    opacity: 0.4;
+  }
+  to {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+}
+
+@keyframes reveal-x {
+  from {
+    clip-path: inset(0 100% 0 0);
+    opacity: 0.5;
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+    opacity: 1;
+  }
+}
+
+@keyframes dot-in {
   from {
     opacity: 0;
-    stroke-dashoffset: 40;
+    transform: scale(0.4);
   }
   to {
     opacity: 1;
-    stroke-dashoffset: 0;
+    transform: scale(1);
+  }
+}
+
+@keyframes fade-up-row {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
 .animate-fade-up {
-  animation: fade-up 620ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: fade-up 500ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .animate-fade-left {
-  animation: fade-left 620ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: fade-left 650ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .animate-fade-down {
-  animation: fade-down 560ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: fade-down 550ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-.animation-delay-75 {
-  animation-delay: 75ms;
+.animate-bar-grow {
+  animation: bar-grow 1000ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  transform-origin: bottom;
+}
+
+.animate-chart-line {
+  stroke-dasharray: 600;
+  animation: chart-line 1200ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-reveal-x {
+  animation: reveal-x 900ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-dot-in {
+  animation: dot-in 500ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.animate-fade-up-row {
+  animation: fade-up-row 500ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animation-delay-100 {
+  animation-delay: 100ms;
 }
 .animation-delay-150 {
   animation-delay: 150ms;
 }
-.animation-delay-225 {
-  animation-delay: 225ms;
+.animation-delay-200 {
+  animation-delay: 200ms;
+}
+.animation-delay-250 {
+  animation-delay: 250ms;
 }
 .animation-delay-300 {
   animation-delay: 300ms;
 }
-.animation-delay-375 {
-  animation-delay: 375ms;
+.animation-delay-350 {
+  animation-delay: 350ms;
+}
+.animation-delay-400 {
+  animation-delay: 400ms;
 }
 .animation-delay-450 {
   animation-delay: 450ms;
 }
-.animation-delay-525 {
-  animation-delay: 525ms;
+.animation-delay-500 {
+  animation-delay: 500ms;
 }
 .animation-delay-600 {
   animation-delay: 600ms;
@@ -200,11 +264,18 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .animate-fade-up,
   .animate-fade-left,
-  .animate-fade-down {
+  .animate-fade-down,
+  .animate-bar-grow,
+  .animate-chart-line,
+  .animate-reveal-x,
+  .animate-dot-in,
+  .animate-fade-up-row {
     animation: none !important;
     opacity: 1 !important;
     transform: none !important;
     filter: none !important;
+    clip-path: none !important;
+    stroke-dashoffset: 0 !important;
   }
 
   .panel-premium:hover {
@@ -213,13 +284,6 @@ body {
 
   .btn-campaign:hover {
     transform: none;
-  }
-
-  rect[style*="chart-bar-grow"],
-  [class*="chart-bar-grow"] {
-    animation: none !important;
-    opacity: 1 !important;
-    transform: none !important;
   }
 
   * {

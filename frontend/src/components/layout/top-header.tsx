@@ -3,7 +3,7 @@ import { Avatar } from "@/components/ui/avatar";
 
 export function TopHeader() {
   return (
-    <header className="animate-fade-down sticky top-0 z-30 flex h-[72px] items-center justify-between gap-4 border-b border-border-soft bg-[rgba(255,255,255,0.9)] px-6 backdrop-blur-md md:px-7">
+    <header className="animate-fade-down sticky top-0 z-30 flex h-[72px] items-center justify-between gap-4 border-b border-border-soft bg-[rgba(255,255,255,0.94)] px-6 backdrop-blur-md md:px-8">
       <div className="flex min-w-0 flex-1 items-center gap-3">
         <div className="relative hidden min-w-0 flex-1 sm:block sm:max-w-[520px]">
           <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-text-muted" />
