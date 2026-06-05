@@ -1,4 +1,5 @@
-import { mockLeads } from "@/data/mock-leads";
+import { getLeadDetailById, mockLeads } from "@/data/mock-leads";
+import type { LeadDetailProfile } from "@/types/pages";
 import type { Lead } from "@shared/types/lead";
 
 export const leadsClient = {
@@ -13,4 +14,8 @@ export function getLeads(): Lead[] {
 
 export function getLeadById(leadId: string): Lead | undefined {
   return mockLeads.find((lead) => lead.id === leadId);
+}
+
+export function getLeadDetail(leadId: string): LeadDetailProfile | undefined {
+  return getLeadDetailById(leadId);
 }

@@ -1,8 +1,15 @@
+import { SettingsPageContent } from "@/components/settings/settings-page-content";
+import { PageHeader } from "@/components/layout/page-header";
+
 export default function SettingsPage() {
   return (
-    <main>
-      <h1>Settings</h1>
-      <p>Manage workspace preferences, team access, and integrations.</p>
-    </main>
+    <div className="space-y-5">
+      <PageHeader
+        className="animate-fade-up"
+        title="Settings"
+        description="Manage your profile, workspace, outreach preferences, and integrations."
+      />
+      <SettingsPageContent />
+    </div>
   );
 }

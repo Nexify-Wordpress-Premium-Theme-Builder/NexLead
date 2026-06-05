@@ -1,8 +1,20 @@
+import { OutreachPageContent } from "@/components/outreach/outreach-page-content";
+import { PageHeader } from "@/components/layout/page-header";
+
 export default function OutreachPage() {
   return (
-    <main>
-      <h1>Outreach</h1>
-      <p>Draft, personalize, and track outbound messages across your pipeline.</p>
-    </main>
+    <div className="space-y-5">
+      <PageHeader
+        className="animate-fade-up"
+        title="Outreach"
+        description="Generate, personalize, and track lead-specific outreach messages."
+        action={
+          <button type="button" className="btn-campaign">
+            Create Campaign
+          </button>
+        }
+      />
+      <OutreachPageContent />
+    </div>
   );
 }

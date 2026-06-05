@@ -1,8 +1,20 @@
+import { PipelineBoard } from "@/components/pipeline/pipeline-board";
+import { PageHeader } from "@/components/layout/page-header";
+
 export default function PipelinePage() {
   return (
-    <main>
-      <h1>Pipeline</h1>
-      <p>Visualize lead progression from discovery to closed deals.</p>
-    </main>
+    <div className="space-y-5">
+      <PageHeader
+        className="animate-fade-up"
+        title="Pipeline"
+        description="Track every lead from discovery to meeting and close."
+        action={
+          <button type="button" className="btn-campaign">
+            Add Stage
+          </button>
+        }
+      />
+      <PipelineBoard />
+    </div>
   );
 }
