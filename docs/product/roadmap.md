@@ -1,8 +1,5 @@
-# Roadmap
+# Yol Haritası
 
-**Purpose:** Phased delivery plan for NexLead.
+MVP ve sonraki faz planlaması.
 
-- Phase 1: Architecture and dashboard UI
-- Phase 2: Auth, workspaces, and lead APIs
-- Phase 3: Audit automation and outreach AI
-- Phase 4: Billing, teams, and enterprise integrations
+Detaylar ileride eklenecek.

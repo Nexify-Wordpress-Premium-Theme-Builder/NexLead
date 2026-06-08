@@ -1,12 +1,39 @@
-node_modules
-.next
-dist
-build
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build
+dist/
+.next/
+out/
+.turbo/
+build/
+
+# Environment
 .env
 .env.local
-.env.production
-.DS_Store
-coverage
-logs
+.env.*.local
+
+# Logs
+logs/
 *.log
+npm-debug.log*
+pnpm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Testing
+coverage/
+
+# Supabase
+database/supabase/.temp/
+
+# Misc
 *.tsbuildinfo

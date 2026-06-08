@@ -1,5 +1,0 @@
-export const logger = {
-  info: (message: string) => console.log(`[info] ${message}`),
-  warn: (message: string) => console.warn(`[warn] ${message}`),
-  error: (message: string) => console.error(`[error] ${message}`),
-};

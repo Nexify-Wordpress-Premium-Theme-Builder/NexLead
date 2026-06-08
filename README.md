@@ -1,60 +1,67 @@
 # NexLead
 
-NexLead is an AI-powered client acquisition, website audit, outreach, and sales pipeline SaaS for agencies and B2B service providers.
+AI destekli müşteri bulma ve web sitesi denetim SaaS platformu.
 
-## Overview
+## Gereksinimler
 
-This repository is organized as a full-stack monorepo with separate frontend, backend, database, and shared packages. The current phase focuses on architecture scaffolding — not production feature implementation.
+- Node.js >= 20
+- pnpm >= 9
 
-## Folder Structure
+## Kurulum
 
-```txt
-frontend/   Next.js App Router UI
-backend/    API server architecture
-database/   SQL schema, migrations, seeds, docs
-shared/     Framework-agnostic types and constants
-docs/       Product, technical, design, partnership docs
-scripts/    Dev and maintenance scripts
-config/     Tooling and deployment reference config
-tests/      Frontend, backend, and e2e test placeholders
+```bash
+pnpm install
 ```
 
-## Frontend
+## Geliştirme
 
-- Location: `frontend/`
-- Stack: Next.js, TypeScript, Tailwind CSS
-- Dev: `cd frontend && npm install && npm run dev`
+Tüm uygulamaları paralel başlatır (web: 3000, api: 4000):
 
-## Backend
+```bash
+pnpm dev
+```
 
-- Location: `backend/`
-- Layered architecture: routes → controllers → services → repositories
-- Dev placeholder: `cd backend && npm install && npm run typecheck`
+Tek uygulama:
 
-## Database
+```bash
+pnpm --filter @nexlead/web dev
+pnpm --filter @nexlead/api dev
+```
 
-- Location: `database/schema`, `database/migrations`, `database/seeds`
-- Entity docs: `database/docs/`
+## Build
 
-## Shared
+```bash
+pnpm build
+```
 
-- Location: `shared/types`, `shared/constants`, `shared/schemas`, `shared/utils`
-- Imported by frontend and backend via TypeScript path aliases
+## Production
 
-## Environment Variables
+```bash
+pnpm start
+```
 
-Copy `.env.example` to `.env` and fill values locally. Never commit secrets.
+## Lint & Format
 
-## Development Setup
+```bash
+pnpm lint
+pnpm format
+pnpm format:check
+```
 
-1. `cp .env.example .env`
-2. `cd frontend && npm install && npm run dev`
-3. (Optional) `cd backend && npm install && npm run typecheck`
+## Sağlık Kontrolü
 
-## Roadmap
+- Web: `http://localhost:3000/api/health`
+- API: `http://localhost:4000/health`
 
-- Dashboard UI implementation
-- Auth and workspace APIs
-- Website audit and outreach automation
-- Lead search integrations
-- Billing and team management
+## Monorepo Yapısı
+
+| Paket | Açıklama |
+|-------|----------|
+| `apps/web` | Next.js frontend |
+| `apps/api` | Node.js HTTP API |
+| `packages/types` | Paylaşılan TypeScript tipleri |
+| `packages/utils` | Paylaşılan yardımcı fonksiyonlar |
+| `packages/ui` | Paylaşılan UI bileşenleri |
+| `packages/config` | ESLint, TypeScript, Prettier config |
+
+Detaylı klasör yapısı: [PROJECT_STRUCTURE.md](./PROJECT_STRUCTURE.md)
