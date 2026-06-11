@@ -15,8 +15,8 @@ export function AuthShell({ title, subtitle, children, footer }: AuthShellProps)
       <aside className="relative hidden overflow-hidden border-r border-border bg-surface-soft lg:flex lg:flex-col lg:justify-between">
         <div className="auth-grid absolute inset-0 opacity-60" />
         <div className="relative z-10 flex h-full flex-col justify-between p-10 xl:p-14">
-          <div className="animate-fade-in">
-            <NexLeadLogo />
+          <div className="animate-fade-in max-w-full">
+            <NexLeadLogo variant="full" />
           </div>
 
           <div className="max-w-md space-y-6">
@@ -36,8 +36,8 @@ export function AuthShell({ title, subtitle, children, footer }: AuthShellProps)
 
       <section className="flex min-h-screen items-center justify-center px-5 py-10 sm:px-8">
         <div className="w-full max-w-[420px]">
-          <div className="mb-8 lg:hidden">
-            <NexLeadLogo />
+          <div className="mb-8 max-w-full lg:hidden">
+            <NexLeadLogo variant="full" />
           </div>
 
           <div className="auth-stagger rounded-2xl border border-border bg-surface p-7 shadow-card sm:p-8">

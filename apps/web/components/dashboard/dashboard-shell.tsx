@@ -38,8 +38,10 @@ export function DashboardShell({ userEmail, workspaceName, children }: Dashboard
       <aside
         className={`fixed inset-y-0 left-0 z-50 flex w-[280px] flex-col border-r border-border bg-surface transition-transform duration-300 lg:translate-x-0 ${mobileOpen ? "translate-x-0" : "-translate-x-full"}`}
       >
-        <div className="flex items-center justify-between border-b border-border px-5 py-5">
-          <NexLeadLogo />
+        <div className="flex items-center justify-between gap-3 border-b border-border px-5 py-5">
+          <div className="min-w-0 flex-1">
+            <NexLeadLogo variant="full" className="max-w-full" />
+          </div>
           <button
             type="button"
             className="rounded-lg p-2 text-text-secondary hover:bg-surface-soft lg:hidden"

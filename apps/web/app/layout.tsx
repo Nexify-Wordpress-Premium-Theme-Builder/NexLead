@@ -13,6 +13,11 @@ const sans = Plus_Jakarta_Sans({
 export const metadata: Metadata = {
   title: "NexLead",
   description: "AI destekli müşteri bulma ve web sitesi denetim platformu",
+  icons: {
+    icon: "/favicon.png",
+    shortcut: "/favicon.png",
+    apple: "/favicon.png",
+  },
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
