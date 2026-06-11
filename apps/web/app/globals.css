@@ -1,0 +1,65 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    @apply antialiased;
+  }
+
+  body {
+    @apply bg-background text-text-primary font-sans;
+  }
+
+  * {
+    @apply border-border;
+  }
+}
+
+@layer utilities {
+  .auth-stagger > * {
+    opacity: 0;
+    animation: fade-up 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+
+  .auth-stagger > *:nth-child(1) {
+    animation-delay: 0.05s;
+  }
+
+  .auth-stagger > *:nth-child(2) {
+    animation-delay: 0.12s;
+  }
+
+  .auth-stagger > *:nth-child(3) {
+    animation-delay: 0.19s;
+  }
+
+  .auth-stagger > *:nth-child(4) {
+    animation-delay: 0.26s;
+  }
+
+  .auth-stagger > *:nth-child(5) {
+    animation-delay: 0.33s;
+  }
+
+  .auth-stagger > *:nth-child(6) {
+    animation-delay: 0.4s;
+  }
+
+  .auth-grid {
+    background-image: radial-gradient(circle at 1px 1px, #e5e7eb 1px, transparent 0);
+    background-size: 24px 24px;
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

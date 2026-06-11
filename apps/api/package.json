@@ -10,7 +10,8 @@
     "clean": "rimraf dist"
   },
   "dependencies": {
-    "@nexlead/types": "workspace:*"
+    "@nexlead/types": "workspace:*",
+    "@supabase/supabase-js": "^2.107.0"
   },
   "devDependencies": {
     "@types/node": "^22.10.2",
