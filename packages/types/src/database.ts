@@ -909,6 +909,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      archive_lead: { Args: { target_lead_id: string }; Returns: undefined }
       bootstrap_user_workspace: {
         Args: { p_email: string; p_metadata?: Json; p_user_id: string }
         Returns: string

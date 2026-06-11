@@ -1,5 +1,10 @@
 import type { Tables, TablesInsert, TablesUpdate } from "@nexlead/types";
 
+/**
+ * Primary contact is stored on `leads` columns (contact_name/email/phone)
+ * plus `metadata` for title, LinkedIn and domain fields.
+ * There is no `lead_contacts` table in the current core schema (MVP).
+ */
 export type LeadRow = Tables<"leads">;
 export type LeadInsert = TablesInsert<"leads">;
 export type LeadUpdate = TablesUpdate<"leads">;

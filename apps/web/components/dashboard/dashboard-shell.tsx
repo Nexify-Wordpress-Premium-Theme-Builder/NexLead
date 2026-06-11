@@ -2,25 +2,27 @@
 
 import type { ReactNode } from "react";
 import { useState } from "react";
-import { usePathname } from "next/navigation";
-
 import { NexLeadLogo } from "@/components/brand/nexlead-logo";
 import { LogoutButton } from "@/components/dashboard/logout-button";
-import {
-  DashboardSidebar,
-  getDashboardSectionTitle,
-} from "@/components/layout/dashboard-sidebar";
+import { DashboardSidebar } from "@/components/layout/dashboard-sidebar";
 import { IconClose, IconMenu } from "@/components/ui/icons";
 
 type DashboardShellProps = {
   userEmail: string | null;
+  workspaceName: string | null;
   children: ReactNode;
 };
 
-export function DashboardShell({ userEmail, children }: DashboardShellProps) {
+function getWorkspaceDisplayName(workspaceName: string | null): string {
+  if (workspaceName?.trim()) {
+    return workspaceName.trim();
+  }
+
+  return "Çalışma alanı hazırlanıyor";
+}
+
+export function DashboardShell({ userEmail, workspaceName, children }: DashboardShellProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const pathname = usePathname();
-  const sectionTitle = getDashboardSectionTitle(pathname);
 
   return (
     <div className="min-h-screen bg-background">
@@ -70,9 +72,11 @@ export function DashboardShell({ userEmail, children }: DashboardShellProps) {
             >
               <IconMenu className="h-5 w-5" />
             </button>
-            <div>
+            <div className="min-w-0">
               <p className="text-sm text-text-muted">Çalışma Alanı</p>
-              <p className="text-sm font-medium text-text-primary">{sectionTitle}</p>
+              <p className="truncate text-sm font-medium text-text-primary">
+                {getWorkspaceDisplayName(workspaceName)}
+              </p>
             </div>
           </div>
 
@@ -81,7 +85,7 @@ export function DashboardShell({ userEmail, children }: DashboardShellProps) {
           </div>
         </header>
 
-        <main className="px-4 py-6 sm:px-6 sm:py-8">{children}</main>
+        <main className="overflow-x-hidden px-4 py-6 sm:px-6 sm:py-8">{children}</main>
       </div>
     </div>
   );

@@ -116,15 +116,15 @@ export async function archiveLeadForWorkspace(
 ): Promise<void> {
   const supabase = await createServerSupabaseClient();
 
-  const { error } = await supabase
-    .from("leads")
-    .update({
-      deleted_at: new Date().toISOString(),
-      status: "archived",
-    })
-    .eq("workspace_id", workspaceId)
-    .eq("id", leadId)
-    .is("deleted_at", null);
+  const existing = await getLeadById(workspaceId, leadId);
+
+  if (!existing) {
+    throw new Error("Lead arşivlenemedi");
+  }
+
+  const { error } = await supabase.rpc("archive_lead", {
+    target_lead_id: leadId,
+  });
 
   if (error) {
     throw new Error(error.message);
