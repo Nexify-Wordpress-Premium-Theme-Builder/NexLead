@@ -22,4 +22,4 @@ export {
   startWebsiteAuditForWorkspace,
   updateWebsiteForWorkspace,
 } from "./website.service";
-export { formatWebsiteDate, isAuditInProgress } from "./website.utils";
+export { formatLastAuditAt, formatWebsiteDate, isAuditInProgress } from "./website.utils";

@@ -1,9 +1,9 @@
-import type { WebsiteStatus, WebsiteWithRelations } from "@/features/websites/website.types";
+import type { WebsiteStatus } from "@/features/websites/website.types";
 
 const STATUS_LABELS: Record<WebsiteStatus, string> = {
   pending: "Bekliyor",
   active: "Aktif",
-  unreachable: "Başarısız",
+  unreachable: "Erişilemiyor",
   archived: "Arşivlendi",
 };
 
@@ -15,31 +15,15 @@ const STATUS_STYLES: Record<WebsiteStatus, string> = {
 };
 
 type WebsiteStatusBadgeProps = {
-  website: WebsiteWithRelations;
+  status: WebsiteStatus;
 };
 
-export function WebsiteStatusBadge({ website }: WebsiteStatusBadgeProps) {
-  if (website.isAuditRunning) {
-    return (
-      <span className="inline-flex items-center rounded-full bg-blue-50 px-2.5 py-1 text-xs font-medium text-blue-700">
-        Analiz Sürüyor
-      </span>
-    );
-  }
-
-  if (website.latestAudit?.status === "completed" && website.status === "active") {
-    return (
-      <span className="inline-flex items-center rounded-full bg-violet-50 px-2.5 py-1 text-xs font-medium text-violet-700">
-        Analiz Edildi
-      </span>
-    );
-  }
-
+export function WebsiteStatusBadge({ status }: WebsiteStatusBadgeProps) {
   return (
     <span
-      className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ${STATUS_STYLES[website.status]}`}
+      className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ${STATUS_STYLES[status]}`}
     >
-      {STATUS_LABELS[website.status]}
+      {STATUS_LABELS[status]}
     </span>
   );
 }

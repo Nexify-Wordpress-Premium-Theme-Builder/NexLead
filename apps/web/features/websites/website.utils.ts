@@ -104,3 +104,8 @@ export function formatWebsiteDate(iso: string | null): string {
     year: "numeric",
   }).format(new Date(iso));
 }
+
+export function formatLastAuditAt(website: WebsiteWithRelations): string {
+  const iso = website.last_audited_at ?? website.latestAudit?.created_at ?? null;
+  return formatWebsiteDate(iso);
+}

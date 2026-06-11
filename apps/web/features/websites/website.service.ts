@@ -267,7 +267,7 @@ export async function startWebsiteAuditForWorkspace(
   }
 
   if (website.isAuditRunning) {
-    throw new Error("Bu web sitesi için analiz zaten sürüyor.");
+    throw new Error("Bu web sitesi için devam eden bir analiz isteği var.");
   }
 
   const supabase = await createServerSupabaseClient();

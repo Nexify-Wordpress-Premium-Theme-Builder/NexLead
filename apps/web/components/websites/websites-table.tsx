@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { ConfirmAction } from "@/components/ui/confirm-action";
 import type { WebsiteWithRelations } from "@/features/websites/website.types";
 import { archiveWebsiteAction, startWebsiteAuditAction } from "@/features/websites/website.actions";
-import { formatWebsiteDate } from "@/features/websites/website.utils";
+import { formatLastAuditAt, formatWebsiteDate } from "@/features/websites/website.utils";
 
 type WebsitesTableProps = {
   websites: WebsiteWithRelations[];
@@ -28,6 +28,7 @@ function WebsiteActions({
   const [pending, startTransition] = useTransition();
 
   const displayUrl = website.url ?? website.domain ?? "—";
+  const auditInProgress = website.isAuditRunning;
 
   return (
     <div className="flex flex-wrap items-center gap-2">
@@ -35,7 +36,7 @@ function WebsiteActions({
         type="button"
         variant="ghost"
         size="sm"
-        disabled={website.isAuditRunning || pending}
+        disabled={auditInProgress || pending}
         onClick={() => {
           startTransition(async () => {
             await startWebsiteAuditAction(website.id);
@@ -43,7 +44,7 @@ function WebsiteActions({
           });
         }}
       >
-        {website.isAuditRunning ? "Analiz Sürüyor" : "Analiz Başlat"}
+        {auditInProgress ? "Analiz Sürüyor" : "Analiz Başlat"}
       </Button>
       <Button type="button" variant="ghost" size="sm" onClick={() => onEdit(website)}>
         Düzenle
@@ -80,7 +81,8 @@ export function WebsitesTable({ websites, onEdit, onActionComplete }: WebsitesTa
               <tr>
                 <th className="px-4 py-3 font-medium text-text-secondary">Web site</th>
                 <th className="px-4 py-3 font-medium text-text-secondary">Bağlı lead</th>
-                <th className="px-4 py-3 font-medium text-text-secondary">Durum</th>
+                <th className="px-4 py-3 font-medium text-text-secondary">Web site durumu</th>
+                <th className="px-4 py-3 font-medium text-text-secondary">Analiz durumu</th>
                 <th className="px-4 py-3 font-medium text-text-secondary">Son analiz</th>
                 <th className="px-4 py-3 font-medium text-text-secondary">Oluşturulma</th>
                 <th className="px-4 py-3 font-medium text-text-secondary">İşlem</th>
@@ -103,11 +105,12 @@ export function WebsitesTable({ websites, onEdit, onActionComplete }: WebsitesTa
                     {website.leadCompanyName ?? "—"}
                   </td>
                   <td className="px-4 py-4">
-                    <WebsiteStatusBadge website={website} />
+                    <WebsiteStatusBadge status={website.status} />
                   </td>
                   <td className="px-4 py-4">
                     <AuditStatusBadge status={website.latestAudit?.status ?? null} />
                   </td>
+                  <td className="px-4 py-4 text-text-secondary">{formatLastAuditAt(website)}</td>
                   <td className="px-4 py-4 text-text-secondary">
                     {formatWebsiteDate(website.created_at)}
                   </td>
@@ -131,24 +134,31 @@ export function WebsitesTable({ websites, onEdit, onActionComplete }: WebsitesTa
             key={website.id}
             className="rounded-2xl border border-border bg-surface p-4 shadow-soft"
           >
-            <div className="flex items-start justify-between gap-3">
-              <div className="min-w-0">
-                <h3 className="truncate text-base font-semibold text-text-primary">
-                  {website.url ?? website.domain}
-                </h3>
-                <p className="mt-1 truncate text-sm text-text-secondary">
-                  {website.leadCompanyName ?? "Bağlı lead yok"}
-                </p>
-              </div>
-              <WebsiteStatusBadge website={website} />
+            <div className="min-w-0">
+              <h3 className="truncate text-base font-semibold text-text-primary">
+                {website.url ?? website.domain}
+              </h3>
+              <p className="mt-1 truncate text-sm text-text-secondary">
+                {website.leadCompanyName ?? "Bağlı lead yok"}
+              </p>
             </div>
 
             <dl className="mt-4 grid grid-cols-2 gap-3 text-sm">
               <div>
-                <dt className="text-text-muted">Son analiz</dt>
+                <dt className="text-text-muted">Web site durumu</dt>
+                <dd className="mt-1">
+                  <WebsiteStatusBadge status={website.status} />
+                </dd>
+              </div>
+              <div>
+                <dt className="text-text-muted">Analiz durumu</dt>
                 <dd className="mt-1">
                   <AuditStatusBadge status={website.latestAudit?.status ?? null} />
                 </dd>
+              </div>
+              <div>
+                <dt className="text-text-muted">Son analiz</dt>
+                <dd className="mt-0.5 text-text-primary">{formatLastAuditAt(website)}</dd>
               </div>
               <div>
                 <dt className="text-text-muted">Oluşturulma</dt>
