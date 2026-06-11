@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import { IconLayout, IconUsers } from "@/components/ui/icons";
+import { IconGlobe, IconLayout, IconUsers } from "@/components/ui/icons";
 
 type NavItem = {
   label: string;
@@ -14,7 +14,7 @@ type NavItem = {
 const NAV_ITEMS: NavItem[] = [
   { label: "Genel Bakış", href: "/dashboard" },
   { label: "Leadler", href: "/dashboard/leads" },
-  { label: "Web Site Analizleri", disabled: true },
+  { label: "Web Site Analizleri", href: "/dashboard/websites" },
   { label: "Raporlar", disabled: true },
   { label: "Outreach", disabled: true },
   { label: "Ayarlar", disabled: true },
@@ -31,6 +31,10 @@ function isActive(pathname: string, href: string): boolean {
 function NavIcon({ label }: { label: string }) {
   if (label === "Leadler") {
     return <IconUsers className="h-[18px] w-[18px]" />;
+  }
+
+  if (label === "Web Site Analizleri") {
+    return <IconGlobe className="h-[18px] w-[18px]" />;
   }
 
   return <IconLayout className="h-[18px] w-[18px]" />;
@@ -80,6 +84,10 @@ export function DashboardSidebar({ onNavigate }: { onNavigate?: () => void }) {
 export function getDashboardSectionTitle(pathname: string): string {
   if (pathname.startsWith("/dashboard/leads")) {
     return "Leadler";
+  }
+
+  if (pathname.startsWith("/dashboard/websites")) {
+    return "Web Site Analizleri";
   }
 
   return "Genel Bakış";

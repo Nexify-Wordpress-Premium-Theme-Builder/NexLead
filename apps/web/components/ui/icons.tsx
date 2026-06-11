@@ -79,6 +79,15 @@ export function IconLayout(props: IconProps) {
   );
 }
 
+export function IconGlobe(props: IconProps) {
+  return (
+    <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" {...props}>
+      <circle cx="10" cy="10" r="6.5" stroke="currentColor" strokeWidth="1.5" />
+      <path d="M3.5 10h13M10 3.5c1.8 1.6 2.8 3.7 2.8 6.5S11.8 14.9 10 16.5M10 3.5C8.2 5.1 7.2 7.2 7.2 10s1 4.9 2.8 6.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 export function IconUsers(props: IconProps) {
   return (
     <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" {...props}>
