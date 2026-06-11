@@ -27,4 +27,10 @@ export {
   startWebsiteAuditForWorkspace,
   updateWebsiteForWorkspace,
 } from "./website.service";
-export { formatLastAuditAt, formatWebsiteDate, isAuditInProgress } from "./website.utils";
+export {
+  formatAuditErrorForUser,
+  formatLastAuditAt,
+  formatWebsiteDate,
+  getAuditStartButtonLabel,
+  isAuditInProgress,
+} from "./website.utils";

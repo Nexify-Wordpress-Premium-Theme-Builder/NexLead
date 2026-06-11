@@ -9,7 +9,11 @@ import { Button } from "@/components/ui/button";
 import { ConfirmAction } from "@/components/ui/confirm-action";
 import type { WebsiteWithRelations } from "@/features/websites/website.types";
 import { archiveWebsiteAction, startWebsiteAuditAction } from "@/features/websites/website.actions";
-import { formatLastAuditAt, formatWebsiteDate } from "@/features/websites/website.utils";
+import {
+  formatLastAuditAt,
+  formatWebsiteDate,
+  getAuditStartButtonLabel,
+} from "@/features/websites/website.utils";
 
 type WebsitesTableProps = {
   websites: WebsiteWithRelations[];
@@ -29,7 +33,7 @@ function WebsiteActions({
   const [pending, startTransition] = useTransition();
 
   const displayUrl = website.url ?? website.domain ?? "—";
-  const auditInProgress = website.isAuditRunning;
+  const startButton = getAuditStartButtonLabel(website.latestAudit?.status ?? null, pending);
 
   return (
     <div className="flex flex-wrap items-center gap-2">
@@ -43,7 +47,8 @@ function WebsiteActions({
         type="button"
         variant="ghost"
         size="sm"
-        disabled={auditInProgress || pending}
+        loading={pending}
+        disabled={startButton.disabled}
         onClick={() => {
           startTransition(async () => {
             await startWebsiteAuditAction(website.id);
@@ -51,7 +56,7 @@ function WebsiteActions({
           });
         }}
       >
-        {auditInProgress ? "Analiz Sürüyor" : "Analiz Başlat"}
+        {startButton.label}
       </Button>
       <Button type="button" variant="ghost" size="sm" onClick={() => onEdit(website)}>
         Düzenle

@@ -101,6 +101,7 @@ export async function updateWebsiteAction(
       input,
     );
     revalidatePath(WEBSITES_PATH);
+    revalidatePath(`/dashboard/websites/${websiteId}`);
 
     return {
       success: warning
@@ -182,6 +183,7 @@ export async function startWebsiteAuditAction(websiteId: string): Promise<Websit
       websiteId,
     );
     revalidatePath(WEBSITES_PATH);
+    revalidatePath(`/dashboard/websites/${websiteId}`);
     return { success: "Analiz isteği oluşturuldu." };
   } catch (error) {
     const message =

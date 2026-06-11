@@ -109,3 +109,40 @@ export function formatLastAuditAt(website: WebsiteWithRelations): string {
   const iso = website.last_audited_at ?? website.latestAudit?.created_at ?? null;
   return formatWebsiteDate(iso);
 }
+
+export function getAuditStartButtonLabel(
+  latestStatus: AuditStatus | null | undefined,
+  isPending: boolean,
+): { label: string; disabled: boolean } {
+  if (isPending) {
+    return { label: "Analiz Başlatılıyor", disabled: true };
+  }
+
+  if (isAuditInProgress(latestStatus ?? undefined)) {
+    if (latestStatus === "queued") {
+      return { label: "Analiz Kuyrukta", disabled: true };
+    }
+
+    return { label: "Analiz Çalışıyor", disabled: true };
+  }
+
+  if (latestStatus === "failed" || latestStatus === "cancelled") {
+    return { label: "Tekrar Analiz Başlat", disabled: false };
+  }
+
+  return { label: "Analiz Başlat", disabled: false };
+}
+
+export function formatAuditErrorForUser(hasError: boolean): {
+  message: string;
+  hasTechnicalDetail: boolean;
+} {
+  if (!hasError) {
+    return { message: "", hasTechnicalDetail: false };
+  }
+
+  return {
+    message: "Analiz tamamlanamadı. Daha sonra tekrar deneyebilirsiniz.",
+    hasTechnicalDetail: true,
+  };
+}

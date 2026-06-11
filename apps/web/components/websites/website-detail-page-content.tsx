@@ -3,6 +3,8 @@
 import { useRouter } from "next/navigation";
 import { useCallback, useState, useTransition } from "react";
 
+import { AuditFeedbackBanner } from "@/components/websites/audit-feedback-banner";
+import { AuditStatusRefresh } from "@/components/websites/audit-status-refresh";
 import { WebsiteAuditHistoryCard } from "@/components/websites/website-audit-history-card";
 import { WebsiteDetailHeader } from "@/components/websites/website-detail-header";
 import { WebsiteForm } from "@/components/websites/website-form";
@@ -13,19 +15,27 @@ import { Button } from "@/components/ui/button";
 import { Modal } from "@/components/ui/modal";
 import type { LeadOption, WebsiteDetail } from "@/features/websites/website.types";
 import { startWebsiteAuditAction } from "@/features/websites/website.actions";
+import { getAuditStartButtonLabel } from "@/features/websites/website.utils";
 
 type WebsiteDetailPageContentProps = {
   website: WebsiteDetail;
   leads: LeadOption[];
 };
 
+type AuditFeedback = {
+  type: "success" | "error";
+  text: string;
+};
+
 export function WebsiteDetailPageContent({ website, leads }: WebsiteDetailPageContentProps) {
   const router = useRouter();
   const [editOpen, setEditOpen] = useState(false);
-  const [auditMessage, setAuditMessage] = useState<string | null>(null);
+  const [auditFeedback, setAuditFeedback] = useState<AuditFeedback | null>(null);
   const [auditPending, startAuditTransition] = useTransition();
 
+  const latestAuditStatus = website.latestAudit?.status ?? null;
   const auditInProgress = website.isAuditRunning;
+  const startButton = getAuditStartButtonLabel(latestAuditStatus, auditPending);
 
   const handleEditSuccess = useCallback(() => {
     setEditOpen(false);
@@ -33,20 +43,23 @@ export function WebsiteDetailPageContent({ website, leads }: WebsiteDetailPageCo
   }, [router]);
 
   const handleStartAudit = () => {
-    if (auditInProgress) {
+    if (startButton.disabled) {
       return;
     }
 
     startAuditTransition(async () => {
-      setAuditMessage(null);
+      setAuditFeedback(null);
       const result = await startWebsiteAuditAction(website.id);
 
       if (result.error) {
-        setAuditMessage(result.error);
+        setAuditFeedback({ type: "error", text: result.error });
         return;
       }
 
-      setAuditMessage(result.success ?? "Analiz isteği oluşturuldu.");
+      setAuditFeedback({
+        type: "success",
+        text: result.success ?? "Analiz isteği oluşturuldu.",
+      });
       router.refresh();
     });
   };
@@ -62,10 +75,10 @@ export function WebsiteDetailPageContent({ website, leads }: WebsiteDetailPageCo
             <Button
               type="button"
               loading={auditPending}
-              disabled={auditInProgress}
+              disabled={startButton.disabled}
               onClick={handleStartAudit}
             >
-              {auditInProgress ? "Devam eden analiz var" : "Analiz Başlat"}
+              {startButton.label}
             </Button>
             <Button type="button" variant="secondary" onClick={() => setEditOpen(true)}>
               Web Site Düzenle
@@ -74,13 +87,21 @@ export function WebsiteDetailPageContent({ website, leads }: WebsiteDetailPageCo
         }
       />
 
-      {auditMessage ? (
-        <p className="mt-4 text-sm text-text-secondary">{auditMessage}</p>
-      ) : null}
+      <AuditFeedbackBanner status={latestAuditStatus} />
 
       {auditInProgress ? (
-        <p className="mt-2 text-sm text-text-muted">
-          Bu web sitesi için kuyrukta veya çalışan bir analiz isteği bulunuyor.
+        <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1">
+          <AuditStatusRefresh isActive={auditInProgress} />
+        </div>
+      ) : null}
+
+      {auditFeedback ? (
+        <p
+          className={`mt-4 text-sm ${
+            auditFeedback.type === "error" ? "text-error" : "text-text-secondary"
+          }`}
+        >
+          {auditFeedback.text}
         </p>
       ) : null}
 
