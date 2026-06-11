@@ -18,8 +18,8 @@ END;
 $$;
 
 -- ---------------------------------------------------------------------------
--- 2. Revoke public RPC access to SECURITY DEFINER helpers
---    (RLS policies still evaluate these via table-owner context)
+-- 2. Revoke public/anon RPC access to SECURITY DEFINER helpers
+--    authenticated EXECUTE is restored in 004_rls_helper_execute_grants.sql
 -- ---------------------------------------------------------------------------
 REVOKE ALL ON FUNCTION public.is_workspace_member(UUID) FROM PUBLIC;
 REVOKE EXECUTE ON FUNCTION public.is_workspace_member(UUID) FROM anon, authenticated;
