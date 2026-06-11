@@ -286,6 +286,10 @@ export async function startWebsiteAuditForWorkspace(
     .single();
 
   if (auditError || !audit) {
+    if (auditError?.code === "23505") {
+      throw new Error("Bu web sitesi için devam eden bir analiz isteği var.");
+    }
+
     throw new Error(auditError?.message ?? "Analiz isteği oluşturulamadı");
   }
 

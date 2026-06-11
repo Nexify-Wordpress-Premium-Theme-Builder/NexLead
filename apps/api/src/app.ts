@@ -6,6 +6,8 @@ import {
   handleAuthBootstrapPost,
   handleAuthSession,
 } from "./auth";
+import { isJobWorkerConfigured } from "./config/job-worker-env";
+import { handleProcessNextAuditJob } from "./modules/audits";
 import { checkApiSupabaseConnections } from "./supabase";
 
 async function buildHealthPayload() {
@@ -16,6 +18,7 @@ async function buildHealthPayload() {
     service: "api",
     checks: {
       supabase,
+      auditWorker: isJobWorkerConfigured() ? "configured" : "not_configured",
     },
   };
 }
@@ -36,6 +39,11 @@ export function createApp(): http.Server {
 
     if (pathname === "/auth/bootstrap" && req.method === "POST") {
       void handleAuthBootstrapPost(req, res);
+      return;
+    }
+
+    if (pathname === "/jobs/audits/process-next" && req.method === "POST") {
+      void handleProcessNextAuditJob(req, res);
       return;
     }
 
