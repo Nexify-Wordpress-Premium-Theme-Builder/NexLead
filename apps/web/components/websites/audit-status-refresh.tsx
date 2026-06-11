@@ -3,16 +3,19 @@
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
-const DEFAULT_INTERVAL_MS = 6000;
+export const AUDIT_DETAIL_REFRESH_INTERVAL_MS = 6000;
+export const AUDIT_LIST_REFRESH_INTERVAL_MS = 9000;
 
 type AuditStatusRefreshProps = {
   isActive: boolean;
   intervalMs?: number;
+  message?: string;
 };
 
 export function AuditStatusRefresh({
   isActive,
-  intervalMs = DEFAULT_INTERVAL_MS,
+  intervalMs = AUDIT_DETAIL_REFRESH_INTERVAL_MS,
+  message = "Durum otomatik güncelleniyor",
 }: AuditStatusRefreshProps) {
   const router = useRouter();
 
@@ -32,5 +35,5 @@ export function AuditStatusRefresh({
     return null;
   }
 
-  return <p className="text-xs text-text-muted">Durum otomatik güncelleniyor</p>;
+  return <p className="text-xs text-text-muted">{message}</p>;
 }

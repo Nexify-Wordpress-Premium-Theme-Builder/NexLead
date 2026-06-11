@@ -3,6 +3,10 @@
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState, useTransition } from "react";
 
+import {
+  AUDIT_LIST_REFRESH_INTERVAL_MS,
+  AuditStatusRefresh,
+} from "@/components/websites/audit-status-refresh";
 import { WebsiteEmptyState } from "@/components/websites/website-empty-state";
 import { WebsiteForm } from "@/components/websites/website-form";
 import { WebsitesTable } from "@/components/websites/websites-table";
@@ -10,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Modal } from "@/components/ui/modal";
 import type { LeadOption, WebsiteWithRelations } from "@/features/websites/website.types";
 import { createWebsiteFromLeadAction } from "@/features/websites/website.actions";
+import { isAuditInProgress } from "@/features/websites/website.utils";
 
 type WebsitesPageContentProps = {
   websites: WebsiteWithRelations[];
@@ -47,6 +52,10 @@ export function WebsitesPageContent({ websites, leads, initialLeadId }: Websites
       setModal({ type: "create" });
     }
   }, [initialLeadId]);
+
+  const hasActiveAudit = websites.some((website) =>
+    isAuditInProgress(website.latestAudit?.status ?? undefined),
+  );
 
   const handleQuickCreateFromLead = () => {
     if (!quickLeadId) {
@@ -121,6 +130,16 @@ export function WebsitesPageContent({ websites, leads, initialLeadId }: Websites
           {quickMessage ? (
             <p className="mt-3 text-sm text-text-secondary">{quickMessage}</p>
           ) : null}
+        </div>
+      ) : null}
+
+      {hasActiveAudit ? (
+        <div className="mt-6">
+          <AuditStatusRefresh
+            isActive={hasActiveAudit}
+            intervalMs={AUDIT_LIST_REFRESH_INTERVAL_MS}
+            message="Analiz durumları otomatik güncelleniyor"
+          />
         </div>
       ) : null}
 
