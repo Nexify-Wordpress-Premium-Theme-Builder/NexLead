@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 
 import { WebsiteDetailPageContent } from "@/components/websites/website-detail-page-content";
+import { getWebsiteAuditResult } from "@/features/audits/audit-result.service";
 import {
   getLeadOptionsForWorkspace,
   getWebsiteDetail,
@@ -23,22 +24,27 @@ export default async function WebsiteDetailPage({ params }: WebsiteDetailPagePro
 
   let website;
   let leads;
+  let auditResult;
 
   try {
-    const [websiteResult, leadOptions] = await Promise.all([
+    const [websiteResult, leadOptions, auditResultData] = await Promise.all([
       getWebsiteDetail(workspace.workspaceId, websiteId),
       getLeadOptionsForWorkspace(workspace.workspaceId),
+      getWebsiteAuditResult(workspace.workspaceId, websiteId),
     ]);
 
-    if (!websiteResult) {
+    if (!websiteResult || !auditResultData) {
       notFound();
     }
 
     website = websiteResult;
     leads = leadOptions;
+    auditResult = auditResultData;
   } catch {
     throw new Error("Web site detayı yüklenemedi");
   }
 
-  return <WebsiteDetailPageContent website={website} leads={leads} />;
+  return (
+    <WebsiteDetailPageContent website={website} leads={leads} auditResult={auditResult} />
+  );
 }

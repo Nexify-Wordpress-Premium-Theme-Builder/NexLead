@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useCallback, useState, useTransition } from "react";
 
 import { AuditFeedbackBanner } from "@/components/websites/audit-feedback-banner";
+import { AuditResultsPanel } from "@/components/websites/audit-results-panel";
 import { AuditStatusRefresh } from "@/components/websites/audit-status-refresh";
 import { WebsiteAuditHistoryCard } from "@/components/websites/website-audit-history-card";
 import { WebsiteDetailHeader } from "@/components/websites/website-detail-header";
@@ -13,6 +14,7 @@ import { WebsiteLeadCard } from "@/components/websites/website-lead-card";
 import { BackLink } from "@/components/ui/back-link";
 import { Button } from "@/components/ui/button";
 import { Modal } from "@/components/ui/modal";
+import type { WebsiteAuditResult } from "@/features/audits/audit-result.types";
 import type { LeadOption, WebsiteDetail } from "@/features/websites/website.types";
 import { startWebsiteAuditAction } from "@/features/websites/website.actions";
 import { getAuditStartButtonLabel } from "@/features/websites/website.utils";
@@ -20,6 +22,7 @@ import { getAuditStartButtonLabel } from "@/features/websites/website.utils";
 type WebsiteDetailPageContentProps = {
   website: WebsiteDetail;
   leads: LeadOption[];
+  auditResult: WebsiteAuditResult;
 };
 
 type AuditFeedback = {
@@ -27,7 +30,11 @@ type AuditFeedback = {
   text: string;
 };
 
-export function WebsiteDetailPageContent({ website, leads }: WebsiteDetailPageContentProps) {
+export function WebsiteDetailPageContent({
+  website,
+  leads,
+  auditResult,
+}: WebsiteDetailPageContentProps) {
   const router = useRouter();
   const [editOpen, setEditOpen] = useState(false);
   const [auditFeedback, setAuditFeedback] = useState<AuditFeedback | null>(null);
@@ -110,6 +117,10 @@ export function WebsiteDetailPageContent({ website, leads }: WebsiteDetailPageCo
           <WebsiteInfoCard website={website} />
           <WebsiteLeadCard linkedLead={website.linkedLead} />
         </div>
+        <AuditResultsPanel result={auditResult} />
+      </div>
+
+      <div className="mt-6">
         <WebsiteAuditHistoryCard audits={website.audits} />
       </div>
 
