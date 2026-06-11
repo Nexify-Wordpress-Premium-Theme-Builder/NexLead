@@ -1,6 +1,12 @@
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 
-import type { LeadOption, WebsiteFormInput, WebsiteWithRelations } from "./website.types";
+import type {
+  AuditHistoryItem,
+  LeadOption,
+  WebsiteDetail,
+  WebsiteFormInput,
+  WebsiteWithRelations,
+} from "./website.types";
 import { buildWebsitePayload, leadToOption, mapWebsiteRow } from "./website.utils";
 import { getLeadById } from "@/features/leads/lead.service";
 
@@ -102,6 +108,70 @@ export async function getWebsiteById(
   ]);
 
   return website ?? null;
+}
+
+export async function getWebsiteAudits(
+  workspaceId: string,
+  websiteId: string,
+  limit = 20,
+): Promise<AuditHistoryItem[]> {
+  const supabase = await createServerSupabaseClient();
+
+  const { data, error } = await supabase
+    .from("audits")
+    .select("id, status, type, created_at, started_at, completed_at, error_message")
+    .eq("workspace_id", workspaceId)
+    .eq("website_id", websiteId)
+    .order("created_at", { ascending: false })
+    .limit(limit);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data ?? [];
+}
+
+export async function getLatestAuditForWebsite(
+  workspaceId: string,
+  websiteId: string,
+): Promise<AuditHistoryItem | null> {
+  const audits = await getWebsiteAudits(workspaceId, websiteId, 1);
+  return audits[0] ?? null;
+}
+
+export async function getWebsiteDetail(
+  workspaceId: string,
+  websiteId: string,
+): Promise<WebsiteDetail | null> {
+  const website = await getWebsiteById(workspaceId, websiteId);
+
+  if (!website) {
+    return null;
+  }
+
+  const audits = await getWebsiteAudits(workspaceId, websiteId);
+
+  let linkedLead: WebsiteDetail["linkedLead"] = null;
+
+  if (website.lead_id) {
+    const lead = await getLeadById(workspaceId, website.lead_id);
+
+    if (lead) {
+      linkedLead = {
+        id: lead.id,
+        companyName: lead.company_name,
+        normalizedDomain: lead.normalizedDomain,
+        status: lead.status,
+      };
+    }
+  }
+
+  return {
+    ...website,
+    audits,
+    linkedLead,
+  };
 }
 
 export async function getLeadOptionsForWorkspace(workspaceId: string): Promise<LeadOption[]> {

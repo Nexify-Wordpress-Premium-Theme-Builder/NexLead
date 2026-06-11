@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useTransition } from "react";
 
 import { AuditStatusBadge } from "@/components/websites/audit-status-badge";
@@ -32,6 +33,12 @@ function WebsiteActions({
 
   return (
     <div className="flex flex-wrap items-center gap-2">
+      <Link
+        href={`/dashboard/websites/${website.id}`}
+        className="inline-flex h-9 items-center justify-center rounded-lg px-3 text-sm font-medium text-text-secondary transition-colors hover:bg-surface-soft hover:text-text-primary"
+      >
+        Detay
+      </Link>
       <Button
         type="button"
         variant="ghost"
@@ -93,9 +100,12 @@ export function WebsitesTable({ websites, onEdit, onActionComplete }: WebsitesTa
                 <tr key={website.id} className="hover:bg-surface-soft/50">
                   <td className="px-4 py-4">
                     <div className="min-w-0">
-                      <p className="truncate font-medium text-text-primary">
+                      <Link
+                        href={`/dashboard/websites/${website.id}`}
+                        className="block truncate font-medium text-text-primary transition-colors hover:text-accent"
+                      >
                         {website.url ?? website.domain}
-                      </p>
+                      </Link>
                       {website.domain && website.url !== website.domain ? (
                         <p className="truncate text-xs text-text-muted">{website.domain}</p>
                       ) : null}
@@ -135,9 +145,12 @@ export function WebsitesTable({ websites, onEdit, onActionComplete }: WebsitesTa
             className="rounded-2xl border border-border bg-surface p-4 shadow-soft"
           >
             <div className="min-w-0">
-              <h3 className="truncate text-base font-semibold text-text-primary">
+              <Link
+                href={`/dashboard/websites/${website.id}`}
+                className="block truncate text-base font-semibold text-text-primary transition-colors hover:text-accent"
+              >
                 {website.url ?? website.domain}
-              </h3>
+              </Link>
               <p className="mt-1 truncate text-sm text-text-secondary">
                 {website.leadCompanyName ?? "Bağlı lead yok"}
               </p>

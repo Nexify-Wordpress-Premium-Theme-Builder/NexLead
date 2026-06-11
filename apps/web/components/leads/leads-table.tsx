@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useTransition } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -43,7 +44,13 @@ function LeadActions({
   const [pending, startTransition] = useTransition();
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex flex-wrap items-center gap-2">
+      <Link
+        href={`/dashboard/leads/${lead.id}`}
+        className="inline-flex h-9 items-center justify-center rounded-lg px-3 text-sm font-medium text-text-secondary transition-colors hover:bg-surface-soft hover:text-text-primary"
+      >
+        Detay
+      </Link>
       <Button type="button" variant="ghost" size="sm" onClick={() => onEdit(lead)}>
         Düzenle
       </Button>
@@ -89,7 +96,14 @@ export function LeadsTable({ leads, onEdit }: LeadsTableProps) {
             <tbody className="divide-y divide-border">
               {leads.map((lead) => (
                 <tr key={lead.id} className="hover:bg-surface-soft/50">
-                  <td className="px-4 py-4 font-medium text-text-primary">{lead.company_name}</td>
+                  <td className="px-4 py-4">
+                    <Link
+                      href={`/dashboard/leads/${lead.id}`}
+                      className="font-medium text-text-primary transition-colors hover:text-accent"
+                    >
+                      {lead.company_name}
+                    </Link>
+                  </td>
                   <td className="px-4 py-4 text-text-secondary">
                     {lead.normalizedDomain ?? "—"}
                   </td>
@@ -120,9 +134,12 @@ export function LeadsTable({ leads, onEdit }: LeadsTableProps) {
           >
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
-                <h3 className="truncate text-base font-semibold text-text-primary">
+                <Link
+                  href={`/dashboard/leads/${lead.id}`}
+                  className="block truncate text-base font-semibold text-text-primary transition-colors hover:text-accent"
+                >
                   {lead.company_name}
-                </h3>
+                </Link>
                 <p className="mt-1 text-sm text-text-secondary">
                   {lead.normalizedDomain ?? lead.industry ?? "—"}
                 </p>

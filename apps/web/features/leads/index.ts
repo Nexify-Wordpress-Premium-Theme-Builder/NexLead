@@ -14,6 +14,8 @@ export {
   archiveLeadForWorkspace,
   createLeadForWorkspace,
   getLeadById,
+  getLeadDetail,
+  getLeadWebsites,
   getLeadsForWorkspace,
   updateLeadForWorkspace,
 } from "./lead.service";

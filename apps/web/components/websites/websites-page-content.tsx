@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useCallback, useState, useTransition } from "react";
+import { useCallback, useEffect, useState, useTransition } from "react";
 
 import { WebsiteEmptyState } from "@/components/websites/website-empty-state";
 import { WebsiteForm } from "@/components/websites/website-form";
@@ -14,6 +14,7 @@ import { createWebsiteFromLeadAction } from "@/features/websites/website.actions
 type WebsitesPageContentProps = {
   websites: WebsiteWithRelations[];
   leads: LeadOption[];
+  initialLeadId?: string;
 };
 
 type ModalState =
@@ -21,9 +22,10 @@ type ModalState =
   | { type: "create" }
   | { type: "edit"; website: WebsiteWithRelations };
 
-export function WebsitesPageContent({ websites, leads }: WebsitesPageContentProps) {
+export function WebsitesPageContent({ websites, leads, initialLeadId }: WebsitesPageContentProps) {
   const router = useRouter();
   const [modal, setModal] = useState<ModalState>({ type: "closed" });
+  const [createLeadId, setCreateLeadId] = useState(initialLeadId ?? "");
   const [quickLeadId, setQuickLeadId] = useState("");
   const [quickMessage, setQuickMessage] = useState<string | null>(null);
   const [quickPending, startQuickTransition] = useTransition();
@@ -38,6 +40,13 @@ export function WebsitesPageContent({ websites, leads }: WebsitesPageContentProp
   const handleActionComplete = useCallback(() => {
     router.refresh();
   }, [router]);
+
+  useEffect(() => {
+    if (initialLeadId) {
+      setCreateLeadId(initialLeadId);
+      setModal({ type: "create" });
+    }
+  }, [initialLeadId]);
 
   const handleQuickCreateFromLead = () => {
     if (!quickLeadId) {
@@ -134,8 +143,10 @@ export function WebsitesPageContent({ websites, leads }: WebsitesPageContentProp
         onClose={closeModal}
       >
         <WebsiteForm
+          key={createLeadId || "create"}
           mode="create"
           leads={leads}
+          defaultLeadId={createLeadId || undefined}
           onSuccess={handleSuccess}
           onCancel={closeModal}
         />

@@ -7,7 +7,12 @@ import { requireWorkspace } from "@/lib/workspace/require-workspace";
 
 export const dynamic = "force-dynamic";
 
-export default async function WebsitesPage() {
+type WebsitesPageProps = {
+  searchParams: Promise<{ leadId?: string }>;
+};
+
+export default async function WebsitesPage({ searchParams }: WebsitesPageProps) {
+  const { leadId } = await searchParams;
   const workspace = await requireWorkspace();
 
   if (!workspace) {
@@ -28,7 +33,9 @@ export default async function WebsitesPage() {
       getLeadOptionsForWorkspace(workspace.workspaceId),
     ]);
 
-    return <WebsitesPageContent websites={websites} leads={leads} />;
+    return (
+      <WebsitesPageContent websites={websites} leads={leads} initialLeadId={leadId} />
+    );
   } catch {
     return (
       <div className="mx-auto max-w-2xl rounded-2xl border border-border bg-surface p-8 shadow-soft">

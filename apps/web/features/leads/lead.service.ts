@@ -1,5 +1,8 @@
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 
+import type { WebsiteWithRelations } from "@/features/websites/website.types";
+import { mapWebsiteRow } from "@/features/websites/website.utils";
+
 import type { LeadFormInput, LeadWithPrimaryContact } from "./lead.types";
 import { buildLocation, mapLeadRow, toLeadMetadata } from "./lead.utils";
 
@@ -58,6 +61,68 @@ export async function getLeadById(
   }
 
   return data ? mapLeadRow(data) : null;
+}
+
+export async function getLeadDetail(
+  workspaceId: string,
+  leadId: string,
+): Promise<LeadWithPrimaryContact | null> {
+  return getLeadById(workspaceId, leadId);
+}
+
+export async function getLeadWebsites(
+  workspaceId: string,
+  leadId: string,
+  leadCompanyName: string,
+): Promise<WebsiteWithRelations[]> {
+  const supabase = await createServerSupabaseClient();
+
+  const { data, error } = await supabase
+    .from("websites")
+    .select("*")
+    .eq("workspace_id", workspaceId)
+    .eq("lead_id", leadId)
+    .is("deleted_at", null)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  const rows = data ?? [];
+
+  if (rows.length === 0) {
+    return [];
+  }
+
+  const websiteIds = rows.map((row) => row.id);
+
+  const { data: audits, error: auditError } = await supabase
+    .from("audits")
+    .select("id, website_id, status, created_at")
+    .eq("workspace_id", workspaceId)
+    .in("website_id", websiteIds)
+    .order("created_at", { ascending: false });
+
+  if (auditError) {
+    throw new Error(auditError.message);
+  }
+
+  const latestByWebsite = new Map<string, WebsiteWithRelations["latestAudit"]>();
+
+  for (const audit of audits ?? []) {
+    if (!latestByWebsite.has(audit.website_id)) {
+      latestByWebsite.set(audit.website_id, {
+        id: audit.id,
+        status: audit.status,
+        created_at: audit.created_at,
+      });
+    }
+  }
+
+  return rows.map((row) =>
+    mapWebsiteRow(row, leadCompanyName, latestByWebsite.get(row.id) ?? null),
+  );
 }
 
 export async function createLeadForWorkspace(

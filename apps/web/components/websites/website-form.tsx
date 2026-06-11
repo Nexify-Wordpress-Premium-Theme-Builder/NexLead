@@ -11,24 +11,38 @@ type WebsiteFormProps = {
   mode: "create" | "edit";
   website?: WebsiteWithRelations;
   leads: LeadOption[];
+  defaultLeadId?: string;
   onSuccess: () => void;
   onCancel: () => void;
 };
 
 const initialState: WebsiteActionState = {};
 
-function websiteToDefaults(website?: WebsiteWithRelations) {
+function websiteToDefaults(
+  website?: WebsiteWithRelations,
+  defaultLeadId?: string,
+  leads: LeadOption[] = [],
+) {
+  const selectedLead = defaultLeadId ? leads.find((lead) => lead.id === defaultLeadId) : undefined;
+
   return {
-    websiteUrl: website?.url ?? website?.domain ?? "",
-    leadId: website?.lead_id ?? "",
+    websiteUrl: website?.url ?? website?.domain ?? selectedLead?.suggestedUrl ?? "",
+    leadId: website?.lead_id ?? defaultLeadId ?? "",
     description: website?.description ?? "",
   };
 }
 
-export function WebsiteForm({ mode, website, leads, onSuccess, onCancel }: WebsiteFormProps) {
+export function WebsiteForm({
+  mode,
+  website,
+  leads,
+  defaultLeadId,
+  onSuccess,
+  onCancel,
+}: WebsiteFormProps) {
   const action = mode === "create" ? createWebsiteAction : updateWebsiteAction;
   const [state, formAction, pending] = useActionState(action, initialState);
-  const defaults = websiteToDefaults(website);
+  const defaults = websiteToDefaults(website, defaultLeadId, leads);
   const fillFromSelectedLead = () => {
     const leadSelect = document.getElementById("leadId") as HTMLSelectElement | null;
     const urlInput = document.getElementById("websiteUrl") as HTMLInputElement | null;
