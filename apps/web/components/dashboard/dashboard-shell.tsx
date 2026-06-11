@@ -2,20 +2,25 @@
 
 import type { ReactNode } from "react";
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 
 import { NexLeadLogo } from "@/components/brand/nexlead-logo";
 import { LogoutButton } from "@/components/dashboard/logout-button";
-import { IconClose, IconLayout, IconMenu } from "@/components/ui/icons";
+import {
+  DashboardSidebar,
+  getDashboardSectionTitle,
+} from "@/components/layout/dashboard-sidebar";
+import { IconClose, IconMenu } from "@/components/ui/icons";
 
 type DashboardShellProps = {
   userEmail: string | null;
   children: ReactNode;
 };
 
-const NAV_ITEMS = [{ label: "Genel Bakış", href: "/dashboard", active: true }] as const;
-
 export function DashboardShell({ userEmail, children }: DashboardShellProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const pathname = usePathname();
+  const sectionTitle = getDashboardSectionTitle(pathname);
 
   return (
     <div className="min-h-screen bg-background">
@@ -43,22 +48,7 @@ export function DashboardShell({ userEmail, children }: DashboardShellProps) {
           </button>
         </div>
 
-        <nav className="flex-1 space-y-1 px-3 py-4">
-          {NAV_ITEMS.map((item) => (
-            <a
-              key={item.href}
-              href={item.href}
-              className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
-                item.active
-                  ? "bg-surface-soft text-text-primary"
-                  : "text-text-secondary hover:bg-surface-soft hover:text-text-primary"
-              }`}
-            >
-              <IconLayout className="h-[18px] w-[18px]" />
-              {item.label}
-            </a>
-          ))}
-        </nav>
+        <DashboardSidebar onNavigate={() => setMobileOpen(false)} />
 
         <div className="border-t border-border p-4">
           <div className="mb-3 rounded-lg bg-surface-soft px-3 py-2.5">
@@ -82,7 +72,7 @@ export function DashboardShell({ userEmail, children }: DashboardShellProps) {
             </button>
             <div>
               <p className="text-sm text-text-muted">Çalışma Alanı</p>
-              <p className="text-sm font-medium text-text-primary">Genel Bakış</p>
+              <p className="text-sm font-medium text-text-primary">{sectionTitle}</p>
             </div>
           </div>
 

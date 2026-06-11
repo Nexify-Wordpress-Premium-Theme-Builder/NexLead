@@ -79,6 +79,31 @@ export function IconLayout(props: IconProps) {
   );
 }
 
+export function IconUsers(props: IconProps) {
+  return (
+    <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" {...props}>
+      <circle cx="7" cy="7.5" r="2.5" stroke="currentColor" strokeWidth="1.5" />
+      <path
+        d="M3.5 15.5c.6-2 2-3 3.5-3s2.9 1 3.5 3"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+      <path
+        d="M12.5 8.25a2.25 2.25 0 1 1 0-4.5 2.25 2.25 0 0 1 0 4.5Z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+      />
+      <path
+        d="M11.5 15.5c.35-1.35 1.35-2.25 2.75-2.25s2.4.9 2.75 2.25"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
 export function IconChevronRight(props: IconProps) {
   return (
     <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" {...props}>
