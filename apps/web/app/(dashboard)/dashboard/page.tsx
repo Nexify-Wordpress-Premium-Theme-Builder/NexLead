@@ -1,38 +1,34 @@
-import { getServerAuthSessionUser } from "@/lib/auth";
+import { DashboardOverview } from "@/components/dashboard/dashboard-overview";
+import { getDashboardOverview } from "@/features/dashboard/dashboard.service";
+import { requireWorkspace } from "@/lib/workspace/require-workspace";
 
 export const dynamic = "force-dynamic";
 
 export default async function DashboardPage() {
-  const user = await getServerAuthSessionUser();
-  const displayName = user?.email?.split("@")[0] ?? "Kullanıcı";
+  const workspace = await requireWorkspace();
 
-  return (
-    <div className="mx-auto max-w-3xl">
-      <section className="rounded-2xl border border-border bg-surface p-8 shadow-soft">
-        <p className="text-sm font-medium text-accent">NexLead Çalışma Alanı</p>
-        <h1 className="mt-3 text-3xl font-semibold tracking-[-0.03em] text-text-primary">
-          Hoş geldiniz, {displayName}
-        </h1>
-        <p className="mt-3 max-w-xl text-base leading-relaxed text-text-secondary">
-          Hesabınız hazır. Bu alan, müşteri adayı yönetimi ve web denetim modüllerinin
-          açılacağı premium çalışma yüzeyidir.
+  if (!workspace) {
+    return (
+      <div className="mx-auto max-w-2xl rounded-2xl border border-border bg-surface p-8 shadow-soft">
+        <h1 className="text-xl font-semibold text-text-primary">Çalışma alanı bulunamadı</h1>
+        <p className="mt-3 text-sm text-text-secondary">
+          Aktif bir çalışma alanına erişilemiyor. Lütfen oturumu kapatıp tekrar giriş yapın.
         </p>
+      </div>
+    );
+  }
 
-        <div className="mt-8 grid gap-3 sm:grid-cols-2">
-          <div className="rounded-xl border border-border bg-surface-soft px-4 py-4">
-            <p className="text-xs font-medium uppercase tracking-[0.08em] text-text-muted">
-              Durum
-            </p>
-            <p className="mt-1 text-sm font-medium text-text-primary">Oturum aktif</p>
-          </div>
-          <div className="rounded-xl border border-border bg-surface-soft px-4 py-4">
-            <p className="text-xs font-medium uppercase tracking-[0.08em] text-text-muted">
-              Workspace
-            </p>
-            <p className="mt-1 text-sm font-medium text-text-primary">Bootstrap tamamlandı</p>
-          </div>
-        </div>
-      </section>
-    </div>
-  );
+  try {
+    const overview = await getDashboardOverview(workspace.workspaceId);
+    return <DashboardOverview data={overview} />;
+  } catch {
+    return (
+      <div className="mx-auto max-w-2xl rounded-2xl border border-border bg-surface p-8 shadow-soft">
+        <h1 className="text-xl font-semibold text-text-primary">Genel bakış yüklenemedi</h1>
+        <p className="mt-3 text-sm text-text-secondary">
+          Dashboard verileri alınırken bir sorun oluştu. Lütfen sayfayı yenileyin.
+        </p>
+      </div>
+    );
+  }
 }
