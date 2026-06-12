@@ -9,6 +9,55 @@ import { hasTrendData, isDashboardPreviewId } from "@/features/dashboard/dashboa
 
 export { isDashboardPreviewId };
 
+export function createEmptyDashboardOverview(
+  workspaceId: string,
+  workspaceName: string,
+): DashboardOverviewData {
+  return {
+    workspaceId,
+    workspaceName,
+    stats: {
+      totalLeads: 0,
+      activeWebsites: 0,
+      pendingAudits: 0,
+      completedAudits: 0,
+    },
+    kpis: {
+      totalLeads: 0,
+      activeWebsites: 0,
+      pendingAudits: 0,
+      completedAudits: 0,
+      averageScore: null,
+      criticalFindings: 0,
+    },
+    trends: {
+      labels: [],
+      leads: [],
+      websites: [],
+      audits: [],
+      reports: [],
+    },
+    scoreSummary: {
+      averageScore: null,
+      scoredAuditCount: 0,
+      categoryAverages: [],
+    },
+    severitySummary: {
+      critical: 0,
+      high: 0,
+      medium: 0,
+      low: 0,
+      info: 0,
+      total: 0,
+    },
+    recentActivity: [],
+    recentLeads: [],
+    recentWebsites: [],
+    recentAudits: [],
+    isFullyEmpty: true,
+  };
+}
+
 function isTrendSeriesEmpty(trends: DashboardOverviewData["trends"]): boolean {
   return (
     !hasTrendData(trends.leads) &&

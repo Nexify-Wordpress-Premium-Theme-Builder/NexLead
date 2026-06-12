@@ -31,9 +31,14 @@ export async function middleware(request: NextRequest) {
     },
   });
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  let user: { id: string } | null = null;
+
+  try {
+    const { data } = await supabase.auth.getUser();
+    user = data.user;
+  } catch {
+    return response;
+  }
 
   const { pathname } = request.nextUrl;
   const isAuthRoute = AUTH_ROUTES.some((route) => pathname === route);

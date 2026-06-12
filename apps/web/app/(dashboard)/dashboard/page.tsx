@@ -1,6 +1,9 @@
 import { DashboardOverview } from "@/components/dashboard/dashboard-overview";
 import { getDashboardOverview } from "@/features/dashboard/dashboard.service";
-import { applyDashboardPreview } from "@/features/dashboard/dashboard-preview.utils";
+import {
+  applyDashboardPreview,
+  createEmptyDashboardOverview,
+} from "@/features/dashboard/dashboard-preview.utils";
 import { requireWorkspace } from "@/lib/workspace/require-workspace";
 
 export const dynamic = "force-dynamic";
@@ -19,22 +22,17 @@ export default async function DashboardPage() {
     );
   }
 
+  const workspaceName = workspace.workspaceName ?? "Çalışma Alanı";
+
   try {
     const overview = applyDashboardPreview(
-      await getDashboardOverview(
-        workspace.workspaceId,
-        workspace.workspaceName ?? "Çalışma Alanı",
-      ),
+      await getDashboardOverview(workspace.workspaceId, workspaceName),
     );
     return <DashboardOverview data={overview} />;
   } catch {
-    return (
-      <div className="nx-card mx-auto max-w-2xl p-8">
-        <h1 className="text-xl font-semibold text-text-primary">Genel bakış yüklenemedi</h1>
-        <p className="mt-3 text-sm text-text-secondary">
-          Dashboard verileri alınırken bir sorun oluştu. Lütfen sayfayı yenileyin.
-        </p>
-      </div>
+    const overview = applyDashboardPreview(
+      createEmptyDashboardOverview(workspace.workspaceId, workspaceName),
     );
+    return <DashboardOverview data={overview} />;
   }
 }
