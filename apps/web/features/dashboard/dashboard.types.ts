@@ -80,6 +80,16 @@ export type DashboardRecentAudit = {
   completedAt: string | null;
 };
 
+export type DashboardPreviewField =
+  | "kpis"
+  | "trends"
+  | "scoreSummary"
+  | "severitySummary"
+  | "recentActivity"
+  | "recentLeads"
+  | "recentWebsites"
+  | "recentAudits";
+
 export type DashboardOverview = {
   workspaceId: string;
   workspaceName: string;
@@ -93,4 +103,5 @@ export type DashboardOverview = {
   recentWebsites: DashboardRecentWebsite[];
   recentAudits: DashboardRecentAudit[];
   isFullyEmpty: boolean;
+  previewFields?: DashboardPreviewField[];
 };

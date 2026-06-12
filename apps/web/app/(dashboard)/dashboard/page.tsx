@@ -1,5 +1,6 @@
 import { DashboardOverview } from "@/components/dashboard/dashboard-overview";
 import { getDashboardOverview } from "@/features/dashboard/dashboard.service";
+import { applyDashboardPreview } from "@/features/dashboard/dashboard-preview.utils";
 import { requireWorkspace } from "@/lib/workspace/require-workspace";
 
 export const dynamic = "force-dynamic";
@@ -19,9 +20,11 @@ export default async function DashboardPage() {
   }
 
   try {
-    const overview = await getDashboardOverview(
-      workspace.workspaceId,
-      workspace.workspaceName ?? "Çalışma Alanı",
+    const overview = applyDashboardPreview(
+      await getDashboardOverview(
+        workspace.workspaceId,
+        workspace.workspaceName ?? "Çalışma Alanı",
+      ),
     );
     return <DashboardOverview data={overview} />;
   } catch {

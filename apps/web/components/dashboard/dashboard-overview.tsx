@@ -14,6 +14,7 @@ import { RecentActivityCard } from "@/components/dashboard/recent-activity-card"
 import { RecentAuditsCard } from "@/components/dashboard/recent-audits-card";
 import { RecentLeadsCard } from "@/components/dashboard/recent-leads-card";
 import { RecentWebsitesCard } from "@/components/dashboard/recent-websites-card";
+import { DashboardPreviewBanner } from "@/components/dashboard/dashboard-preview-banner";
 import type { DashboardOverview } from "@/features/dashboard/dashboard.types";
 
 type DashboardOverviewProps = {
@@ -21,10 +22,11 @@ type DashboardOverviewProps = {
 };
 
 export function DashboardOverview({ data }: DashboardOverviewProps) {
-  const { kpis, trends, workspaceName, isFullyEmpty } = data;
+  const { kpis, trends, workspaceName, isFullyEmpty, previewFields = [] } = data;
 
   return (
     <div className="dashboard-page-enter mx-auto max-w-7xl">
+      <DashboardPreviewBanner fields={previewFields} />
       <div className="dashboard-stagger-item">
         <h1 className="text-3xl font-semibold tracking-[-0.03em] text-text-primary">Genel Bakış</h1>
         <p className="mt-2 max-w-2xl text-sm text-text-secondary sm:text-base">

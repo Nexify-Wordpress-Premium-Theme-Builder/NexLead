@@ -2,6 +2,7 @@ export type {
   DashboardActivityItem,
   DashboardKpis,
   DashboardOverview,
+  DashboardPreviewField,
   DashboardRecentAudit,
   DashboardRecentLead,
   DashboardRecentWebsite,
@@ -10,6 +11,11 @@ export type {
   DashboardStats,
   DashboardTrendSeries,
 } from "./dashboard.types";
+export { DASHBOARD_PREVIEW_DATA } from "./dashboard-preview-data";
+export {
+  applyDashboardPreview,
+  DASHBOARD_PREVIEW_FIELD_LABELS,
+} from "./dashboard-preview.utils";
 export {
   getAuditScoreSummary,
   getDashboardKpis,
