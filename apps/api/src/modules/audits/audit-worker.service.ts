@@ -2,6 +2,8 @@ import type { TablesInsert, TablesUpdate } from "@nexlead/types";
 
 import { createAdminSupabaseClient } from "../../supabase/admin-client";
 
+import { generateAuditOutput } from "./audit-output.service";
+import type { AuditOutputJobResult, GenerateAuditOutputResult } from "./audit-output.types";
 import type {
   AuditClaimResult,
   AuditRow,
@@ -90,7 +92,7 @@ export async function createAuditJobRun(audit: AuditRow): Promise<string> {
     payload: {
       auditId: audit.id,
       websiteId: audit.website_id,
-      engine: "foundation_stub",
+      engine: "deterministic_foundation",
     },
     created_by: audit.created_by,
   };
@@ -118,6 +120,7 @@ export async function updateAuditJobRun(
   jobRunId: string,
   status: "completed" | "failed",
   errorMessage?: string,
+  outputResult?: AuditOutputJobResult,
 ): Promise<void> {
   const supabase = createAdminSupabaseClient();
   const completedAt = nowIso();
@@ -128,12 +131,8 @@ export async function updateAuditJobRun(
     error_message: errorMessage ?? null,
   };
 
-  if (status === "completed") {
-    update.result = {
-      engine: "foundation_stub",
-      findingsGenerated: false,
-      scoresGenerated: false,
-    };
+  if (status === "completed" && outputResult) {
+    update.result = outputResult;
   }
 
   const { error } = await supabase.from("job_runs").update(update).eq("id", jobRunId);
@@ -143,7 +142,24 @@ export async function updateAuditJobRun(
   }
 }
 
-export async function completeAudit(auditId: string, jobRunId: string | null): Promise<AuditRow> {
+function toJobOutputResult(output: GenerateAuditOutputResult): AuditOutputJobResult {
+  const scoresCount = Object.keys(output.scoreBreakdown).length;
+
+  return {
+    engine: "deterministic_foundation",
+    findingsGenerated: output.findingsCreated > 0,
+    scoresGenerated: scoresCount > 0,
+    overallScore: output.overallScore,
+    findingsCount: output.findingsCreated,
+    scoresCount,
+  };
+}
+
+export async function completeAudit(
+  auditId: string,
+  jobRunId: string | null,
+  output?: GenerateAuditOutputResult,
+): Promise<AuditRow> {
   const supabase = createAdminSupabaseClient();
   const completedAt = nowIso();
 
@@ -194,7 +210,12 @@ export async function completeAudit(auditId: string, jobRunId: string | null): P
   }
 
   if (jobRunId) {
-    await updateAuditJobRun(jobRunId, "completed");
+    await updateAuditJobRun(
+      jobRunId,
+      "completed",
+      undefined,
+      output ? toJobOutputResult(output) : undefined,
+    );
   }
 
   return data;
@@ -323,7 +344,8 @@ export async function processAudit(auditId: string): Promise<AuditWorkerResult> 
       };
     }
 
-    await completeAudit(auditId, jobRunId);
+    const output = await generateAuditOutput(auditId);
+    await completeAudit(auditId, jobRunId, output);
 
     return {
       processed: true,
