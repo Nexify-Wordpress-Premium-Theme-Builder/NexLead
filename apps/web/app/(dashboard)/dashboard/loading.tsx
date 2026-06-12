@@ -1,28 +1,22 @@
 export default function DashboardLoading() {
   return (
-    <div className="mx-auto max-w-7xl animate-pulse">
-      <div className="h-9 w-48 rounded-lg bg-surface-soft" />
-      <div className="mt-3 h-5 w-full max-w-xl rounded-lg bg-surface-soft" />
+    <div className="mx-auto max-w-[1520px] animate-pulse">
+      <div className="h-10 w-56 rounded-xl bg-[#E2E8F0]" />
+      <div className="mt-3 h-5 w-full max-w-xl rounded-lg bg-[#E2E8F0]" />
 
-      <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-6">
+      <div className="mt-6 grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-6">
         {Array.from({ length: 6 }).map((_, index) => (
-          <div key={index} className="h-36 rounded-2xl border border-border bg-surface" />
+          <div key={index} className="h-[158px] rounded-[22px] border border-[rgba(15,23,42,0.06)] bg-white" />
         ))}
       </div>
 
-      <div className="mt-8 grid gap-6 xl:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
-        <div className="h-80 rounded-2xl border border-border bg-surface" />
-        <div className="h-80 rounded-2xl border border-border bg-surface" />
+      <div className="mt-5 grid gap-4 xl:grid-cols-12">
+        <div className="h-[420px] rounded-[22px] border border-[rgba(15,23,42,0.06)] bg-white xl:col-span-8" />
+        <div className="space-y-4 xl:col-span-4">
+          <div className="h-64 rounded-[22px] border border-[rgba(15,23,42,0.06)] bg-white" />
+          <div className="h-56 rounded-[22px] border border-[rgba(15,23,42,0.06)] bg-white" />
+        </div>
       </div>
-
-      <div className="mt-8 h-64 rounded-2xl border border-border bg-surface" />
-
-      <div className="mt-8 grid gap-6 lg:grid-cols-2">
-        <div className="h-72 rounded-2xl border border-border bg-surface" />
-        <div className="h-72 rounded-2xl border border-border bg-surface" />
-      </div>
-
-      <div className="mt-6 h-64 rounded-2xl border border-border bg-surface" />
     </div>
   );
 }

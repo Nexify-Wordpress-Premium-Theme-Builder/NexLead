@@ -8,29 +8,76 @@
   }
 
   body {
-    @apply bg-background font-sans text-text-primary;
+    @apply bg-[#F4F6FA] font-sans text-[#0B1220];
   }
 }
 
 @layer components {
   .dashboard-title {
-    @apply text-[1.875rem] font-bold tracking-[-0.03em] text-text-primary sm:text-[2rem];
+    @apply text-[26px] font-extrabold tracking-[-0.045em] text-[#0B1220] sm:text-[30px] lg:text-[34px];
   }
 
   .dashboard-section-title {
-    @apply text-[17px] font-bold tracking-[-0.02em] text-text-heading;
+    @apply text-lg font-extrabold tracking-[-0.02em] text-[#0F172A];
   }
 
   .dashboard-metric-value {
-    @apply text-[1.875rem] font-bold tracking-[-0.04em] text-text-primary;
+    @apply text-[34px] font-extrabold leading-none tracking-[-0.05em] text-[#0B1220];
   }
 
   .dashboard-label {
-    @apply text-[13px] font-semibold text-text-secondary;
+    @apply text-sm font-bold text-[#475569];
   }
 
   .dashboard-body {
-    @apply text-sm font-medium leading-relaxed text-text-secondary;
+    @apply text-[13px] font-medium leading-[1.45] text-[#64748B];
+  }
+
+  .premium-card {
+    box-shadow:
+      0 18px 40px rgba(15, 23, 42, 0.06),
+      0 2px 8px rgba(15, 23, 42, 0.04);
+  }
+
+  .premium-card-hover {
+    @apply transition-all duration-300 ease-out;
+  }
+
+  .premium-card-hover:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      0 22px 48px rgba(15, 23, 42, 0.08),
+      0 4px 12px rgba(15, 23, 42, 0.05);
+  }
+
+  .icon-badge {
+    @apply flex shrink-0 items-center justify-center rounded-2xl;
+    width: 44px;
+    height: 44px;
+  }
+
+  .icon-badge-lg {
+    width: 48px;
+    height: 48px;
+  }
+
+  .sidebar-nav-item {
+    @apply flex h-[46px] items-center gap-3 rounded-[14px] px-3 text-sm font-semibold transition-all duration-[180ms] ease-out;
+  }
+
+  .sidebar-nav-item-active {
+    background: linear-gradient(135deg, #eef4ff, #f4f0ff);
+    border: 1px solid rgba(37, 99, 235, 0.14);
+    color: #2563eb;
+    box-shadow: 0 8px 22px rgba(37, 99, 235, 0.08);
+  }
+
+  .sidebar-nav-item-inactive {
+    @apply text-[#64748B] hover:bg-[#F8FAFC] hover:text-[#0F172A];
+  }
+
+  .trend-pill {
+    @apply inline-flex items-center gap-0.5 rounded-full px-2 py-0.5 text-xs font-bold tabular-nums;
   }
 }
 
@@ -40,29 +87,12 @@
     animation: fade-up 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
   }
 
-  .auth-stagger > *:nth-child(1) {
-    animation-delay: 0.05s;
-  }
-
-  .auth-stagger > *:nth-child(2) {
-    animation-delay: 0.12s;
-  }
-
-  .auth-stagger > *:nth-child(3) {
-    animation-delay: 0.19s;
-  }
-
-  .auth-stagger > *:nth-child(4) {
-    animation-delay: 0.26s;
-  }
-
-  .auth-stagger > *:nth-child(5) {
-    animation-delay: 0.33s;
-  }
-
-  .auth-stagger > *:nth-child(6) {
-    animation-delay: 0.4s;
-  }
+  .auth-stagger > *:nth-child(1) { animation-delay: 0.05s; }
+  .auth-stagger > *:nth-child(2) { animation-delay: 0.12s; }
+  .auth-stagger > *:nth-child(3) { animation-delay: 0.19s; }
+  .auth-stagger > *:nth-child(4) { animation-delay: 0.26s; }
+  .auth-stagger > *:nth-child(5) { animation-delay: 0.33s; }
+  .auth-stagger > *:nth-child(6) { animation-delay: 0.4s; }
 
   .auth-grid {
     background-image: radial-gradient(circle at 1px 1px, #e5e7eb 1px, transparent 0);
@@ -77,29 +107,12 @@
     animation: fade-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
   }
 
-  .dashboard-stagger > .dashboard-stagger-item:nth-child(1) {
-    animation-delay: 0.04s;
-  }
-
-  .dashboard-stagger > .dashboard-stagger-item:nth-child(2) {
-    animation-delay: 0.08s;
-  }
-
-  .dashboard-stagger > .dashboard-stagger-item:nth-child(3) {
-    animation-delay: 0.12s;
-  }
-
-  .dashboard-stagger > .dashboard-stagger-item:nth-child(4) {
-    animation-delay: 0.16s;
-  }
-
-  .dashboard-stagger > .dashboard-stagger-item:nth-child(5) {
-    animation-delay: 0.2s;
-  }
-
-  .dashboard-stagger > .dashboard-stagger-item:nth-child(6) {
-    animation-delay: 0.24s;
-  }
+  .dashboard-stagger > .dashboard-stagger-item:nth-child(1) { animation-delay: 0.04s; }
+  .dashboard-stagger > .dashboard-stagger-item:nth-child(2) { animation-delay: 0.08s; }
+  .dashboard-stagger > .dashboard-stagger-item:nth-child(3) { animation-delay: 0.12s; }
+  .dashboard-stagger > .dashboard-stagger-item:nth-child(4) { animation-delay: 0.16s; }
+  .dashboard-stagger > .dashboard-stagger-item:nth-child(5) { animation-delay: 0.2s; }
+  .dashboard-stagger > .dashboard-stagger-item:nth-child(6) { animation-delay: 0.24s; }
 
   .dashboard-stagger > * > .dashboard-stagger-item {
     animation: fade-up 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.12s forwards;
@@ -109,27 +122,27 @@
     animation: fade-up 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards;
   }
 
-  .dashboard-right-panel > .dashboard-right-panel-item:nth-child(1) {
-    animation-delay: 0.1s;
-  }
-
-  .dashboard-right-panel > .dashboard-right-panel-item:nth-child(2) {
-    animation-delay: 0.18s;
-  }
+  .dashboard-right-panel > .dashboard-right-panel-item:nth-child(1) { animation-delay: 0.08s; }
+  .dashboard-right-panel > .dashboard-right-panel-item:nth-child(2) { animation-delay: 0.14s; }
+  .dashboard-right-panel > .dashboard-right-panel-item:nth-child(3) { animation-delay: 0.2s; }
 
   .dashboard-table-row {
     animation: fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
   }
 
+  .insight-row-stagger {
+    animation: fade-up 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+
   .chart-line-draw {
-    stroke-dasharray: 1200;
-    stroke-dashoffset: 1200;
-    animation: chart-draw 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    stroke-dasharray: 1400;
+    stroke-dashoffset: 1400;
+    animation: chart-draw 1.3s cubic-bezier(0.22, 1, 0.36, 1) forwards;
   }
 
   .chart-area-fade {
     opacity: 0;
-    animation: chart-area-fade 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.15s forwards;
+    animation: chart-area-fade 1s cubic-bezier(0.22, 1, 0.36, 1) 0.12s forwards;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -140,6 +153,7 @@
     .chart-line-draw,
     .chart-area-fade,
     .dashboard-table-row,
+    .insight-row-stagger,
     .auth-stagger > * {
       animation: none !important;
       opacity: 1 !important;
@@ -162,21 +176,11 @@
 }
 
 @keyframes chart-draw {
-  from {
-    stroke-dashoffset: 1200;
-  }
-
-  to {
-    stroke-dashoffset: 0;
-  }
+  from { stroke-dashoffset: 1400; }
+  to { stroke-dashoffset: 0; }
 }
 
 @keyframes chart-area-fade {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }

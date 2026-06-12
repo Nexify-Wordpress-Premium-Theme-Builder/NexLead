@@ -10,18 +10,12 @@ type DashboardHeaderProps = {
 };
 
 function getWorkspaceDisplayName(workspaceName: string | null): string {
-  if (workspaceName?.trim()) {
-    return workspaceName.trim();
-  }
-
+  if (workspaceName?.trim()) return workspaceName.trim();
   return "Çalışma alanı hazırlanıyor";
 }
 
 function getUserDisplayName(userEmail: string | null): string {
-  if (!userEmail) {
-    return "Kullanıcı";
-  }
-
+  if (!userEmail) return "Kullanıcı";
   const localPart = userEmail.split("@")[0] ?? userEmail;
   return localPart
     .split(/[._-]/)
@@ -31,10 +25,7 @@ function getUserDisplayName(userEmail: string | null): string {
 }
 
 function getUserInitials(userEmail: string | null): string {
-  if (!userEmail) {
-    return "K";
-  }
-
+  if (!userEmail) return "K";
   return userEmail.slice(0, 1).toUpperCase();
 }
 
@@ -45,12 +36,12 @@ export function DashboardHeader({
   showMenuButton = false,
 }: DashboardHeaderProps) {
   return (
-    <header className="sticky top-0 z-30 border-b border-border/70 bg-surface/90 shadow-[0_1px_0_rgba(15,23,42,0.03)] backdrop-blur-xl">
-      <div className="flex h-[4.25rem] items-center gap-3 px-4 sm:px-6">
+    <header className="sticky top-0 z-30 border-b border-[rgba(15,23,42,0.06)] bg-white/[0.86] backdrop-blur-xl">
+      <div className="flex h-[72px] items-center gap-4 px-6">
         {showMenuButton ? (
           <button
             type="button"
-            className="rounded-xl border border-border/80 p-2 text-text-secondary transition-colors hover:bg-surface-soft lg:hidden"
+            className="rounded-xl border border-[rgba(15,23,42,0.08)] p-2.5 text-[#64748B] transition-colors hover:bg-[#F8FAFC] lg:hidden"
             aria-label="Menüyü aç"
             onClick={onMenuOpen}
           >
@@ -61,63 +52,67 @@ export function DashboardHeader({
         ) : null}
 
         <div className="hidden min-w-0 shrink-0 lg:block">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.1em] text-text-muted">
+          <p className="text-[11px] font-bold uppercase tracking-[0.08em] text-[#94A3B8]">
             Çalışma Alanı
           </p>
-          <p className="truncate text-[13px] font-bold text-text-heading">
+          <p className="truncate text-[15px] font-extrabold text-[#0F172A]">
             {getWorkspaceDisplayName(workspaceName)}
           </p>
         </div>
 
-        <label className="relative mx-auto hidden min-w-0 max-w-2xl flex-1 md:block">
+        <label className="relative mx-auto hidden min-w-0 max-w-[520px] flex-1 lg:block">
           <span className="sr-only">Ara</span>
-          <IconSearch className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-text-muted" />
+          <IconSearch
+            className="pointer-events-none absolute left-4 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-[#94A3B8]"
+            strokeWidth={2.2}
+          />
           <input
             type="search"
             disabled
             placeholder="Ara: lead, şirket, web site..."
-            className="h-10 w-full rounded-xl border border-border/80 bg-[#F8FAFC] pl-10 pr-14 text-[13px] font-medium text-text-primary shadow-inner shadow-black/[0.02] placeholder:font-normal placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-accent/15 disabled:cursor-not-allowed disabled:opacity-90"
+            className="h-11 w-full rounded-2xl border border-[rgba(15,23,42,0.08)] bg-[#F8FAFC] pl-11 pr-14 text-[14px] font-medium text-[#0F172A] placeholder:text-[#94A3B8] focus:outline-none focus:ring-2 focus:ring-[#2563EB]/15 disabled:cursor-not-allowed"
             aria-disabled="true"
           />
-          <span className="pointer-events-none absolute right-2.5 top-1/2 hidden -translate-y-1/2 rounded-md border border-border/80 bg-surface px-1.5 py-0.5 text-[10px] font-semibold text-text-muted sm:inline">
+          <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 rounded-lg border border-[rgba(15,23,42,0.08)] bg-white px-2 py-0.5 text-[11px] font-bold text-[#64748B]">
             ⌘K
           </span>
         </label>
 
-        <div className="ml-auto flex items-center gap-2 sm:gap-2.5">
+        <div className="ml-auto flex items-center gap-2.5">
           <button
             type="button"
             disabled
-            className="hidden h-9 items-center gap-2 rounded-full border border-border/80 bg-surface px-3.5 text-[12px] font-semibold text-text-secondary shadow-sm disabled:cursor-not-allowed disabled:opacity-90 lg:inline-flex"
+            className="hidden h-11 items-center gap-2 rounded-2xl border border-[rgba(15,23,42,0.08)] bg-white px-4 text-[13px] font-bold text-[#475569] shadow-sm disabled:cursor-not-allowed lg:inline-flex"
             aria-disabled="true"
           >
-            <IconCalendar className="h-3.5 w-3.5" />
+            <IconCalendar className="h-[18px] w-[18px]" strokeWidth={2.2} />
             <span>Son 30 gün</span>
           </button>
 
           <button
             type="button"
             disabled
-            className="relative inline-flex h-9 w-9 items-center justify-center rounded-xl border border-border/80 bg-surface text-text-secondary shadow-sm disabled:cursor-not-allowed disabled:opacity-90"
+            className="relative inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-[rgba(15,23,42,0.08)] bg-white text-[#64748B] shadow-sm disabled:cursor-not-allowed"
             aria-label="Bildirimler yakında"
             aria-disabled="true"
           >
-            <IconBell className="h-4 w-4" />
-            <span className="absolute -right-1 -top-1 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-accent px-1 text-[10px] font-bold text-white shadow-sm">
+            <IconBell className="h-5 w-5" strokeWidth={2.2} />
+            <span className="absolute -right-1 -top-1 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-[#2563EB] px-1 text-[10px] font-extrabold text-white">
               3
             </span>
           </button>
 
-          <div className="flex min-w-0 items-center gap-2 rounded-xl border border-border/80 bg-surface py-1 pl-1 pr-2.5 shadow-sm sm:pr-3">
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-accent/15 to-accent-purple/15 text-sm font-bold text-accent">
+          <div className="flex min-w-0 items-center gap-2.5 rounded-2xl border border-[rgba(15,23,42,0.08)] bg-white py-1.5 pl-1.5 pr-3 shadow-sm">
+            <div className="relative flex h-[38px] w-[38px] shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#2563EB]/12 to-[#7C3AED]/12 text-sm font-extrabold text-[#2563EB]">
               {getUserInitials(userEmail)}
+              <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full border-2 border-white bg-[#16A34A]" />
             </div>
             <div className="hidden min-w-0 sm:block">
-              <p className="truncate text-[13px] font-bold text-text-heading">
+              <p className="truncate text-[14px] font-extrabold text-[#0F172A]">
                 {getUserDisplayName(userEmail)}
               </p>
-              <p className="flex items-center gap-1 truncate text-[11px] font-medium text-text-muted">
-                <IconUser className="h-3 w-3 shrink-0" />
+              <p className="flex items-center gap-1 truncate text-[11px] font-medium text-[#64748B]">
+                <IconUser className="h-3 w-3 shrink-0" strokeWidth={2.2} />
                 <span className="truncate">{userEmail ?? "Aktif oturum"}</span>
               </p>
             </div>

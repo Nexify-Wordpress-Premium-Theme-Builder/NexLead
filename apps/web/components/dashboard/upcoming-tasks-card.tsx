@@ -1,4 +1,5 @@
 import { IconClock } from "@/components/ui/icons";
+import { PremiumCard } from "@/components/ui/premium-card";
 import type { DashboardUpcomingTask } from "@/features/dashboard/dashboard.types";
 
 type UpcomingTasksCardProps = {
@@ -7,31 +8,34 @@ type UpcomingTasksCardProps = {
 
 export function UpcomingTasksCard({ tasks }: UpcomingTasksCardProps) {
   return (
-    <section className="rounded-2xl border border-border bg-surface p-4 shadow-soft sm:p-5">
+    <PremiumCard padding="panel">
       <div className="flex items-center justify-between gap-2">
         <div>
-          <h2 className="text-sm font-semibold text-text-primary">Yaklaşan İşler</h2>
-          <p className="mt-1 text-xs text-text-muted">Takip edilecek analiz ve leadler</p>
+          <h2 className="dashboard-section-title">Yaklaşan İşler</h2>
+          <p className="dashboard-body mt-1">Takip edilecek analiz ve raporlar</p>
         </div>
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-warning/10 text-warning">
-          <IconClock className="h-4 w-4" />
+        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#F97316]/10 text-[#F97316]">
+          <IconClock className="h-5 w-5" strokeWidth={2.2} />
         </div>
       </div>
 
       <ul className="mt-4 space-y-3">
-        {tasks.map((task) => (
+        {tasks.map((task, index) => (
           <li
             key={task.id}
-            className="flex items-start justify-between gap-3 rounded-xl border border-border/70 bg-surface-soft/40 px-3 py-2.5"
+            className="dashboard-table-row flex items-start justify-between gap-3 rounded-2xl border border-[rgba(15,23,42,0.06)] bg-[#F8FAFC] p-3.5"
+            style={{ animationDelay: `${index * 0.05}s` }}
           >
             <div className="min-w-0">
-              <p className="truncate text-sm font-medium text-text-primary">{task.title}</p>
-              <p className="mt-0.5 text-xs text-text-secondary">{task.subtitle}</p>
+              <p className="truncate text-[14px] font-bold text-[#0F172A]">{task.title}</p>
+              <p className="mt-0.5 text-[12px] font-medium text-[#64748B]">{task.subtitle}</p>
             </div>
-            <span className="shrink-0 text-[11px] font-medium text-text-muted">{task.timeLabel}</span>
+            <span className="shrink-0 rounded-full bg-white px-2 py-0.5 text-[11px] font-bold text-[#475569]">
+              {task.timeLabel}
+            </span>
           </li>
         ))}
       </ul>
-    </section>
+    </PremiumCard>
   );
 }

@@ -1,6 +1,3 @@
-import {
-  DASHBOARD_PREVIEW_FIELD_LABELS,
-} from "@/features/dashboard/dashboard-preview.utils";
 import type { DashboardPreviewField } from "@/features/dashboard/dashboard.types";
 
 type DashboardPreviewBannerProps = {
@@ -12,17 +9,14 @@ export function DashboardPreviewBanner({ fields }: DashboardPreviewBannerProps) 
     return null;
   }
 
-  const labels = fields.map((field) => DASHBOARD_PREVIEW_FIELD_LABELS[field]).join(", ");
-
   return (
-    <div
-      className="mb-6 rounded-xl border border-accent/20 bg-accent/5 px-4 py-3 text-sm text-text-secondary"
+    <span
+      className="inline-flex items-center gap-1.5 rounded-full border border-[#2563EB]/15 bg-[#2563EB]/8 px-2.5 py-1 text-[11px] font-bold text-[#2563EB]"
       role="status"
+      title="Bazı alanlarda kontrollü frontend önizleme verisi kullanılıyor"
     >
-      <p className="font-medium text-text-primary">Önizleme verisi aktif</p>
-      <p className="mt-1">
-        Gerçek veri olmayan alanlarda kontrollü frontend önizlemesi gösteriliyor: {labels}.
-      </p>
-    </div>
+      <span className="h-1.5 w-1.5 rounded-full bg-[#2563EB]" aria-hidden="true" />
+      Önizleme modu
+    </span>
   );
 }
