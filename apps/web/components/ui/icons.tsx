@@ -152,3 +152,79 @@ export function IconChevronRight(props: IconProps) {
     </svg>
   );
 }
+
+export function IconSearch(props: IconProps) {
+  return (
+    <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" {...props}>
+      <circle cx="9" cy="9" r="5.5" stroke="currentColor" strokeWidth="1.5" />
+      <path d="m13.5 13.5 3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+export function IconBell(props: IconProps) {
+  return (
+    <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" {...props}>
+      <path
+        d="M6.5 14.5h7M5 7.5a5 5 0 1 1 10 0c0 4 1.5 4.5 1.5 7h-13S5 11.5 5 7.5Z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+export function IconCalendar(props: IconProps) {
+  return (
+    <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" {...props}>
+      <rect x="4" y="5" width="12" height="11" rx="1.5" stroke="currentColor" strokeWidth="1.5" />
+      <path d="M7 3.5V6M13 3.5V6M4 8.5h12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+export function IconSettings(props: IconProps) {
+  return (
+    <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" {...props}>
+      <circle cx="10" cy="10" r="2.5" stroke="currentColor" strokeWidth="1.5" />
+      <path
+        d="M10 3.5v1.2M10 15.3v1.2M4.2 6.2l.85.85M14.95 16.95l.85.85M3.5 10h1.2M15.3 10h1.2M4.2 13.8l.85-.85M14.95 3.05l.85-.85"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+export function IconFileText(props: IconProps) {
+  return (
+    <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" {...props}>
+      <path
+        d="M6 4.5h5.2L14 7.3V15.5a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-10a1 1 0 0 1 1-1Z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinejoin="round"
+      />
+      <path d="M11 4.5V8H14.2" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
+      <path d="M7.5 11h5M7.5 13.5h5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+export function IconAlertTriangle(props: IconProps) {
+  return (
+    <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" {...props}>
+      <path
+        d="M10 4.5 16.5 15.5H3.5L10 4.5Z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinejoin="round"
+      />
+      <path d="M10 9v3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+      <circle cx="10" cy="13.8" r="0.75" fill="currentColor" />
+    </svg>
+  );
+}

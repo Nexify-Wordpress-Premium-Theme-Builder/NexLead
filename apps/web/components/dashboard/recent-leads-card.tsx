@@ -30,7 +30,7 @@ export function RecentLeadsCard({ leads }: RecentLeadsCardProps) {
         <div className="px-5 py-10 text-center">
           <p className="text-sm font-medium text-text-primary">Henüz lead eklenmedi.</p>
           <p className="mt-2 text-sm text-text-secondary">
-            İlk lead&apos;inizi ekleyerek başlayın.
+            İlk lead&apos;inizi ekleyerek müşteri kazanım sürecinizi başlatın.
           </p>
           <Link
             href="/dashboard/leads"

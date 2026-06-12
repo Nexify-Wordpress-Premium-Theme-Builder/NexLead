@@ -19,8 +19,9 @@ const config: Config = {
         primary: "#111827",
         "primary-hover": "#000000",
         accent: "#2563EB",
+        "accent-purple": "#7C3AED",
         success: "#16A34A",
-        warning: "#D97706",
+        warning: "#F97316",
         error: "#DC2626",
       },
       fontFamily: {
@@ -47,12 +48,17 @@ const config: Config = {
           "0%": { transform: "scaleX(0)" },
           "100%": { transform: "scaleX(1)" },
         },
+        "chart-draw": {
+          "0%": { strokeDashoffset: "240" },
+          "100%": { strokeDashoffset: "0" },
+        },
       },
       animation: {
         "fade-up": "fade-up 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards",
         "fade-in": "fade-in 0.45s ease-out forwards",
         "slide-in": "slide-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards",
         "line-grow": "line-grow 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards",
+        "chart-draw": "chart-draw 1s cubic-bezier(0.22, 1, 0.36, 1) forwards",
       },
     },
   },

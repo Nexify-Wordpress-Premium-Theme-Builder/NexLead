@@ -3,7 +3,13 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import { IconGlobe, IconLayout, IconUsers } from "@/components/ui/icons";
+import {
+  IconFileText,
+  IconGlobe,
+  IconLayout,
+  IconSettings,
+  IconUsers,
+} from "@/components/ui/icons";
 
 type NavItem = {
   label: string;
@@ -16,7 +22,6 @@ const NAV_ITEMS: NavItem[] = [
   { label: "Leadler", href: "/dashboard/leads" },
   { label: "Web Site Analizleri", href: "/dashboard/websites" },
   { label: "Raporlar", disabled: true },
-  { label: "Outreach", disabled: true },
   { label: "Ayarlar", disabled: true },
 ];
 
@@ -37,6 +42,14 @@ function NavIcon({ label }: { label: string }) {
     return <IconGlobe className="h-[18px] w-[18px]" />;
   }
 
+  if (label === "Raporlar") {
+    return <IconFileText className="h-[18px] w-[18px]" />;
+  }
+
+  if (label === "Ayarlar") {
+    return <IconSettings className="h-[18px] w-[18px]" />;
+  }
+
   return <IconLayout className="h-[18px] w-[18px]" />;
 }
 
@@ -44,7 +57,10 @@ export function DashboardSidebar({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = usePathname();
 
   return (
-    <nav className="flex-1 space-y-1 px-3 py-4">
+    <nav className="flex-1 space-y-1 px-3 py-4" aria-label="Ana menü">
+      <p className="px-3 pb-2 text-[11px] font-semibold uppercase tracking-[0.08em] text-text-muted">
+        Menü
+      </p>
       {NAV_ITEMS.map((item) => {
         const active = item.href ? isActive(pathname, item.href) : false;
 
@@ -52,8 +68,9 @@ export function DashboardSidebar({ onNavigate }: { onNavigate?: () => void }) {
           return (
             <span
               key={item.label}
-              className="flex cursor-not-allowed items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-text-muted"
+              className="flex cursor-not-allowed items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-text-muted"
               aria-disabled="true"
+              title="Yakında"
             >
               <NavIcon label={item.label} />
               {item.label}
@@ -66,11 +83,12 @@ export function DashboardSidebar({ onNavigate }: { onNavigate?: () => void }) {
             key={item.href}
             href={item.href}
             onClick={onNavigate}
-            className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
+            className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-200 ${
               active
-                ? "bg-surface-soft text-text-primary"
+                ? "bg-accent/10 text-accent shadow-sm"
                 : "text-text-secondary hover:bg-surface-soft hover:text-text-primary"
             }`}
+            aria-current={active ? "page" : undefined}
           >
             <NavIcon label={item.label} />
             {item.label}
