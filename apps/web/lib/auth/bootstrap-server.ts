@@ -21,14 +21,23 @@ export const ensureServerBootstrap = cache(async (userId: string): Promise<Boots
     return current;
   }
 
-  await fetch(`${getApiBaseUrl()}/auth/bootstrap`, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-Type": "application/json",
-    },
-    cache: "no-store",
-  });
+  try {
+    const response = await fetch(`${getApiBaseUrl()}/auth/bootstrap`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+      cache: "no-store",
+    });
+
+    if (!response.ok) {
+      return current;
+    }
+  } catch {
+    // API kapalıyken dashboard UI çalışmaya devam etsin (Supabase verisi yeterli).
+    return current;
+  }
 
   return getServerBootstrapStatus(userId);
 });

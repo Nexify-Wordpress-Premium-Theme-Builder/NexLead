@@ -23,8 +23,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="tr">
-      <body className={`${sans.variable} font-sans`}>{children}</body>
+    <html lang="tr" suppressHydrationWarning>
+      <body className={`${sans.variable} font-sans`} suppressHydrationWarning>
+        {children}
+      </body>
     </html>
   );
 }
