@@ -26,7 +26,7 @@ export function AuditFunnelCard({ steps }: AuditFunnelCardProps) {
 
   return (
     <section className="rounded-2xl border border-border/90 bg-surface p-4 shadow-soft sm:p-5">
-      <h2 className="text-dashboard-section text-text-heading">Analiz Hunisi</h2>
+      <h2 className="dashboard-section-title">Analiz Hunisi</h2>
       <p className="mt-1 text-[12px] font-medium text-text-secondary">Lead&apos;den aksiyona dönüşüm</p>
 
       <div className="mt-4 space-y-3">

@@ -1,5 +1,7 @@
 "use client";
 
+import { useId } from "react";
+
 type MiniSparklineProps = {
   values: number[];
   color?: string;
@@ -41,6 +43,7 @@ export function MiniSparkline({
   color = "#2563EB",
   className,
 }: MiniSparklineProps) {
+  const gradientId = useId();
   const width = 64;
   const height = 24;
   const points = buildPoints(values, width, height);
@@ -66,7 +69,7 @@ export function MiniSparkline({
   return (
     <svg viewBox={`0 0 ${width} ${height}`} className={className} aria-hidden="true">
       <defs>
-        <linearGradient id={`spark-${color.replace("#", "")}`} x1="0" y1="0" x2="0" y2="1">
+        <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stopColor={color} stopOpacity="0.2" />
           <stop offset="100%" stopColor={color} stopOpacity="0" />
         </linearGradient>
@@ -74,7 +77,7 @@ export function MiniSparkline({
       {points.length > 1 ? (
         <path
           d={`${path} L ${points[points.length - 1].x} ${height} L ${points[0].x} ${height} Z`}
-          fill={`url(#spark-${color.replace("#", "")})`}
+          fill={`url(#${gradientId})`}
         />
       ) : null}
       <path
@@ -84,7 +87,6 @@ export function MiniSparkline({
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
-        className="chart-line-draw"
       />
     </svg>
   );

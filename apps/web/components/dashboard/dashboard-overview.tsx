@@ -30,10 +30,8 @@ export function DashboardOverview({ data }: DashboardOverviewProps) {
       <DashboardPreviewBanner fields={previewFields} />
 
       <div className="dashboard-stagger-item">
-        <h1 className="text-[1.875rem] font-bold tracking-[-0.03em] text-text-primary sm:text-[2rem]">
-          Genel Bakış
-        </h1>
-        <p className="mt-1.5 text-dashboard-body text-text-secondary">
+        <h1 className="dashboard-title">Genel Bakış</h1>
+        <p className="dashboard-body mt-1.5">
           Lead, web sitesi ve analiz performansınızı tek ekrandan izleyin.
         </p>
       </div>
@@ -101,7 +99,7 @@ export function DashboardOverview({ data }: DashboardOverviewProps) {
           <div className="rounded-2xl border border-border/90 bg-surface p-4 shadow-soft sm:p-5">
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
-                <h2 className="text-dashboard-section text-text-heading">Lead &amp; Analiz Performansı</h2>
+                <h2 className="dashboard-section-title">Lead &amp; Analiz Performansı</h2>
                 <p className="mt-1 text-[12px] font-medium text-text-secondary">
                   Son 14 günlük kayıt trendleri
                 </p>

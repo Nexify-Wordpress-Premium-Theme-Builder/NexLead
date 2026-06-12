@@ -84,8 +84,8 @@ export function DashboardLineChart({ labels, series }: DashboardLineChartProps) 
         className="flex flex-col items-center justify-center rounded-xl border border-dashed border-border bg-surface-soft/40 px-6 text-center"
         style={{ height: CHART_HEIGHT }}
       >
-        <p className="text-dashboard-body font-semibold text-text-primary">Grafik için yeterli veri yok</p>
-        <p className="mt-2 max-w-sm text-dashboard-body text-text-secondary">
+        <p className="dashboard-body font-semibold text-text-primary">Grafik için yeterli veri yok</p>
+        <p className="dashboard-body mt-2 max-w-sm">
           Lead, web sitesi veya analiz kayıtları oluştukça trend grafiği burada görünecek.
         </p>
       </div>
@@ -135,7 +135,9 @@ export function DashboardLineChart({ labels, series }: DashboardLineChartProps) 
               x={padding.left - 10}
               y={tick.y + 4}
               textAnchor="end"
-              className="fill-text-muted text-[10px] font-medium"
+              fill="#94A3B8"
+              fontSize="10"
+              fontWeight="500"
             >
               {tick.value}
             </text>

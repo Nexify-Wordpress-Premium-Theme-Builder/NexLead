@@ -24,7 +24,7 @@ export function AnalysisSummaryCard({
       <div className="dashboard-right-panel-item rounded-2xl border border-border/90 bg-surface p-4 shadow-soft sm:p-5">
         <div className="flex items-start justify-between gap-3">
           <div>
-            <h2 className="text-dashboard-section text-text-heading">Site Analizi Özeti</h2>
+            <h2 className="dashboard-section-title">Site Analizi Özeti</h2>
             <p className="mt-1 text-[12px] font-medium leading-relaxed text-text-secondary">
               Tamamlanan analizlerden türetilen skor özeti
             </p>

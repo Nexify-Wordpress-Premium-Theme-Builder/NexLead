@@ -65,10 +65,10 @@ export function MetricCard({
         )}
       </div>
 
-      <p className="mt-3 text-dashboard-label text-text-secondary">{label}</p>
+      <p className="dashboard-label mt-3">{label}</p>
 
       <div className="mt-1 flex items-end justify-between gap-2">
-        <p className="text-dashboard-metric text-text-primary tabular-nums">
+        <p className="dashboard-metric-value tabular-nums">
           {displayValue ?? <AnimatedNumber value={value} className="font-bold" />}
         </p>
         {trend ? <TrendBadge trend={trend} /> : null}

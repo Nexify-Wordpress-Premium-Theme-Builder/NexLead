@@ -25,21 +25,20 @@ const TONE_STYLES: Record<
 export function AnalysisInsightsCard({ insights }: AnalysisInsightsCardProps) {
   return (
     <div className="dashboard-right-panel-item rounded-2xl border border-border/90 bg-surface p-4 shadow-soft sm:p-5">
-      <h3 className="text-dashboard-section text-text-heading">Analiz İçgörüleri</h3>
+      <h3 className="dashboard-section-title">Analiz İçgörüleri</h3>
       <p className="mt-1 text-[12px] font-medium text-text-secondary">
         Öncelikli bulgular ve önerilen aksiyonlar
       </p>
 
       <ul className="mt-4 space-y-3">
-        {insights.map((insight, index) => {
+        {insights.map((insight) => {
           const tone = TONE_STYLES[insight.tone];
           const Icon = tone.icon;
 
           return (
             <li
               key={insight.id}
-              className="dashboard-table-row flex gap-3 rounded-xl border border-border/70 bg-surface-soft/35 p-3"
-              style={{ animationDelay: `${0.15 + index * 0.06}s` }}
+              className="flex gap-3 rounded-xl border border-border/70 bg-surface-soft/35 p-3"
             >
               <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] ${tone.bg} ${tone.accent}`}>
                 <Icon className="h-4 w-4" />
