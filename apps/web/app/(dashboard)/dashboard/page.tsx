@@ -10,7 +10,7 @@ export default async function DashboardPage() {
 
   if (!workspace) {
     return (
-      <div className="mx-auto max-w-2xl rounded-2xl border border-border bg-surface p-8 shadow-soft">
+      <div className="nx-card mx-auto max-w-2xl p-8">
         <h1 className="text-xl font-semibold text-text-primary">Çalışma alanı bulunamadı</h1>
         <p className="mt-3 text-sm text-text-secondary">
           Aktif bir çalışma alanına erişilemiyor. Lütfen oturumu kapatıp tekrar giriş yapın.
@@ -29,7 +29,7 @@ export default async function DashboardPage() {
     return <DashboardOverview data={overview} />;
   } catch {
     return (
-      <div className="mx-auto max-w-2xl rounded-2xl border border-border bg-surface p-8 shadow-soft">
+      <div className="nx-card mx-auto max-w-2xl p-8">
         <h1 className="text-xl font-semibold text-text-primary">Genel bakış yüklenemedi</h1>
         <p className="mt-3 text-sm text-text-secondary">
           Dashboard verileri alınırken bir sorun oluştu. Lütfen sayfayı yenileyin.

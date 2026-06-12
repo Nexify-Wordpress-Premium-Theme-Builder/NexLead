@@ -19,7 +19,7 @@ type RecentAuditsCardProps = {
 
 export function RecentAuditsCard({ audits }: RecentAuditsCardProps) {
   return (
-    <section className="rounded-2xl border border-border bg-surface shadow-soft">
+    <section className="nx-card">
       <div className="flex items-center justify-between gap-3 border-b border-border px-5 py-4">
         <div>
           <h2 className="text-base font-semibold text-text-primary">Son Analiz İstekleri</h2>

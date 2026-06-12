@@ -16,7 +16,7 @@ export function AuditResultsPanel({ result }: AuditResultsPanelProps) {
   const showReportLink = result.latestAudit && canOpenReport(result.state);
 
   return (
-    <section className="rounded-2xl border border-border bg-surface p-5 shadow-soft sm:p-6">
+    <section className="nx-card p-5 sm:p-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h2 className="text-base font-semibold text-text-primary">Analiz Sonuçları</h2>
         {showReportLink ? <AuditReportLink auditId={result.latestAudit!.id} /> : null}

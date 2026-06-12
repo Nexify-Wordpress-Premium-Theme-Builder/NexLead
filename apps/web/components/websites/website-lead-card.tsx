@@ -9,7 +9,7 @@ type WebsiteLeadCardProps = {
 
 export function WebsiteLeadCard({ linkedLead }: WebsiteLeadCardProps) {
   return (
-    <section className="rounded-2xl border border-border bg-surface p-5 shadow-soft sm:p-6">
+    <section className="nx-card p-5 sm:p-6">
       <h2 className="text-base font-semibold text-text-primary">Bağlı Lead</h2>
 
       {linkedLead ? (

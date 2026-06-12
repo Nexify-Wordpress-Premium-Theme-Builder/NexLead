@@ -72,7 +72,7 @@ export function WebsiteDetailPageContent({
   };
 
   return (
-    <div className="animate-fade-up mx-auto max-w-7xl">
+    <div className="nx-page space-y-6">
       <BackLink href="/dashboard/websites">Web Site Analizleri&apos;ne dön</BackLink>
 
       <WebsiteDetailHeader

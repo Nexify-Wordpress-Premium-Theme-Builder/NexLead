@@ -1,189 +1,192 @@
-import {
-  IconAlertTriangle,
-  IconClock,
-  IconFileText,
-  IconGlobe,
-  IconTarget,
-  IconUsers,
-} from "@/components/ui/icons";
-import { AnalysisInsightsCard } from "@/components/dashboard/analysis-insights-card";
-import { AnalysisSummaryCard } from "@/components/dashboard/analysis-summary-card";
-import { AuditFunnelCard } from "@/components/dashboard/audit-funnel-card";
+import Link from "next/link";
+
+import { AnimatedNumber } from "@/components/dashboard/animated-number";
 import { DashboardEmptyPanel } from "@/components/dashboard/dashboard-empty-panel";
 import { DashboardLineChart } from "@/components/dashboard/dashboard-line-chart";
 import { DashboardPreviewBanner } from "@/components/dashboard/dashboard-preview-banner";
-import { ManualAnalysisCta } from "@/components/dashboard/manual-analysis-cta";
-import { MetricCard } from "@/components/dashboard/metric-card";
-import { PotentialLeadsTable } from "@/components/dashboard/potential-leads-table";
-import { RecentActivityCard } from "@/components/dashboard/recent-activity-card";
-import { UpcomingTasksCard } from "@/components/dashboard/upcoming-tasks-card";
-import { PremiumCard } from "@/components/ui/premium-card";
-import type { DashboardOverview, DashboardTrendSeries } from "@/features/dashboard/dashboard.types";
+import { DashboardStat } from "@/components/dashboard/dashboard-stat";
+import { IconActivity, IconFileText, IconGlobe, IconUsers } from "@/components/ui/icons";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { PageHeader } from "@/components/ui/page-header";
+import type { DashboardOverview } from "@/features/dashboard/dashboard.types";
+import { formatWebsiteDate } from "@/features/websites/website.utils";
 
 type DashboardOverviewProps = {
   data: DashboardOverview;
 };
 
-const ICON_CLASS = "h-[24px] w-[24px]";
-
-const SPARKLINE_FALLBACK = {
-  pending: [6, 5, 5, 4, 4, 3, 3, 3, 2, 3, 2, 2, 3, 3],
-  score: [72, 74, 73, 76, 77, 78, 79, 80, 81, 81, 82, 82, 83, 82],
-  critical: [9, 8, 8, 7, 7, 6, 6, 5, 5, 5, 5, 5, 5, 5],
-} as const;
-
-function buildChartMetrics(trends: DashboardTrendSeries, kpis: DashboardOverview["kpis"]) {
-  const audits = trends.audits;
-  const maxValue = Math.max(...audits, 0);
-  const peakIndex = audits.indexOf(maxValue);
-  const peakDay = trends.labels[peakIndex] ?? "—";
-  const completedTotal = audits.reduce((sum, value) => sum + value, 0);
-
-  return [
-    { label: "En yüksek gün", value: peakDay },
-    { label: "Tamamlanan analiz", value: String(kpis.completedAudits || completedTotal) },
-    {
-      label: "Ortalama skor",
-      value: kpis.averageScore !== null ? String(kpis.averageScore) : "—",
-    },
-  ];
-}
+const TYPE_LABELS = { lead: "Lead", website: "Web Sitesi", audit: "Analiz" } as const;
 
 export function DashboardOverview({ data }: DashboardOverviewProps) {
-  const { kpis, trends, display, scoreSummary, isFullyEmpty, previewFields = [] } = data;
-  const chartMetrics = buildChartMetrics(trends, kpis);
+  const { kpis, trends, display, scoreSummary, isFullyEmpty, previewFields = [], recentActivity } = data;
 
   return (
-    <div className="dashboard-page-enter w-full max-w-[1520px]">
-      <div className="dashboard-stagger-item flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <div className="flex flex-wrap items-center gap-2.5">
-            <h1 className="dashboard-title">Genel Bakış</h1>
-            <DashboardPreviewBanner fields={previewFields} />
-          </div>
-          <p className="dashboard-body mt-2">
-            Lead, web sitesi ve analiz performansınızı tek ekrandan izleyin.
-          </p>
-        </div>
-      </div>
+    <div className="nx-page space-y-6">
+      <PageHeader
+        title="Genel Bakış"
+        description="Lead pipeline'ınızı, web site analizlerinizi ve öncelikli aksiyonlarınızı tek ekrandan yönetin."
+        badge={<DashboardPreviewBanner fields={previewFields} />}
+        actions={
+          <Link href="/dashboard/websites">
+            <Button type="button">Yeni Analiz Başlat</Button>
+          </Link>
+        }
+      />
 
-      {isFullyEmpty ? (
-        <div className="dashboard-stagger-item mt-5">
-          <DashboardEmptyPanel />
-        </div>
-      ) : null}
+      {isFullyEmpty ? <DashboardEmptyPanel /> : null}
 
-      <div className="dashboard-stagger mt-5 grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-6">
-        <MetricCard
-          icon={<IconUsers className={ICON_CLASS} strokeWidth={2.2} />}
-          label="Bulunan Lead"
+      <div className="nx-stagger grid grid-cols-2 gap-4 lg:grid-cols-4">
+        <DashboardStat
+          label="Toplam Lead"
           value={kpis.totalLeads}
-          trend={display.kpiTrends.leads}
-          sparkline={trends.leads}
-          sparklineColor="#2563EB"
-          accentClassName="bg-[#2563EB]/12 text-[#2563EB]"
+          hint="Çalışma alanındaki kayıtlar"
+          icon={<IconUsers className="h-[18px] w-[18px]" strokeWidth={2} />}
         />
-        <MetricCard
-          icon={<IconGlobe className={ICON_CLASS} strokeWidth={2.2} />}
-          label="Analiz Edilen Site"
+        <DashboardStat
+          label="Aktif Web Sitesi"
           value={kpis.activeWebsites}
-          trend={display.kpiTrends.websites}
-          sparkline={trends.websites}
-          sparklineColor="#7C3AED"
-          accentClassName="bg-[#7C3AED]/12 text-[#7C3AED]"
+          hint="Analiz için kayıtlı"
+          icon={<IconGlobe className="h-[18px] w-[18px]" strokeWidth={2} />}
         />
-        <MetricCard
-          icon={<IconFileText className={ICON_CLASS} strokeWidth={2.2} />}
-          label="Oluşturulan Rapor"
+        <DashboardStat
+          label="Tamamlanan Analiz"
           value={kpis.completedAudits}
-          trend={display.kpiTrends.reports}
-          sparkline={trends.reports}
-          sparklineColor="#16A34A"
-          accentClassName="bg-[#16A34A]/12 text-[#16A34A]"
+          hint="Rapor oluşturulan"
+          icon={<IconFileText className="h-[18px] w-[18px]" strokeWidth={2} />}
         />
-        <MetricCard
-          icon={<IconClock className={ICON_CLASS} strokeWidth={2.2} />}
-          label="Bekleyen Analiz"
-          value={kpis.pendingAudits}
-          trend={display.kpiTrends.pending}
-          sparkline={[...SPARKLINE_FALLBACK.pending]}
-          sparklineColor="#F97316"
-          accentClassName="bg-[#F97316]/12 text-[#F97316]"
-        />
-        <MetricCard
-          icon={<IconTarget className={ICON_CLASS} strokeWidth={2.2} />}
+        <DashboardStat
           label="Ortalama Skor"
           value={kpis.averageScore ?? 0}
           displayValue={kpis.averageScore !== null ? undefined : "—"}
-          trend={display.kpiTrends.score}
-          sparkline={[...SPARKLINE_FALLBACK.score]}
-          sparklineColor="#0891B2"
-          accentClassName="bg-[#0891B2]/12 text-[#0891B2]"
-        />
-        <MetricCard
-          icon={<IconAlertTriangle className={ICON_CLASS} strokeWidth={2.2} />}
-          label="Kritik Bulgu"
-          value={kpis.criticalFindings}
-          trend={display.kpiTrends.critical}
-          sparkline={[...SPARKLINE_FALLBACK.critical]}
-          sparklineColor="#DC2626"
-          accentClassName="bg-[#DC2626]/12 text-[#DC2626]"
+          hint={kpis.pendingAudits > 0 ? `${kpis.pendingAudits} analiz bekliyor` : "Tüm analizler güncel"}
+          icon={<IconActivity className="h-[18px] w-[18px]" strokeWidth={2} />}
         />
       </div>
 
-      <div className="dashboard-stagger mt-4 grid gap-4 xl:grid-cols-12">
-        <div className="dashboard-stagger-item xl:col-span-8">
-          <PremiumCard padding="chart" radius="chart" className="chart-hero-card min-h-[450px]">
-            <div className="flex flex-wrap items-start justify-between gap-3">
-              <div>
-                <h2 className="dashboard-section-title">Lead &amp; Analiz Performansı</h2>
-                <p className="dashboard-body mt-1">Son 30 günlük büyüme ve analiz trendleri</p>
-              </div>
-              <span
-                className="inline-flex h-10 items-center rounded-2xl border border-[rgba(15,23,42,0.08)] bg-[#F8FAFC] px-4 text-[12px] font-extrabold text-[#475569]"
-                aria-disabled="true"
-              >
-                Günlük
-              </span>
+      <div className="grid gap-4 xl:grid-cols-12">
+        <Card padding="lg" className="xl:col-span-8">
+          <div className="mb-5 flex flex-wrap items-start justify-between gap-3">
+            <div>
+              <h2 className="nx-section-title">Performans Trendi</h2>
+              <p className="nx-section-desc">Lead, site ve analiz hareketleri</p>
             </div>
-            <div className="mt-4">
-              <DashboardLineChart
-                labels={trends.labels}
-                metrics={chartMetrics}
-                series={[
-                  { label: "Leadler", values: trends.leads, color: "#2563EB" },
-                  { label: "Web Siteleri", values: trends.websites, color: "#7C3AED" },
-                  { label: "Analizler", values: trends.audits, color: "#16A34A" },
-                  { label: "Raporlar", values: trends.reports, color: "#F97316" },
-                ]}
-              />
-            </div>
-          </PremiumCard>
-        </div>
-
-        <div className="dashboard-stagger-item dashboard-right-panel flex flex-col gap-4 xl:col-span-4">
-          <AnalysisSummaryCard
-            circularScores={display.circularScores}
-            scoreSummary={scoreSummary}
-            criticalFindings={kpis.criticalFindings}
+          </div>
+          <DashboardLineChart
+            labels={trends.labels}
+            series={[
+              { label: "Leadler", values: trends.leads, color: "#4F46E5" },
+              { label: "Web Siteleri", values: trends.websites, color: "#6366F1" },
+              { label: "Analizler", values: trends.audits, color: "#059669" },
+            ]}
           />
-          <AnalysisInsightsCard insights={display.insights} />
-          <AuditFunnelCard steps={display.funnelSteps} />
+        </Card>
+
+        <div className="flex flex-col gap-4 xl:col-span-4">
+          <Card padding="md">
+            <h2 className="nx-section-title">Analiz Sağlığı</h2>
+            <p className="nx-section-desc">Genel skor ve kritik bulgular</p>
+            <div className="mt-5 grid grid-cols-2 gap-3">
+              <div className="rounded-xl bg-surface-soft p-4">
+                <p className="text-[12px] font-semibold text-text-muted">Ortalama Skor</p>
+                <p className="mt-1 text-[28px] font-bold tabular-nums text-text-primary">
+                  {scoreSummary.averageScore !== null ? (
+                    <AnimatedNumber value={scoreSummary.averageScore} />
+                  ) : (
+                    "—"
+                  )}
+                </p>
+              </div>
+              <div className="rounded-xl bg-surface-soft p-4">
+                <p className="text-[12px] font-semibold text-text-muted">Kritik Bulgu</p>
+                <p className="mt-1 text-[28px] font-bold tabular-nums text-error">
+                  <AnimatedNumber value={kpis.criticalFindings} />
+                </p>
+              </div>
+            </div>
+            <div className="mt-4 space-y-2">
+              {display.insights.slice(0, 3).map((insight) => (
+                <div
+                  key={insight.id}
+                  className="rounded-xl border bg-surface-soft px-3 py-2.5"
+                  style={{ borderColor: "var(--nx-border)" }}
+                >
+                  <p className="text-[13px] font-semibold text-text-primary">{insight.title}</p>
+                  <p className="mt-0.5 text-[12px] font-medium text-text-muted">{insight.description}</p>
+                </div>
+              ))}
+            </div>
+          </Card>
+
+          <Card padding="md">
+            <h2 className="nx-section-title">Hızlı Aksiyonlar</h2>
+            <div className="mt-4 flex flex-col gap-2">
+              <Link
+                href="/dashboard/leads"
+                className="rounded-xl border px-4 py-3 text-[14px] font-semibold text-text-primary transition-colors hover:bg-surface-soft"
+                style={{ borderColor: "var(--nx-border)" }}
+              >
+                Lead ekle veya yönet
+              </Link>
+              <Link
+                href="/dashboard/websites"
+                className="rounded-xl border px-4 py-3 text-[14px] font-semibold text-text-primary transition-colors hover:bg-surface-soft"
+                style={{ borderColor: "var(--nx-border)" }}
+              >
+                Web sitesi analizi başlat
+              </Link>
+            </div>
+          </Card>
         </div>
       </div>
 
-      <div className="dashboard-stagger mt-4 grid gap-4 xl:grid-cols-12">
-        <div className="dashboard-stagger-item xl:col-span-8">
-          <PotentialLeadsTable rows={display.leadTableRows} />
-        </div>
+      <div className="grid gap-4 lg:grid-cols-2">
+        <Card padding="none" className="overflow-hidden">
+          <div className="border-b px-5 py-4" style={{ borderColor: "var(--nx-border)" }}>
+            <h2 className="nx-section-title">Son Leadler</h2>
+          </div>
+          <ul>
+            {display.leadTableRows.slice(0, 5).map((row, index) => (
+              <li
+                key={row.id}
+                className="nx-row-enter flex items-center justify-between gap-3 border-b px-5 py-3.5 last:border-b-0"
+                style={{ borderColor: "var(--nx-border)", animationDelay: `${index * 0.05}s` }}
+              >
+                <div className="min-w-0">
+                  <p className="truncate text-[14px] font-semibold text-text-primary">{row.companyName}</p>
+                  <p className="truncate text-[12px] font-medium text-text-muted">{row.website}</p>
+                </div>
+                <span className="nx-badge bg-accent-soft text-accent">{row.statusLabel}</span>
+              </li>
+            ))}
+          </ul>
+          <div className="border-t px-5 py-3" style={{ borderColor: "var(--nx-border)" }}>
+            <Link href="/dashboard/leads" className="text-[14px] font-semibold text-accent hover:text-accent-hover">
+              Tüm leadleri gör →
+            </Link>
+          </div>
+        </Card>
 
-        <div className="dashboard-stagger-item flex flex-col gap-4 xl:col-span-4">
-          <RecentActivityCard items={data.recentActivity} compact />
-          <UpcomingTasksCard tasks={display.upcomingTasks} />
-        </div>
+        <Card padding="none" className="overflow-hidden">
+          <div className="border-b px-5 py-4" style={{ borderColor: "var(--nx-border)" }}>
+            <h2 className="nx-section-title">Son Aktiviteler</h2>
+          </div>
+          <ul>
+            {recentActivity.slice(0, 5).map((item, index) => (
+              <li
+                key={item.id}
+                className="nx-row-enter border-b px-5 py-3.5 last:border-b-0"
+                style={{ borderColor: "var(--nx-border)", animationDelay: `${index * 0.05}s` }}
+              >
+                <p className="text-[14px] font-semibold text-text-primary">{item.title}</p>
+                <p className="mt-0.5 text-[12px] font-medium text-text-muted">
+                  {TYPE_LABELS[item.type]} · {item.subtitle} · {formatWebsiteDate(item.createdAt)}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </Card>
       </div>
-
-      <ManualAnalysisCta />
     </div>
   );
 }

@@ -18,26 +18,25 @@ export function DashboardShell({ userEmail, workspaceName, children }: Dashboard
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-[#F4F6FA]">
+    <div className="min-h-screen bg-background">
       {mobileOpen ? (
         <button
           type="button"
           aria-label="Menüyü kapat"
-          className="fixed inset-0 z-40 bg-[#0F172A]/20 backdrop-blur-[2px] lg:hidden"
+          className="fixed inset-0 z-40 bg-[#0f172a]/20 backdrop-blur-[2px] lg:hidden"
           onClick={() => setMobileOpen(false)}
         />
       ) : null}
 
       <aside
-        className={`fixed inset-y-0 left-0 z-50 flex w-[260px] flex-col border-r border-[rgba(15,23,42,0.08)] bg-white transition-transform duration-300 lg:translate-x-0 ${mobileOpen ? "translate-x-0" : "-translate-x-full"}`}
+        className={`fixed inset-y-0 left-0 z-50 flex w-[248px] flex-col border-r bg-surface transition-transform duration-300 lg:translate-x-0 ${mobileOpen ? "translate-x-0" : "-translate-x-full"}`}
+        style={{ borderColor: "var(--nx-border)" }}
       >
-        <div className="flex h-16 items-center justify-between gap-3 border-b border-[rgba(15,23,42,0.06)] px-[18px]">
-          <div className="min-w-0 flex-1">
-            <NexLeadLogo variant="full" className="h-9 max-w-full" priority />
-          </div>
+        <div className="flex h-16 items-center justify-between gap-3 border-b px-4" style={{ borderColor: "var(--nx-border)" }}>
+          <NexLeadLogo variant="full" className="h-8 max-w-full" priority />
           <button
             type="button"
-            className="rounded-xl p-2 text-[#64748B] transition-colors hover:bg-[#F8FAFC] lg:hidden"
+            className="rounded-xl p-2 text-text-muted transition-colors hover:bg-surface-soft lg:hidden"
             aria-label="Menüyü kapat"
             onClick={() => setMobileOpen(false)}
           >
@@ -48,7 +47,7 @@ export function DashboardShell({ userEmail, workspaceName, children }: Dashboard
         <DashboardSidebar userEmail={userEmail} onNavigate={() => setMobileOpen(false)} />
       </aside>
 
-      <div className="lg:pl-[260px]">
+      <div className="lg:pl-[248px]">
         <DashboardHeader
           workspaceName={workspaceName}
           userEmail={userEmail}
@@ -56,7 +55,7 @@ export function DashboardShell({ userEmail, workspaceName, children }: Dashboard
           onMenuOpen={() => setMobileOpen(true)}
         />
 
-        <main className="overflow-x-hidden px-4 py-5 sm:px-6 lg:px-6">{children}</main>
+        <main className="overflow-x-hidden px-4 py-5 sm:px-6 lg:px-8">{children}</main>
       </div>
     </div>
   );

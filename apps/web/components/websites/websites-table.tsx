@@ -6,6 +6,7 @@ import { useTransition } from "react";
 import { AuditStatusBadge } from "@/components/websites/audit-status-badge";
 import { WebsiteStatusBadge } from "@/components/websites/website-status-badge";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { ConfirmAction } from "@/components/ui/confirm-action";
 import type { WebsiteWithRelations } from "@/features/websites/website.types";
 import { archiveWebsiteAction, startWebsiteAuditAction } from "@/features/websites/website.actions";
@@ -31,17 +32,15 @@ function WebsiteActions({
   onActionComplete: () => void;
 }) {
   const [pending, startTransition] = useTransition();
-
   const displayUrl = website.url ?? website.domain ?? "—";
   const startButton = getAuditStartButtonLabel(website.latestAudit?.status ?? null, pending);
 
   return (
-    <div className="flex flex-wrap items-center gap-2">
-      <Link
-        href={`/dashboard/websites/${website.id}`}
-        className="inline-flex h-9 items-center justify-center rounded-lg px-3 text-sm font-medium text-text-secondary transition-colors hover:bg-surface-soft hover:text-text-primary"
-      >
-        Detay
+    <div className="flex flex-wrap items-center gap-1">
+      <Link href={`/dashboard/websites/${website.id}`}>
+        <Button type="button" variant="ghost" size="sm">
+          Detay
+        </Button>
       </Link>
       <Button
         type="button"
@@ -86,55 +85,44 @@ function WebsiteActions({
 export function WebsitesTable({ websites, onEdit, onActionComplete }: WebsitesTableProps) {
   return (
     <>
-      <div className="hidden overflow-hidden rounded-2xl border border-border bg-surface shadow-soft md:block">
+      <div className="nx-table-wrap hidden md:block">
         <div className="overflow-x-auto">
-          <table className="min-w-full text-left text-sm">
-            <thead className="border-b border-border bg-surface-soft/80">
+          <table className="nx-table">
+            <thead>
               <tr>
-                <th className="px-4 py-3 font-medium text-text-secondary">Web site</th>
-                <th className="px-4 py-3 font-medium text-text-secondary">Bağlı lead</th>
-                <th className="px-4 py-3 font-medium text-text-secondary">Web site durumu</th>
-                <th className="px-4 py-3 font-medium text-text-secondary">Analiz durumu</th>
-                <th className="px-4 py-3 font-medium text-text-secondary">Son analiz</th>
-                <th className="px-4 py-3 font-medium text-text-secondary">Oluşturulma</th>
-                <th className="px-4 py-3 font-medium text-text-secondary">İşlem</th>
+                <th>Web site</th>
+                <th>Bağlı lead</th>
+                <th>Site durumu</th>
+                <th>Analiz durumu</th>
+                <th>Son analiz</th>
+                <th>Oluşturulma</th>
+                <th>İşlem</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-border">
-              {websites.map((website) => (
-                <tr key={website.id} className="hover:bg-surface-soft/50">
-                  <td className="px-4 py-4">
+            <tbody>
+              {websites.map((website, index) => (
+                <tr key={website.id} className="nx-row-enter" style={{ animationDelay: `${index * 0.04}s` }}>
+                  <td>
                     <div className="min-w-0">
                       <Link
                         href={`/dashboard/websites/${website.id}`}
-                        className="block truncate font-medium text-text-primary transition-colors hover:text-accent"
+                        className="block truncate font-semibold text-text-primary hover:text-accent"
                       >
                         {website.url ?? website.domain}
                       </Link>
-                      {website.domain && website.url !== website.domain ? (
-                        <p className="truncate text-xs text-text-muted">{website.domain}</p>
-                      ) : null}
                     </div>
                   </td>
-                  <td className="px-4 py-4 text-text-secondary">
-                    {website.leadCompanyName ?? "—"}
-                  </td>
-                  <td className="px-4 py-4">
+                  <td>{website.leadCompanyName ?? "—"}</td>
+                  <td>
                     <WebsiteStatusBadge status={website.status} />
                   </td>
-                  <td className="px-4 py-4">
+                  <td>
                     <AuditStatusBadge status={website.latestAudit?.status ?? null} />
                   </td>
-                  <td className="px-4 py-4 text-text-secondary">{formatLastAuditAt(website)}</td>
-                  <td className="px-4 py-4 text-text-secondary">
-                    {formatWebsiteDate(website.created_at)}
-                  </td>
-                  <td className="px-4 py-4">
-                    <WebsiteActions
-                      website={website}
-                      onEdit={onEdit}
-                      onActionComplete={onActionComplete}
-                    />
+                  <td>{formatLastAuditAt(website)}</td>
+                  <td>{formatWebsiteDate(website.created_at)}</td>
+                  <td>
+                    <WebsiteActions website={website} onEdit={onEdit} onActionComplete={onActionComplete} />
                   </td>
                 </tr>
               ))}
@@ -144,54 +132,33 @@ export function WebsitesTable({ websites, onEdit, onActionComplete }: WebsitesTa
       </div>
 
       <div className="space-y-3 md:hidden">
-        {websites.map((website) => (
-          <article
-            key={website.id}
-            className="rounded-2xl border border-border bg-surface p-4 shadow-soft"
-          >
-            <div className="min-w-0">
-              <Link
-                href={`/dashboard/websites/${website.id}`}
-                className="block truncate text-base font-semibold text-text-primary transition-colors hover:text-accent"
-              >
-                {website.url ?? website.domain}
-              </Link>
-              <p className="mt-1 truncate text-sm text-text-secondary">
-                {website.leadCompanyName ?? "Bağlı lead yok"}
-              </p>
-            </div>
-
-            <dl className="mt-4 grid grid-cols-2 gap-3 text-sm">
+        {websites.map((website, index) => (
+          <Card key={website.id} padding="md" className="nx-row-enter" style={{ animationDelay: `${index * 0.04}s` }}>
+            <Link
+              href={`/dashboard/websites/${website.id}`}
+              className="block truncate text-[16px] font-bold text-text-primary hover:text-accent"
+            >
+              {website.url ?? website.domain}
+            </Link>
+            <p className="mt-1 truncate text-[13px] text-text-muted">{website.leadCompanyName ?? "Bağlı lead yok"}</p>
+            <dl className="mt-4 grid grid-cols-2 gap-3 text-[13px]">
               <div>
-                <dt className="text-text-muted">Web site durumu</dt>
+                <dt className="text-text-muted">Site durumu</dt>
                 <dd className="mt-1">
                   <WebsiteStatusBadge status={website.status} />
                 </dd>
               </div>
               <div>
-                <dt className="text-text-muted">Analiz durumu</dt>
+                <dt className="text-text-muted">Analiz</dt>
                 <dd className="mt-1">
                   <AuditStatusBadge status={website.latestAudit?.status ?? null} />
                 </dd>
               </div>
-              <div>
-                <dt className="text-text-muted">Son analiz</dt>
-                <dd className="mt-0.5 text-text-primary">{formatLastAuditAt(website)}</dd>
-              </div>
-              <div>
-                <dt className="text-text-muted">Oluşturulma</dt>
-                <dd className="mt-0.5 text-text-primary">{formatWebsiteDate(website.created_at)}</dd>
-              </div>
             </dl>
-
             <div className="mt-4">
-              <WebsiteActions
-                website={website}
-                onEdit={onEdit}
-                onActionComplete={onActionComplete}
-              />
+              <WebsiteActions website={website} onEdit={onEdit} onActionComplete={onActionComplete} />
             </div>
-          </article>
+          </Card>
         ))}
       </div>
     </>

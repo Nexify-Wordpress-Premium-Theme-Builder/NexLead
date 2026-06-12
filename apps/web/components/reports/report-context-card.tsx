@@ -10,7 +10,7 @@ export function ReportContextCard({ report }: ReportContextCardProps) {
   const { website, lead } = report;
 
   return (
-    <section className="rounded-2xl border border-border bg-surface p-5 shadow-soft sm:p-6">
+    <section className="nx-card p-5 sm:p-6">
       <h2 className="text-base font-semibold text-text-primary">Bağlam</h2>
 
       <div className="mt-4 space-y-6">

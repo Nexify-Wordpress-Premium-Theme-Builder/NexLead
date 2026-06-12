@@ -48,7 +48,7 @@ export function LeadDetailPageContent({ lead, websites }: LeadDetailPageContentP
   };
 
   return (
-    <div className="animate-fade-up mx-auto max-w-7xl">
+    <div className="nx-page space-y-6">
       <BackLink href="/dashboard/leads">Leadler&apos;e dön</BackLink>
 
       <LeadDetailHeader

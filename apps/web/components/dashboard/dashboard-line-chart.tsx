@@ -191,7 +191,7 @@ export function DashboardLineChart({ labels, series, metrics = [] }: DashboardLi
                 strokeWidth="2.6"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                className="chart-line-draw"
+                className="nx-chart-line"
                 style={{ animationDelay: `${0.08 + seriesIndex * 0.1}s` }}
               />
             </g>
