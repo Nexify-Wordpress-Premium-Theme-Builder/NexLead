@@ -244,6 +244,10 @@ export function resolveReportState(
     return "not_ready_failed";
   }
 
+  if (status === "cancelled") {
+    return "not_ready_cancelled";
+  }
+
   if (status !== "completed") {
     return "limited";
   }

@@ -1,3 +1,5 @@
+import { NULL_SCORE_LABEL } from "@/features/audits/audit-result.utils";
+
 type AuditScoreCardProps = {
   label: string;
   score: number | null;
@@ -23,7 +25,7 @@ export function AuditScoreCard({ label, score }: AuditScoreCardProps) {
           />
         </div>
       ) : (
-        <p className="mt-2 text-xs text-text-muted">Henüz yok</p>
+        <p className="mt-2 text-xs text-text-muted">{NULL_SCORE_LABEL}</p>
       )}
     </div>
   );

@@ -1,3 +1,4 @@
+import { NULL_SCORE_LABEL } from "@/features/audits/audit-result.utils";
 import type { AuditReport } from "@/features/reports/report.types";
 
 type AuditSummaryCardProps = {
@@ -30,7 +31,7 @@ export function AuditSummaryCard({ report }: AuditSummaryCardProps) {
             <div>
               <dt className="text-text-muted">Genel skor</dt>
               <dd className="mt-0.5 text-lg font-semibold tabular-nums text-text-primary">
-                {overallScore !== null ? overallScore : "—"}
+                {overallScore !== null ? overallScore : NULL_SCORE_LABEL}
               </dd>
             </div>
           </dl>

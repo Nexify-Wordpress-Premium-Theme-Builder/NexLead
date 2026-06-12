@@ -43,7 +43,7 @@ export function AuditMetadataCard({ report }: AuditMetadataCardProps) {
         </div>
         <div>
           <dt className="text-text-muted">Durum</dt>
-          <dd className="mt-0.5 text-text-primary">{audit.status}</dd>
+          <dd className="mt-0.5 break-words text-text-primary">{audit.status}</dd>
         </div>
         <div>
           <dt className="text-text-muted">Süre</dt>

@@ -28,6 +28,8 @@ const SEVERITY_ORDER: Record<FindingSeverity, number> = {
   info: 4,
 };
 
+export const NULL_SCORE_LABEL = "Henüz ölçülmedi";
+
 export const SCORE_CATEGORY_ORDER: FindingCategory[] = [
   "performance",
   "seo",

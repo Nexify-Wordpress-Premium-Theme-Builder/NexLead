@@ -13,6 +13,7 @@ export type AuditReportState =
   | "not_ready_queued"
   | "not_ready_running"
   | "not_ready_failed"
+  | "not_ready_cancelled"
   | "limited"
   | "ready";
 

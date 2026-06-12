@@ -18,7 +18,7 @@ export function AuditReportPageContent({ report }: AuditReportPageContentProps) 
     report.state === "ready" || report.state === "limited";
 
   return (
-    <div className="animate-fade-up mx-auto max-w-7xl space-y-6">
+    <div className="animate-fade-up mx-auto w-full max-w-7xl space-y-6 overflow-x-hidden">
       <AuditReportHeader report={report} />
 
       {!showFullReport ? (

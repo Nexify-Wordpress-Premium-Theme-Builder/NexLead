@@ -1,6 +1,10 @@
 import { AuditScoreCard } from "@/components/websites/audit-score-card";
 import type { AuditScoresView } from "@/features/audits/audit-result.types";
-import { FINDING_CATEGORY_LABELS, SCORE_CATEGORY_ORDER } from "@/features/audits/audit-result.utils";
+import {
+  FINDING_CATEGORY_LABELS,
+  NULL_SCORE_LABEL,
+  SCORE_CATEGORY_ORDER,
+} from "@/features/audits/audit-result.utils";
 
 type ReportScoreOverviewProps = {
   scores: AuditScoresView | null;
@@ -41,7 +45,7 @@ export function ReportScoreOverview({ scores }: ReportScoreOverviewProps) {
         ))}
       </div>
       {orderedCategories.every((item) => item.score === null) && scores.overallScore === null ? (
-        <p className="mt-3 text-sm text-text-muted">Henüz ölçülmedi</p>
+        <p className="mt-3 text-sm text-text-muted">{NULL_SCORE_LABEL}</p>
       ) : null}
     </section>
   );

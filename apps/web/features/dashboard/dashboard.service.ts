@@ -183,7 +183,9 @@ export async function getRecentAudits(workspaceId: string): Promise<DashboardRec
 
   const { data, error } = await supabase
     .from("audits")
-    .select("id, status, type, created_at, completed_at, websites ( url, domain, normalized_url )")
+    .select(
+      "id, status, type, created_at, completed_at, websites!website_id ( url, domain, normalized_url )",
+    )
     .eq("workspace_id", workspaceId)
     .order("created_at", { ascending: false })
     .limit(5);

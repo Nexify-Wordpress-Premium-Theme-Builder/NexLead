@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { AuditReportLink } from "@/components/reports/audit-report-link";
 import { AuditStatusBadge } from "@/components/websites/audit-status-badge";
 import { IconChevronRight } from "@/components/ui/icons";
 import type { AuditType, DashboardRecentAudit } from "@/features/dashboard/dashboard.types";
@@ -60,7 +61,16 @@ export function RecentAuditsCard({ audits }: RecentAuditsCardProps) {
                   {audit.completedAt ? ` · Tamamlanma: ${formatWebsiteDate(audit.completedAt)}` : ""}
                 </p>
               </div>
-              <AuditStatusBadge status={audit.status} />
+              <div className="flex shrink-0 flex-wrap items-center gap-2">
+                <AuditStatusBadge status={audit.status} />
+                {audit.status === "completed" ? (
+                  <AuditReportLink
+                    auditId={audit.id}
+                    label="Rapor"
+                    className="inline-flex h-8 items-center justify-center rounded-lg px-2.5 text-xs font-medium text-text-secondary transition-colors hover:bg-surface-soft hover:text-text-primary"
+                  />
+                ) : null}
+              </div>
             </li>
           ))}
         </ul>
