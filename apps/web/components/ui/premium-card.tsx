@@ -28,8 +28,8 @@ export function PremiumCard({
 }: PremiumCardProps) {
   return (
     <div
-      className={`premium-card border border-[rgba(15,23,42,0.08)] bg-white ${RADIUS_MAP[radius]} ${PADDING_MAP[padding]} ${
-        hover ? "premium-card-hover" : ""
+      className={`nx-card ${RADIUS_MAP[radius]} ${PADDING_MAP[padding]} ${
+        hover ? "nx-card-hover" : ""
       } ${className}`}
     >
       {children}

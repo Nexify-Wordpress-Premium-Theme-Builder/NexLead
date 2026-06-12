@@ -11,7 +11,7 @@ export function LeadEmptyState({ onCreate }: LeadEmptyStateProps) {
     <EmptyState
       title="Henüz lead eklenmedi"
       description="İlk potansiyel müşterinizi ekleyerek pipeline'ınızı oluşturun."
-      icon={<IconUsers className="h-6 w-6" strokeWidth={2} />}
+      icon={<IconUsers size={24} />}
       action={
         <Button type="button" onClick={onCreate}>
           Yeni Lead Ekle

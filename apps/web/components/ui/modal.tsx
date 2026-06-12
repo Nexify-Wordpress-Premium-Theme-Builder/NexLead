@@ -44,7 +44,7 @@ export function Modal({ open, title, description, onClose, children }: ModalProp
         role="dialog"
         aria-modal="true"
         aria-labelledby="modal-title"
-        className="nx-modal-enter relative z-10 flex max-h-[92vh] w-full max-w-2xl flex-col overflow-hidden rounded-t-[var(--nx-radius-lg)] border bg-surface shadow-card sm:max-h-[88vh] sm:rounded-[var(--nx-radius-lg)]"
+        className="nx-modal-enter relative z-10 flex max-h-[92vh] w-full max-w-2xl flex-col overflow-hidden rounded-t-[var(--nx-radius-lg)] border bg-surface sm:max-h-[88vh] sm:rounded-[var(--nx-radius-lg)]"
         style={{ borderColor: "var(--nx-border)" }}
       >
         <div className="flex items-start justify-between border-b px-5 py-4 sm:px-6" style={{ borderColor: "var(--nx-border)" }}>

@@ -54,7 +54,7 @@ export function DashboardHeader({
 
         <label className="relative mx-auto hidden min-w-0 max-w-md flex-1 lg:block">
           <span className="sr-only">Ara</span>
-          <IconSearch className="pointer-events-none absolute left-3.5 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-text-muted" strokeWidth={2} />
+          <IconSearch className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-text-muted" size={18} />
           <input
             type="search"
             disabled
@@ -73,7 +73,7 @@ export function DashboardHeader({
             aria-label="Bildirimler"
             aria-disabled="true"
           >
-            <IconBell className="h-5 w-5" strokeWidth={2} />
+            <IconBell size={20} />
           </button>
 
           <div

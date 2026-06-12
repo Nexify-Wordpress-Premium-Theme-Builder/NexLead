@@ -11,7 +11,7 @@ export function DashboardEmptyPanel() {
       <EmptyState
         title="Henüz veri yok"
         description="İlk lead'inizi ekleyin veya bir web sitesi analizi başlatarak dashboard'u doldurun."
-        icon={<IconUsers className="h-6 w-6" strokeWidth={2} />}
+        icon={<IconUsers size={24} />}
         action={
           <div className="flex flex-wrap justify-center gap-2">
             <Link href="/dashboard/leads">
@@ -19,7 +19,7 @@ export function DashboardEmptyPanel() {
             </Link>
             <Link href="/dashboard/websites">
               <Button type="button" variant="secondary">
-                <IconGlobe className="h-4 w-4" strokeWidth={2} />
+                <IconGlobe size={18} />
                 Analiz Başlat
               </Button>
             </Link>

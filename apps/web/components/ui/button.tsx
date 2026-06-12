@@ -12,9 +12,9 @@ type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
 
 const variantClasses: Record<ButtonVariant, string> = {
   primary:
-    "bg-accent text-white hover:bg-accent-hover border border-accent shadow-sm active:scale-[0.98] disabled:opacity-60",
+    "bg-accent text-white hover:bg-accent-hover border border-accent active:scale-[0.98] disabled:opacity-60",
   secondary:
-    "bg-surface text-text-primary hover:bg-surface-soft border shadow-sm active:scale-[0.98] disabled:opacity-60",
+    "bg-surface text-text-primary hover:bg-surface-soft border active:scale-[0.98] disabled:opacity-60",
   ghost:
     "bg-transparent text-text-secondary hover:text-text-primary hover:bg-surface-soft active:scale-[0.98] disabled:opacity-60",
   danger:
@@ -22,8 +22,8 @@ const variantClasses: Record<ButtonVariant, string> = {
 };
 
 const sizeClasses: Record<ButtonSize, string> = {
-  md: "h-11 px-4 text-[14px] font-semibold",
-  sm: "h-9 px-3 text-[13px] font-semibold",
+  md: "h-11 px-4 text-[14px] font-bold",
+  sm: "h-9 px-3 text-[13px] font-bold",
 };
 
 export function Button({

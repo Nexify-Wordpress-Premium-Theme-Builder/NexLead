@@ -1,15 +1,7 @@
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans } from "next/font/google";
 import type { ReactNode } from "react";
 
 import "./globals.css";
-
-const sans = Plus_Jakarta_Sans({
-  subsets: ["latin"],
-  variable: "--font-sans",
-  display: "swap",
-  weight: ["500", "600", "700", "800"],
-});
 
 export const metadata: Metadata = {
   title: "NexLead",
@@ -24,7 +16,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="tr" suppressHydrationWarning>
-      <body className={`${sans.variable} font-sans`} suppressHydrationWarning>
+      <body className="font-sans" suppressHydrationWarning>
         {children}
       </body>
     </html>

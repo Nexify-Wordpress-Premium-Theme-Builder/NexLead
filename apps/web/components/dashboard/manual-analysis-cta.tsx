@@ -16,7 +16,7 @@ export function ManualAnalysisCta() {
       </div>
       <Link
         href="/dashboard/websites"
-        className="mt-4 inline-flex h-11 items-center justify-center rounded-2xl bg-[#2563EB] px-6 text-[14px] font-extrabold text-white shadow-[0_8px_24px_rgba(37,99,235,0.25)] transition-colors hover:bg-[#1D4ED8] sm:mt-0"
+        className="mt-4 inline-flex h-11 items-center justify-center rounded-2xl border border-[#1D4ED8]/20 bg-[#2563EB] px-6 text-[14px] font-extrabold text-white transition-colors hover:border-[#1D4ED8]/35 hover:bg-[#1D4ED8] sm:mt-0"
       >
         Analizi Başlat
       </Link>

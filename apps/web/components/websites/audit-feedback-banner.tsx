@@ -43,7 +43,7 @@ export function AuditFeedbackBanner({ status }: AuditFeedbackBannerProps) {
   const config = BANNER_CONFIG[status];
 
   return (
-    <div className={`mt-6 rounded-2xl border p-4 shadow-soft sm:p-5 ${config.className}`}>
+    <div className={`mt-6 rounded-2xl border p-4 sm:p-5 ${config.className}`}>
       <p className="text-sm font-medium text-text-primary">{config.title}</p>
       <p className="mt-1 text-sm text-text-secondary">{config.description}</p>
     </div>

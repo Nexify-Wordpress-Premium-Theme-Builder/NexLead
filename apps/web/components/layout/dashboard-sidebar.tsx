@@ -28,11 +28,11 @@ function isActive(pathname: string, href: string): boolean {
 function NavIcon({ label, active }: { label: string; active: boolean }) {
   const className = `h-5 w-5 ${active ? "text-accent" : "text-text-muted"}`;
 
-  if (label === "Leadler") return <IconUsers className={className} strokeWidth={2} />;
-  if (label === "Web Site Analizleri") return <IconGlobe className={className} strokeWidth={2} />;
-  if (label === "Raporlar") return <IconFileText className={className} strokeWidth={2} />;
-  if (label === "Ayarlar") return <IconSettings className={className} strokeWidth={2} />;
-  return <IconLayout className={className} strokeWidth={2} />;
+  if (label === "Leadler") return <IconUsers className={className} size={20} />;
+  if (label === "Web Site Analizleri") return <IconGlobe className={className} size={20} />;
+  if (label === "Raporlar") return <IconFileText className={className} size={20} />;
+  if (label === "Ayarlar") return <IconSettings className={className} size={20} />;
+  return <IconLayout className={className} size={20} />;
 }
 
 function getUserInitials(userEmail: string | null): string {

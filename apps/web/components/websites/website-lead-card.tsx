@@ -32,7 +32,7 @@ export function WebsiteLeadCard({ linkedLead }: WebsiteLeadCardProps) {
           </div>
           <Link
             href={`/dashboard/leads/${linkedLead.id}`}
-            className="inline-flex h-9 items-center justify-center rounded-lg border border-border bg-surface px-3 text-sm font-medium text-text-primary shadow-sm transition-colors hover:bg-surface-soft"
+            className="inline-flex h-9 items-center justify-center rounded-lg border border-border bg-surface px-3 text-sm font-medium text-text-primary transition-colors hover:bg-surface-soft"
           >
             Lead detayına git
           </Link>

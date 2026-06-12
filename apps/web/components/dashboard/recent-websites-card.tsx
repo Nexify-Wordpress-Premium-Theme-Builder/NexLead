@@ -35,7 +35,7 @@ export function RecentWebsitesCard({ websites }: RecentWebsitesCardProps) {
           </p>
           <Link
             href="/dashboard/websites"
-            className="mt-4 inline-flex h-9 items-center justify-center rounded-lg border border-border bg-surface px-3 text-sm font-medium text-text-primary shadow-sm transition-colors hover:bg-surface-soft"
+            className="mt-4 inline-flex h-9 items-center justify-center rounded-lg border border-border bg-surface px-3 text-sm font-medium text-text-primary transition-colors hover:bg-surface-soft"
           >
             Web Site Ekle
           </Link>

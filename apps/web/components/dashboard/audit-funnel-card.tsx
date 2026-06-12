@@ -48,7 +48,7 @@ export function AuditFunnelCard({ steps }: AuditFunnelCardProps) {
                   <IconChevronRight className="mr-1 hidden h-4 w-4 shrink-0 text-[#CBD5E1] sm:block" strokeWidth={2.2} />
                 ) : null}
                 <div
-                  className="funnel-icon-circle flex h-[42px] w-[42px] items-center justify-center rounded-full border border-[rgba(15,23,42,0.06)] bg-white shadow-sm"
+                  className="funnel-icon-circle nx-icon-badge nx-icon-badge--blue h-[42px] w-[42px] rounded-full"
                   style={{ color }}
                 >
                   <Icon className="h-[22px] w-[22px]" strokeWidth={2.2} />

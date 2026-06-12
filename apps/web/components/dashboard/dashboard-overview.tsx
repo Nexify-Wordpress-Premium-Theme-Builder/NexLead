@@ -41,26 +41,30 @@ export function DashboardOverview({ data }: DashboardOverviewProps) {
           label="Toplam Lead"
           value={kpis.totalLeads}
           hint="Çalışma alanındaki kayıtlar"
-          icon={<IconUsers className="h-[18px] w-[18px]" strokeWidth={2} />}
+          iconTone="blue"
+          icon={<IconUsers size={22} />}
         />
         <DashboardStat
           label="Aktif Web Sitesi"
           value={kpis.activeWebsites}
           hint="Analiz için kayıtlı"
-          icon={<IconGlobe className="h-[18px] w-[18px]" strokeWidth={2} />}
+          iconTone="cyan"
+          icon={<IconGlobe size={22} />}
         />
         <DashboardStat
           label="Tamamlanan Analiz"
           value={kpis.completedAudits}
           hint="Rapor oluşturulan"
-          icon={<IconFileText className="h-[18px] w-[18px]" strokeWidth={2} />}
+          iconTone="violet"
+          icon={<IconFileText size={22} />}
         />
         <DashboardStat
           label="Ortalama Skor"
           value={kpis.averageScore ?? 0}
           displayValue={kpis.averageScore !== null ? undefined : "—"}
           hint={kpis.pendingAudits > 0 ? `${kpis.pendingAudits} analiz bekliyor` : "Tüm analizler güncel"}
-          icon={<IconActivity className="h-[18px] w-[18px]" strokeWidth={2} />}
+          iconTone="green"
+          icon={<IconActivity size={22} />}
         />
       </div>
 

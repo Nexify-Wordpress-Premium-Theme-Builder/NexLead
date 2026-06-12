@@ -37,7 +37,7 @@ export function LeadWebsitesCard({ websites }: LeadWebsitesCardProps) {
                 </div>
                 <Link
                   href={`/dashboard/websites/${website.id}`}
-                  className="inline-flex h-9 shrink-0 items-center justify-center rounded-lg border border-border bg-surface px-3 text-sm font-medium text-text-primary shadow-sm transition-colors hover:bg-surface-soft"
+                  className="inline-flex h-9 shrink-0 items-center justify-center rounded-lg border border-border bg-surface px-3 text-sm font-medium text-text-primary transition-colors hover:bg-surface-soft"
                 >
                   Detaya git
                 </Link>
