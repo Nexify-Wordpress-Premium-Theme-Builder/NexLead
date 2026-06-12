@@ -23,6 +23,7 @@ export type DashboardTrendSeries = {
   leads: number[];
   websites: number[];
   audits: number[];
+  reports: number[];
 };
 
 export type DashboardScoreSummary = {
@@ -88,9 +89,67 @@ export type DashboardPreviewField =
   | "recentActivity"
   | "recentLeads"
   | "recentWebsites"
-  | "recentAudits";
+  | "recentAudits"
+  | "leadTable"
+  | "funnel"
+  | "insights"
+  | "upcomingTasks"
+  | "circularScores";
 
-export type DashboardOverview = {
+export type DashboardKpiTrend = {
+  percent: number;
+  direction: "up" | "down" | "neutral";
+};
+
+export type DashboardCircularScoreItem = {
+  label: string;
+  score: number;
+  qualityLabel: string;
+};
+
+export type DashboardLeadTableRow = {
+  id: string;
+  companyName: string;
+  website: string;
+  sector: string;
+  score: number | null;
+  status: LeadStatus;
+  statusLabel: string;
+  nextAction: string;
+  href: string | null;
+  isPreview: boolean;
+};
+
+export type DashboardFunnelStep = {
+  label: string;
+  value: number;
+  conversionPercent: number | null;
+};
+
+export type DashboardUpcomingTask = {
+  id: string;
+  title: string;
+  subtitle: string;
+  timeLabel: string;
+};
+
+export type DashboardDisplay = {
+  kpiTrends: {
+    leads: DashboardKpiTrend;
+    websites: DashboardKpiTrend;
+    reports: DashboardKpiTrend;
+    pending: DashboardKpiTrend;
+    score: DashboardKpiTrend;
+    critical: DashboardKpiTrend;
+  };
+  circularScores: DashboardCircularScoreItem[];
+  insights: string[];
+  leadTableRows: DashboardLeadTableRow[];
+  funnelSteps: DashboardFunnelStep[];
+  upcomingTasks: DashboardUpcomingTask[];
+};
+
+export type DashboardOverviewData = {
   workspaceId: string;
   workspaceName: string;
   stats: DashboardStats;
@@ -104,4 +163,8 @@ export type DashboardOverview = {
   recentAudits: DashboardRecentAudit[];
   isFullyEmpty: boolean;
   previewFields?: DashboardPreviewField[];
+};
+
+export type DashboardOverview = DashboardOverviewData & {
+  display: DashboardDisplay;
 };

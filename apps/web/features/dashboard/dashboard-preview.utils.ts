@@ -1,14 +1,15 @@
 import { DASHBOARD_PREVIEW_DATA } from "@/features/dashboard/dashboard-preview-data";
+import { buildDashboardDisplay } from "@/features/dashboard/dashboard-view.utils";
+import type {
+  DashboardOverview,
+  DashboardOverviewData,
+  DashboardPreviewField,
+} from "@/features/dashboard/dashboard.types";
+import { hasTrendData, isDashboardPreviewId } from "@/features/dashboard/dashboard.utils";
 
-const PREVIEW_ID_PREFIX = "preview-";
+export { isDashboardPreviewId };
 
-export function isDashboardPreviewId(id: string): boolean {
-  return id.startsWith(PREVIEW_ID_PREFIX);
-}
-import type { DashboardOverview, DashboardPreviewField } from "@/features/dashboard/dashboard.types";
-import { hasTrendData } from "@/features/dashboard/dashboard.utils";
-
-function isTrendSeriesEmpty(trends: DashboardOverview["trends"]): boolean {
+function isTrendSeriesEmpty(trends: DashboardOverviewData["trends"]): boolean {
   return (
     !hasTrendData(trends.leads) &&
     !hasTrendData(trends.websites) &&
@@ -16,19 +17,19 @@ function isTrendSeriesEmpty(trends: DashboardOverview["trends"]): boolean {
   );
 }
 
-function isScoreSummaryEmpty(scoreSummary: DashboardOverview["scoreSummary"]): boolean {
+function isScoreSummaryEmpty(scoreSummary: DashboardOverviewData["scoreSummary"]): boolean {
   return scoreSummary.averageScore === null && scoreSummary.scoredAuditCount === 0;
 }
 
 /**
  * Gerçek workspace verisini korur; boş kalan bölümlere kontrollü önizleme verisi uygular.
  */
-export function applyDashboardPreview(overview: DashboardOverview): DashboardOverview {
+export function applyDashboardPreview(overview: DashboardOverviewData): DashboardOverview {
   const previewFields: DashboardPreviewField[] = [];
   const preview = DASHBOARD_PREVIEW_DATA;
 
   if (overview.isFullyEmpty) {
-    return {
+    const merged: DashboardOverviewData = {
       ...overview,
       stats: {
         totalLeads: preview.kpis.totalLeads,
@@ -56,10 +57,12 @@ export function applyDashboardPreview(overview: DashboardOverview): DashboardOve
         "recentAudits",
       ],
     };
+
+    return buildDashboardDisplay(merged, merged.previewFields);
   }
 
   const kpis = { ...overview.kpis };
-  let trends = overview.trends;
+  let trends = { ...overview.trends, reports: overview.trends.reports ?? [] };
   let scoreSummary = overview.scoreSummary;
   let severitySummary = overview.severitySummary;
   let recentActivity = overview.recentActivity;
@@ -74,6 +77,12 @@ export function applyDashboardPreview(overview: DashboardOverview): DashboardOve
 
   if (isTrendSeriesEmpty(overview.trends)) {
     trends = preview.trends;
+    previewFields.push("trends");
+  } else if (!hasTrendData(trends.reports)) {
+    trends = {
+      ...trends,
+      reports: preview.trends.reports,
+    };
     previewFields.push("trends");
   }
 
@@ -107,11 +116,7 @@ export function applyDashboardPreview(overview: DashboardOverview): DashboardOve
     previewFields.push("recentAudits");
   }
 
-  if (previewFields.length === 0) {
-    return overview;
-  }
-
-  return {
+  const base: DashboardOverviewData = {
     ...overview,
     kpis,
     trends,
@@ -121,8 +126,10 @@ export function applyDashboardPreview(overview: DashboardOverview): DashboardOve
     recentLeads,
     recentWebsites,
     recentAudits,
-    previewFields,
+    previewFields: previewFields.length > 0 ? previewFields : undefined,
   };
+
+  return buildDashboardDisplay(base, previewFields);
 }
 
 export const DASHBOARD_PREVIEW_FIELD_LABELS: Record<DashboardPreviewField, string> = {
@@ -134,4 +141,9 @@ export const DASHBOARD_PREVIEW_FIELD_LABELS: Record<DashboardPreviewField, strin
   recentLeads: "Son leadler",
   recentWebsites: "Son web siteleri",
   recentAudits: "Son analizler",
+  leadTable: "Potansiyel müşteri tablosu",
+  funnel: "Analiz hunisi",
+  insights: "Analiz içgörüleri",
+  upcomingTasks: "Yaklaşan işler",
+  circularScores: "Kategori skorları",
 };

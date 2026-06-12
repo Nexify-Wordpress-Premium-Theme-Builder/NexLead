@@ -49,3 +49,9 @@ export function averageRounded(values: number[]): number | null {
   const sum = values.reduce((total, value) => total + value, 0);
   return Math.round(sum / values.length);
 }
+
+const PREVIEW_ID_PREFIX = "preview-";
+
+export function isDashboardPreviewId(id: string): boolean {
+  return id.startsWith(PREVIEW_ID_PREFIX);
+}

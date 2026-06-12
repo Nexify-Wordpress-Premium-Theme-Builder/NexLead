@@ -5,7 +5,7 @@ import { createServerSupabaseClient } from "@/lib/supabase/server";
 import type {
   DashboardActivityItem,
   DashboardKpis,
-  DashboardOverview,
+  DashboardOverviewData,
   DashboardRecentAudit,
   DashboardRecentLead,
   DashboardRecentWebsite,
@@ -163,7 +163,7 @@ export async function getDashboardTrends(workspaceId: string): Promise<Dashboard
   const supabase = await createServerSupabaseClient();
   const since = getTrendSinceIso();
 
-  const [leadsResult, websitesResult, auditsResult] = await Promise.all([
+  const [leadsResult, websitesResult, auditsResult, reportsResult] = await Promise.all([
     supabase
       .from("leads")
       .select("created_at")
@@ -187,6 +187,14 @@ export async function getDashboardTrends(workspaceId: string): Promise<Dashboard
       .gte("created_at", since)
       .order("created_at", { ascending: false })
       .limit(TREND_FETCH_LIMIT),
+    supabase
+      .from("audits")
+      .select("created_at")
+      .eq("workspace_id", workspaceId)
+      .eq("status", "completed")
+      .gte("created_at", since)
+      .order("created_at", { ascending: false })
+      .limit(TREND_FETCH_LIMIT),
   ]);
 
   if (leadsResult.error) {
@@ -201,6 +209,10 @@ export async function getDashboardTrends(workspaceId: string): Promise<Dashboard
     throw new Error(auditsResult.error.message);
   }
 
+  if (reportsResult.error) {
+    throw new Error(reportsResult.error.message);
+  }
+
   const dayKeys = getTrendDayKeys(TREND_DAYS);
 
   return {
@@ -208,6 +220,7 @@ export async function getDashboardTrends(workspaceId: string): Promise<Dashboard
     leads: countRecordsByDay(leadsResult.data ?? [], TREND_DAYS),
     websites: countRecordsByDay(websitesResult.data ?? [], TREND_DAYS),
     audits: countRecordsByDay(auditsResult.data ?? [], TREND_DAYS),
+    reports: countRecordsByDay(reportsResult.data ?? [], TREND_DAYS),
   };
 }
 
@@ -537,7 +550,7 @@ export async function getRecentAudits(workspaceId: string): Promise<DashboardRec
 export async function getDashboardOverview(
   workspaceId: string,
   workspaceName = "Çalışma Alanı",
-): Promise<DashboardOverview> {
+): Promise<DashboardOverviewData> {
   const [
     stats,
     kpis,

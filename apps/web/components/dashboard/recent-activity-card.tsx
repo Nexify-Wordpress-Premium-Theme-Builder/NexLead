@@ -12,31 +12,38 @@ const TYPE_LABELS = {
 
 type RecentActivityCardProps = {
   items: DashboardActivityItem[];
+  compact?: boolean;
 };
 
-export function RecentActivityCard({ items }: RecentActivityCardProps) {
+export function RecentActivityCard({ items, compact = false }: RecentActivityCardProps) {
   return (
     <section className="rounded-2xl border border-border bg-surface shadow-soft">
-      <div className="flex items-center justify-between gap-3 border-b border-border px-5 py-4">
+      <div className={`flex items-center justify-between gap-3 border-b border-border ${compact ? "px-4 py-3" : "px-5 py-4"}`}>
         <div>
-          <h2 className="text-base font-semibold text-text-primary">Son Aktiviteler</h2>
-          <p className="mt-0.5 text-sm text-text-muted">Lead, web sitesi ve analiz hareketleri</p>
+          <h2 className={`font-semibold text-text-primary ${compact ? "text-sm" : "text-base"}`}>
+            Son Aktiviteler
+          </h2>
+          {!compact ? (
+            <p className="mt-0.5 text-sm text-text-muted">Lead, web sitesi ve analiz hareketleri</p>
+          ) : null}
         </div>
-        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent/10 text-accent">
+        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent/10 text-accent">
           <IconActivity className="h-4 w-4" />
         </div>
       </div>
 
       {items.length === 0 ? (
-        <div className="px-5 py-10 text-center">
+        <div className={`text-center ${compact ? "px-4 py-6" : "px-5 py-10"}`}>
           <p className="text-sm font-medium text-text-primary">Henüz aktivite bulunmuyor.</p>
-          <p className="mt-2 text-sm text-text-secondary">
-            Yeni kayıtlar oluştukça burada listelenecek.
-          </p>
+          {!compact ? (
+            <p className="mt-2 text-sm text-text-secondary">
+              Yeni kayıtlar oluştukça burada listelenecek.
+            </p>
+          ) : null}
         </div>
       ) : (
         <ul className="divide-y divide-border">
-          {items.map((item) => {
+          {items.slice(0, compact ? 4 : undefined).map((item) => {
             const content = (
               <>
                 <div className="min-w-0 flex-1">
@@ -46,8 +53,8 @@ export function RecentActivityCard({ items }: RecentActivityCardProps) {
                     </span>
                     <p className="truncate text-sm font-medium text-text-primary">{item.title}</p>
                   </div>
-                  <p className="mt-1 text-sm text-text-secondary">{item.subtitle}</p>
-                  <p className="mt-2 text-xs text-text-muted">{formatWebsiteDate(item.createdAt)}</p>
+                  <p className="mt-1 text-xs text-text-secondary">{item.subtitle}</p>
+                  <p className="mt-1.5 text-[11px] text-text-muted">{formatWebsiteDate(item.createdAt)}</p>
                 </div>
                 {item.href ? <IconChevronRight className="h-4 w-4 shrink-0 text-text-muted" /> : null}
               </>
@@ -58,12 +65,14 @@ export function RecentActivityCard({ items }: RecentActivityCardProps) {
                 {item.href ? (
                   <Link
                     href={item.href}
-                    className="flex items-center gap-3 px-5 py-4 transition-colors hover:bg-surface-soft/60"
+                    className={`flex items-center gap-3 transition-colors hover:bg-surface-soft/60 ${compact ? "px-4 py-3" : "px-5 py-4"}`}
                   >
                     {content}
                   </Link>
                 ) : (
-                  <div className="flex items-center gap-3 px-5 py-4">{content}</div>
+                  <div className={`flex items-center gap-3 ${compact ? "px-4 py-3" : "px-5 py-4"}`}>
+                    {content}
+                  </div>
                 )}
               </li>
             );

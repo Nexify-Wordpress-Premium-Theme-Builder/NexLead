@@ -91,9 +91,19 @@
   }
 
   .chart-line-draw {
-    stroke-dasharray: 240;
-    stroke-dashoffset: 240;
-    animation: chart-draw 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    stroke-dasharray: 1200;
+    stroke-dashoffset: 1200;
+    animation: chart-draw 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+
+  .chart-area-fade {
+    opacity: 0;
+    animation: chart-area-fade 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.15s forwards;
+  }
+
+  .dashboard-table-row {
+    opacity: 0;
+    animation: fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -101,6 +111,8 @@
     .dashboard-stagger > .dashboard-stagger-item,
     .dashboard-stagger > * > .dashboard-stagger-item,
     .chart-line-draw,
+    .chart-area-fade,
+    .dashboard-table-row,
     .auth-stagger > * {
       animation: none !important;
       opacity: 1 !important;
@@ -124,10 +136,20 @@
 
 @keyframes chart-draw {
   from {
-    stroke-dashoffset: 240;
+    stroke-dashoffset: 1200;
   }
 
   to {
     stroke-dashoffset: 0;
+  }
+}
+
+@keyframes chart-area-fade {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
   }
 }

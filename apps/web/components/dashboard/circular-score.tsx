@@ -5,15 +5,28 @@ import { useEffect, useState } from "react";
 type CircularScoreProps = {
   score: number | null;
   label: string;
-  size?: number;
+  qualityLabel?: string;
+  size?: "sm" | "md";
+  color?: string;
 };
 
-export function CircularScore({ score, label, size = 132 }: CircularScoreProps) {
+const SIZE_MAP = {
+  sm: { size: 76, stroke: 7, scoreText: "text-lg", qualityText: "text-[10px]" },
+  md: { size: 132, stroke: 10, scoreText: "text-3xl", qualityText: "text-xs" },
+} as const;
+
+export function CircularScore({
+  score,
+  label,
+  qualityLabel,
+  size = "md",
+  color = "#2563EB",
+}: CircularScoreProps) {
   const [animatedScore, setAnimatedScore] = useState(0);
   const hasScore = score !== null && Number.isFinite(score);
   const clampedScore = hasScore ? Math.max(0, Math.min(100, score)) : 0;
-  const stroke = 10;
-  const radius = (size - stroke) / 2;
+  const { size: dimension, stroke, scoreText, qualityText } = SIZE_MAP[size];
+  const radius = (dimension - stroke) / 2;
   const circumference = 2 * Math.PI * radius;
   const progress = hasScore ? (animatedScore / 100) * circumference : 0;
 
@@ -52,22 +65,22 @@ export function CircularScore({ score, label, size = 132 }: CircularScoreProps) 
 
   return (
     <div className="flex flex-col items-center">
-      <div className="relative" style={{ width: size, height: size }}>
-        <svg width={size} height={size} className="-rotate-90" aria-hidden="true">
+      <div className="relative" style={{ width: dimension, height: dimension }}>
+        <svg width={dimension} height={dimension} className="-rotate-90" aria-hidden="true">
           <circle
-            cx={size / 2}
-            cy={size / 2}
+            cx={dimension / 2}
+            cy={dimension / 2}
             r={radius}
             fill="none"
             stroke="#F2F4F7"
             strokeWidth={stroke}
           />
           <circle
-            cx={size / 2}
-            cy={size / 2}
+            cx={dimension / 2}
+            cy={dimension / 2}
             r={radius}
             fill="none"
-            stroke="#2563EB"
+            stroke={color}
             strokeWidth={stroke}
             strokeLinecap="round"
             strokeDasharray={circumference}
@@ -76,15 +89,19 @@ export function CircularScore({ score, label, size = 132 }: CircularScoreProps) 
           />
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className="text-3xl font-semibold tabular-nums text-text-primary">
+          <span className={`${scoreText} font-semibold tabular-nums text-text-primary`}>
             {hasScore ? Math.round(animatedScore) : "—"}
           </span>
-          <span className="text-xs text-text-muted">/ 100</span>
+          {size === "md" ? <span className="text-xs text-text-muted">/ 100</span> : null}
         </div>
       </div>
-      <p className="mt-3 text-sm font-medium text-text-secondary">{label}</p>
-      {!hasScore ? (
-        <p className="mt-1 text-xs text-text-muted">Henüz analiz sonucu bulunmuyor</p>
+      <p className={`mt-2 text-center font-medium text-text-secondary ${size === "sm" ? "text-xs" : "text-sm"}`}>
+        {label}
+      </p>
+      {qualityLabel ? (
+        <p className={`mt-0.5 text-center text-text-muted ${qualityText}`}>{qualityLabel}</p>
+      ) : !hasScore ? (
+        <p className={`mt-0.5 text-center text-text-muted ${qualityText}`}>Henüz ölçülmedi</p>
       ) : null}
     </div>
   );
