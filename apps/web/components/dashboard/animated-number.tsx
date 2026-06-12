@@ -48,5 +48,5 @@ export function AnimatedNumber({
     return () => cancelAnimationFrame(frameId);
   }, [durationMs, value]);
 
-  return <span className={className}>{formatValue(displayValue)}</span>;
+  return <span className={className ?? "font-bold"}>{formatValue(displayValue)}</span>;
 }

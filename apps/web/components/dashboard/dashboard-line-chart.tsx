@@ -15,149 +15,178 @@ type DashboardLineChartProps = {
 
 type Point = { x: number; y: number };
 
+const CHART_HEIGHT = 340;
+
 function getPoints(
   values: number[],
   width: number,
   height: number,
-  padding: number,
+  padding: { top: number; right: number; bottom: number; left: number },
   maxValue: number,
 ): Point[] {
-  const innerWidth = width - padding * 2;
-  const innerHeight = height - padding * 2;
+  const innerWidth = width - padding.left - padding.right;
+  const innerHeight = height - padding.top - padding.bottom;
   const step = values.length > 1 ? innerWidth / (values.length - 1) : 0;
 
   return values.map((value, index) => ({
-    x: padding + index * step,
-    y: padding + innerHeight - (value / maxValue) * innerHeight,
+    x: padding.left + index * step,
+    y: padding.top + innerHeight - (value / maxValue) * innerHeight,
   }));
 }
 
-function buildSmoothPath(points: Point[]): string {
+function buildCatmullRomPath(points: Point[]): string {
   if (points.length === 0) return "";
   if (points.length === 1) return `M ${points[0].x} ${points[0].y}`;
 
   let path = `M ${points[0].x} ${points[0].y}`;
 
   for (let index = 0; index < points.length - 1; index += 1) {
-    const current = points[index];
-    const next = points[index + 1];
-    const controlX = (current.x + next.x) / 2;
-    path += ` C ${controlX} ${current.y}, ${controlX} ${next.y}, ${next.x} ${next.y}`;
+    const p0 = points[index - 1] ?? points[index];
+    const p1 = points[index];
+    const p2 = points[index + 1];
+    const p3 = points[index + 2] ?? p2;
+    const cp1x = p1.x + (p2.x - p0.x) / 6;
+    const cp1y = p1.y + (p2.y - p0.y) / 6;
+    const cp2x = p2.x - (p3.x - p1.x) / 6;
+    const cp2y = p2.y - (p3.y - p1.y) / 6;
+    path += ` C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${p2.x} ${p2.y}`;
   }
 
   return path;
 }
 
-function buildAreaPath(points: Point[], width: number, height: number, padding: number): string {
+function buildAreaPath(points: Point[], height: number, bottomPadding: number): string {
   if (points.length === 0) return "";
 
-  const line = buildSmoothPath(points);
+  const line = buildCatmullRomPath(points);
   const last = points[points.length - 1];
   const first = points[0];
-  const baseY = height - padding;
+  const baseY = height - bottomPadding;
 
   return `${line} L ${last.x} ${baseY} L ${first.x} ${baseY} Z`;
 }
 
+function slugify(value: string): string {
+  return value.replace(/\s+/g, "-").toLowerCase();
+}
+
 export function DashboardLineChart({ labels, series }: DashboardLineChartProps) {
-  const width = 720;
-  const height = 260;
-  const padding = 28;
+  const width = 760;
+  const height = CHART_HEIGHT;
+  const padding = { top: 32, right: 24, bottom: 36, left: 44 };
+  const chartHeight = height - padding.top - padding.bottom;
   const hasData = series.some((item) => hasTrendData(item.values));
   const maxValue = Math.max(...series.flatMap((item) => item.values), 1);
 
   if (!hasData) {
     return (
-      <div className="flex h-[260px] flex-col items-center justify-center rounded-xl border border-dashed border-border bg-surface-soft/40 px-6 text-center">
-        <p className="text-sm font-medium text-text-primary">Grafik için yeterli veri yok</p>
-        <p className="mt-2 max-w-sm text-sm text-text-secondary">
+      <div
+        className="flex flex-col items-center justify-center rounded-xl border border-dashed border-border bg-surface-soft/40 px-6 text-center"
+        style={{ height: CHART_HEIGHT }}
+      >
+        <p className="text-dashboard-body font-semibold text-text-primary">Grafik için yeterli veri yok</p>
+        <p className="mt-2 max-w-sm text-dashboard-body text-text-secondary">
           Lead, web sitesi veya analiz kayıtları oluştukça trend grafiği burada görünecek.
         </p>
       </div>
     );
   }
 
+  const yTicks = [0, 0.25, 0.5, 0.75, 1].map((ratio) => ({
+    value: Math.round(maxValue * ratio),
+    y: padding.top + chartHeight - ratio * chartHeight,
+  }));
+
   const visibleLabels = labels.filter((_, index) => index % 2 === 0 || index === labels.length - 1);
 
   return (
-    <div className="w-full overflow-hidden">
+    <div className="w-full overflow-hidden" style={{ minHeight: CHART_HEIGHT }}>
       <svg
         viewBox={`0 0 ${width} ${height}`}
-        className="h-auto w-full"
+        className="h-[340px] w-full"
         role="img"
         aria-label="Lead, web sitesi, analiz ve rapor trend grafiği"
         preserveAspectRatio="xMidYMid meet"
       >
         <defs>
-          {series.map((item) => (
-            <linearGradient
-              key={`gradient-${item.label}`}
-              id={`area-${item.label.replace(/\s+/g, "-")}`}
-              x1="0"
-              y1="0"
-              x2="0"
-              y2="1"
-            >
-              <stop offset="0%" stopColor={item.color} stopOpacity="0.18" />
-              <stop offset="100%" stopColor={item.color} stopOpacity="0.02" />
-            </linearGradient>
-          ))}
+          {series.map((item) => {
+            const slug = slugify(item.label);
+            return (
+              <linearGradient key={`gradient-${slug}`} id={`area-${slug}`} x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor={item.color} stopOpacity="0.22" />
+                <stop offset="85%" stopColor={item.color} stopOpacity="0.04" />
+                <stop offset="100%" stopColor={item.color} stopOpacity="0" />
+              </linearGradient>
+            );
+          })}
         </defs>
 
-        {[0, 1, 2, 3, 4].map((line) => {
-          const y = padding + ((height - padding * 2) / 4) * line;
-          return (
+        {yTicks.map((tick) => (
+          <g key={tick.value}>
             <line
-              key={line}
-              x1={padding}
-              y1={y}
-              x2={width - padding}
-              y2={y}
-              stroke="#EEF0F4"
+              x1={padding.left}
+              y1={tick.y}
+              x2={width - padding.right}
+              y2={tick.y}
+              stroke="#EEF2F7"
               strokeWidth="1"
             />
-          );
-        })}
+            <text
+              x={padding.left - 10}
+              y={tick.y + 4}
+              textAnchor="end"
+              className="fill-text-muted text-[10px] font-medium"
+            >
+              {tick.value}
+            </text>
+          </g>
+        ))}
 
-        {series.map((item) => {
+        {series.map((item, seriesIndex) => {
           const points = getPoints(item.values, width, height, padding, maxValue);
-          const gradientId = `area-${item.label.replace(/\s+/g, "-")}`;
+
+          const slug = slugify(item.label);
 
           return (
             <g key={item.label}>
               <path
-                d={buildAreaPath(points, width, height, padding)}
-                fill={`url(#${gradientId})`}
+                d={buildAreaPath(points, height, padding.bottom)}
+                fill={`url(#area-${slug})`}
                 className="chart-area-fade"
+                style={{ animationDelay: `${seriesIndex * 0.08}s` }}
               />
               <path
-                d={buildSmoothPath(points)}
+                d={buildCatmullRomPath(points)}
                 fill="none"
                 stroke={item.color}
                 strokeWidth="2.5"
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 className="chart-line-draw"
+                style={{ animationDelay: `${seriesIndex * 0.1}s` }}
               />
             </g>
           );
         })}
       </svg>
 
-      <div className="mt-2 flex flex-wrap items-center justify-between gap-2 border-t border-border pt-3">
-        <div className="flex flex-wrap gap-x-4 gap-y-1">
+      <div className="mt-1 flex flex-wrap items-center justify-between gap-3 border-t border-border/80 pt-3.5">
+        <div className="flex flex-wrap gap-2">
           {series.map((item) => (
-            <div key={item.label} className="flex items-center gap-1.5 text-xs text-text-secondary">
+            <span
+              key={item.label}
+              className="inline-flex items-center gap-1.5 rounded-full border border-border/80 bg-surface-soft/60 px-2.5 py-1 text-[11px] font-semibold text-text-secondary"
+            >
               <span
                 className="h-2 w-2 rounded-full"
                 style={{ backgroundColor: item.color }}
                 aria-hidden="true"
               />
               {item.label}
-            </div>
+            </span>
           ))}
         </div>
-        <p className="text-xs text-text-muted">
+        <p className="text-[11px] font-medium text-text-muted">
           {visibleLabels[0]} – {visibleLabels[visibleLabels.length - 1]}
         </p>
       </div>

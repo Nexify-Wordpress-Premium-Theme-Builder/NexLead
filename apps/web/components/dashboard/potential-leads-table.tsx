@@ -35,8 +35,8 @@ export function PotentialLeadsTable({ rows }: PotentialLeadsTableProps) {
     <section className="rounded-2xl border border-border bg-surface shadow-soft">
       <div className="flex items-center justify-between gap-3 border-b border-border px-4 py-3.5 sm:px-5">
         <div>
-          <h2 className="text-base font-semibold text-text-primary">Potansiyel Müşteri Listesi</h2>
-          <p className="mt-0.5 text-sm text-text-muted">Son eklenen ve takip edilen leadler</p>
+          <h2 className="text-dashboard-section text-text-heading">Potansiyel Müşteri Listesi</h2>
+          <p className="mt-0.5 text-[12px] font-medium text-text-secondary">Son eklenen ve takip edilen leadler</p>
         </div>
         <span className="shrink-0 rounded-full bg-accent/10 px-2.5 py-1 text-xs font-semibold text-accent">
           {rows.length} lead

@@ -58,8 +58,8 @@ export function DashboardSidebar({ onNavigate }: { onNavigate?: () => void }) {
 
   return (
     <div className="flex flex-1 flex-col">
-      <nav className="flex-1 space-y-1 px-3 py-3" aria-label="Ana menü">
-        <p className="px-3 pb-2 text-[11px] font-semibold uppercase tracking-[0.08em] text-text-muted">
+      <nav className="flex-1 space-y-0.5 px-3 py-3" aria-label="Ana menü">
+        <p className="px-3 pb-2.5 text-[10px] font-bold uppercase tracking-[0.1em] text-text-muted">
           Menü
         </p>
         {NAV_ITEMS.map((item) => {
@@ -69,7 +69,7 @@ export function DashboardSidebar({ onNavigate }: { onNavigate?: () => void }) {
             return (
               <span
                 key={item.label}
-                className="flex cursor-not-allowed items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-text-muted"
+                className="flex cursor-not-allowed items-center gap-3 rounded-xl px-3 py-2.5 text-[13px] font-semibold text-text-muted"
                 aria-disabled="true"
                 title="Yakında"
               >
@@ -84,10 +84,10 @@ export function DashboardSidebar({ onNavigate }: { onNavigate?: () => void }) {
               key={item.href}
               href={item.href}
               onClick={onNavigate}
-              className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-200 ${
+              className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-[13px] font-semibold transition-all duration-200 ${
                 active
-                  ? "bg-accent/10 text-accent shadow-sm ring-1 ring-accent/10"
-                  : "text-text-secondary hover:bg-surface-soft hover:text-text-primary"
+                  ? "bg-gradient-to-r from-accent/12 to-accent-purple/10 text-accent shadow-sm ring-1 ring-accent/10"
+                  : "text-text-secondary hover:bg-surface-soft hover:text-text-heading"
               }`}
               aria-current={active ? "page" : undefined}
             >
@@ -99,14 +99,14 @@ export function DashboardSidebar({ onNavigate }: { onNavigate?: () => void }) {
       </nav>
 
       <div className="px-3 pb-3">
-        <div className="rounded-xl border border-border bg-surface-soft/60 p-3.5">
+        <div className="rounded-xl border border-border/80 bg-gradient-to-br from-surface-soft to-surface p-3.5 shadow-sm">
           <div className="flex items-center justify-between gap-2">
-            <p className="text-sm font-semibold text-text-primary">NexLead Asistan</p>
-            <span className="rounded-full bg-accent/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-accent">
+            <p className="text-[13px] font-bold text-text-heading">NexLead Asistan</p>
+            <span className="rounded-full bg-accent/10 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wide text-accent">
               Yakında
             </span>
           </div>
-          <p className="mt-1.5 text-xs leading-relaxed text-text-muted">
+          <p className="mt-1.5 text-[11px] leading-relaxed text-text-secondary">
             Analiz ve lead süreçleriniz için akıllı öneriler yakında burada olacak.
           </p>
         </div>

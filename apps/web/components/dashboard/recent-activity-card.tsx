@@ -20,7 +20,7 @@ export function RecentActivityCard({ items, compact = false }: RecentActivityCar
     <section className="rounded-2xl border border-border bg-surface shadow-soft">
       <div className={`flex items-center justify-between gap-3 border-b border-border ${compact ? "px-4 py-3" : "px-5 py-4"}`}>
         <div>
-          <h2 className={`font-semibold text-text-primary ${compact ? "text-sm" : "text-base"}`}>
+          <h2 className={`font-bold text-text-heading ${compact ? "text-[13px]" : "text-dashboard-section"}`}>
             Son Aktiviteler
           </h2>
           {!compact ? (

@@ -126,6 +126,15 @@ export type DashboardFunnelStep = {
   conversionPercent: number | null;
 };
 
+export type DashboardInsightTone = "critical" | "seo" | "lead" | "performance" | "info";
+
+export type DashboardInsightItem = {
+  id: string;
+  title: string;
+  description: string;
+  tone: DashboardInsightTone;
+};
+
 export type DashboardUpcomingTask = {
   id: string;
   title: string;
@@ -143,7 +152,7 @@ export type DashboardDisplay = {
     critical: DashboardKpiTrend;
   };
   circularScores: DashboardCircularScoreItem[];
-  insights: string[];
+  insights: DashboardInsightItem[];
   leadTableRows: DashboardLeadTableRow[];
   funnelSteps: DashboardFunnelStep[];
   upcomingTasks: DashboardUpcomingTask[];

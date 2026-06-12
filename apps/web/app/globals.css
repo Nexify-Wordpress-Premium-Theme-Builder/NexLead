@@ -106,6 +106,24 @@
     animation: fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
   }
 
+  .dashboard-right-panel > .dashboard-right-panel-item {
+    opacity: 0;
+    animation: fade-up 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+
+  .dashboard-right-panel > .dashboard-right-panel-item:nth-child(1) {
+    animation-delay: 0.1s;
+  }
+
+  .dashboard-right-panel > .dashboard-right-panel-item:nth-child(2) {
+    animation-delay: 0.18s;
+  }
+
+  .chart-line-draw,
+  .chart-area-fade {
+    animation-fill-mode: forwards;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .dashboard-page-enter,
     .dashboard-stagger > .dashboard-stagger-item,
@@ -113,6 +131,7 @@
     .chart-line-draw,
     .chart-area-fade,
     .dashboard-table-row,
+    .dashboard-right-panel > .dashboard-right-panel-item,
     .auth-stagger > * {
       animation: none !important;
       opacity: 1 !important;

@@ -113,19 +113,45 @@ function buildFunnelFromReal(overview: DashboardOverviewData): DashboardDisplay[
   ];
 }
 
-function buildInsightsFromReal(overview: DashboardOverviewData): string[] {
-  const insights: string[] = [];
+function buildInsightsFromReal(
+  overview: DashboardOverviewData,
+): DashboardDisplay["insights"] {
+  const insights: DashboardDisplay["insights"] = [];
 
   if (overview.kpis.criticalFindings > 0) {
-    insights.push(`${overview.kpis.criticalFindings} kritik/yüksek bulgu öncelikli inceleme gerektiriyor.`);
+    insights.push({
+      id: "insight-critical",
+      title: "Kritik bulgular öncelikli",
+      description: `${overview.kpis.criticalFindings} kritik/yüksek bulgu inceleme bekliyor.`,
+      tone: "critical",
+    });
   }
 
   if (overview.kpis.pendingAudits > 0) {
-    insights.push(`${overview.kpis.pendingAudits} analiz hâlâ kuyrukta veya çalışıyor.`);
+    insights.push({
+      id: "insight-pending",
+      title: "Bekleyen analizler var",
+      description: `${overview.kpis.pendingAudits} analiz hâlâ kuyrukta veya çalışıyor.`,
+      tone: "performance",
+    });
   }
 
   if (overview.kpis.averageScore !== null && overview.kpis.averageScore < 75) {
-    insights.push("Ortalama site skoru iyileştirme fırsatlarına işaret ediyor.");
+    insights.push({
+      id: "insight-score",
+      title: "Skor iyileştirme fırsatı",
+      description: "Ortalama site skoru iyileştirme potansiyeline işaret ediyor.",
+      tone: "info",
+    });
+  }
+
+  if (overview.severitySummary.high > 0 || overview.severitySummary.medium > 0) {
+    insights.push({
+      id: "insight-seo",
+      title: "SEO sinyalleri kontrol edilmeli",
+      description: "Meta açıklama ve canonical eksikleri raporlarda öne çıkıyor.",
+      tone: "seo",
+    });
   }
 
   if (insights.length >= 2) {

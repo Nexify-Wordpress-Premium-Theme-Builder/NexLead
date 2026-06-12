@@ -21,9 +21,24 @@ export const DASHBOARD_PREVIEW_DISPLAY: DashboardDisplay = {
     { label: "İçerik", score: 70, qualityLabel: "İyi" },
   ],
   insights: [
-    "Meta açıklaması eksik sitelerde dönüşüm potansiyeli düşüyor.",
-    "Canonical etiketi olmayan sayfalarda SEO riski artıyor.",
-    "Lead bağlantısı olmayan web siteleri takip sürecini zorlaştırıyor.",
+    {
+      id: "preview-insight-1",
+      title: "Kritik bulgular öncelikli",
+      description: "5 kritik/yüksek bulgu inceleme bekliyor.",
+      tone: "critical",
+    },
+    {
+      id: "preview-insight-2",
+      title: "SEO sinyalleri kontrol edilmeli",
+      description: "Meta açıklama ve canonical eksikleri raporlarda öne çıkıyor.",
+      tone: "seo",
+    },
+    {
+      id: "preview-insight-3",
+      title: "Lead eşleşmeleri iyileştirilebilir",
+      description: "Bazı web siteleri lead kaydıyla eşleşmemiş.",
+      tone: "lead",
+    },
   ],
   leadTableRows: [
     {

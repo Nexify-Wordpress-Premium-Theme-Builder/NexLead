@@ -1,5 +1,6 @@
 export type {
   DashboardActivityItem,
+  DashboardInsightItem,
   DashboardKpis,
   DashboardOverview,
   DashboardPreviewField,
