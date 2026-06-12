@@ -72,7 +72,7 @@ export function WebsiteDetailPageContent({
   };
 
   return (
-    <div className="nx-page space-y-6">
+    <div className="animate-fade-up mx-auto max-w-7xl">
       <BackLink href="/dashboard/websites">Web Site Analizleri&apos;ne dön</BackLink>
 
       <WebsiteDetailHeader
@@ -126,7 +126,6 @@ export function WebsiteDetailPageContent({
 
       <Modal
         open={editOpen}
-        size="md"
         title="Web Site Düzenle"
         description="Web sitesi bilgilerini güncelleyin."
         onClose={() => setEditOpen(false)}

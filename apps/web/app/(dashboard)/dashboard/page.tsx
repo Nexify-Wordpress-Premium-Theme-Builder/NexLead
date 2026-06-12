@@ -1,9 +1,5 @@
 import { DashboardOverview } from "@/components/dashboard/dashboard-overview";
 import { getDashboardOverview } from "@/features/dashboard/dashboard.service";
-import {
-  applyDashboardPreview,
-  createEmptyDashboardOverview,
-} from "@/features/dashboard/dashboard-preview.utils";
 import { requireWorkspace } from "@/lib/workspace/require-workspace";
 
 export const dynamic = "force-dynamic";
@@ -13,7 +9,7 @@ export default async function DashboardPage() {
 
   if (!workspace) {
     return (
-      <div className="nx-card mx-auto max-w-2xl p-8">
+      <div className="mx-auto max-w-2xl rounded-2xl border border-border bg-surface p-8 shadow-soft">
         <h1 className="text-xl font-semibold text-text-primary">Çalışma alanı bulunamadı</h1>
         <p className="mt-3 text-sm text-text-secondary">
           Aktif bir çalışma alanına erişilemiyor. Lütfen oturumu kapatıp tekrar giriş yapın.
@@ -22,17 +18,20 @@ export default async function DashboardPage() {
     );
   }
 
-  const workspaceName = workspace.workspaceName ?? "Çalışma Alanı";
-
   try {
-    const overview = applyDashboardPreview(
-      await getDashboardOverview(workspace.workspaceId, workspaceName),
+    const overview = await getDashboardOverview(
+      workspace.workspaceId,
+      workspace.workspaceName ?? "Çalışma Alanı",
     );
     return <DashboardOverview data={overview} />;
   } catch {
-    const overview = applyDashboardPreview(
-      createEmptyDashboardOverview(workspace.workspaceId, workspaceName),
+    return (
+      <div className="mx-auto max-w-2xl rounded-2xl border border-border bg-surface p-8 shadow-soft">
+        <h1 className="text-xl font-semibold text-text-primary">Genel bakış yüklenemedi</h1>
+        <p className="mt-3 text-sm text-text-secondary">
+          Dashboard verileri alınırken bir sorun oluştu. Lütfen sayfayı yenileyin.
+        </p>
+      </div>
     );
-    return <DashboardOverview data={overview} />;
   }
 }

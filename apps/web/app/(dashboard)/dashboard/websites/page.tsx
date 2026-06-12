@@ -17,7 +17,7 @@ export default async function WebsitesPage({ searchParams }: WebsitesPageProps) 
 
   if (!workspace) {
     return (
-      <div className="mx-auto max-w-2xl rounded-2xl border border-border bg-surface p-8">
+      <div className="mx-auto max-w-2xl rounded-2xl border border-border bg-surface p-8 shadow-soft">
         <h1 className="text-xl font-semibold text-text-primary">Çalışma alanı bulunamadı</h1>
         <p className="mt-3 text-sm text-text-secondary">
           Aktif bir çalışma alanına erişilemiyor. Lütfen oturumu kapatıp tekrar giriş yapın veya
@@ -38,7 +38,7 @@ export default async function WebsitesPage({ searchParams }: WebsitesPageProps) 
     );
   } catch {
     return (
-      <div className="mx-auto max-w-2xl rounded-2xl border border-border bg-surface p-8">
+      <div className="mx-auto max-w-2xl rounded-2xl border border-border bg-surface p-8 shadow-soft">
         <h1 className="text-xl font-semibold text-text-primary">Web siteleri yüklenemedi</h1>
         <p className="mt-3 text-sm text-text-secondary">
           Web site listesi alınırken bir sorun oluştu. Lütfen sayfayı yenileyin.

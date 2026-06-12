@@ -17,7 +17,7 @@ type WebsiteAuditHistoryCardProps = {
 
 export function WebsiteAuditHistoryCard({ audits }: WebsiteAuditHistoryCardProps) {
   return (
-    <section className="nx-card p-5 sm:p-6">
+    <section className="rounded-2xl border border-border bg-surface p-5 shadow-soft sm:p-6">
       <h2 className="text-base font-semibold text-text-primary">Analiz Geçmişi</h2>
       {audits.length > 0 ? (
         <p className="mt-1 text-sm text-text-secondary">

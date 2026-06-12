@@ -12,7 +12,7 @@ type RecentWebsitesCardProps = {
 
 export function RecentWebsitesCard({ websites }: RecentWebsitesCardProps) {
   return (
-    <section className="nx-card">
+    <section className="rounded-2xl border border-border bg-surface shadow-soft">
       <div className="flex items-center justify-between gap-3 border-b border-border px-5 py-4">
         <div>
           <h2 className="text-base font-semibold text-text-primary">Son Web Siteleri</h2>
@@ -35,7 +35,7 @@ export function RecentWebsitesCard({ websites }: RecentWebsitesCardProps) {
           </p>
           <Link
             href="/dashboard/websites"
-            className="mt-4 inline-flex h-9 items-center justify-center rounded-lg border border-border bg-surface px-3 text-sm font-medium text-text-primary transition-colors hover:bg-surface-soft"
+            className="mt-4 inline-flex h-9 items-center justify-center rounded-lg border border-border bg-surface px-3 text-sm font-medium text-text-primary shadow-sm transition-colors hover:bg-surface-soft"
           >
             Web Site Ekle
           </Link>

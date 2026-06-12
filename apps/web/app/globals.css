@@ -3,317 +3,63 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
-    --nx-bg: #f5f7fb;
-    --nx-surface: #ffffff;
-    --nx-surface-muted: #f8fafc;
-    --nx-border: rgba(15, 23, 42, 0.08);
-    --nx-border-strong: rgba(15, 23, 42, 0.12);
-    --nx-text: #0f172a;
-    --nx-text-secondary: #475569;
-    --nx-text-muted: #64748b;
-    --nx-accent: #4f46e5;
-    --nx-accent-hover: #4338ca;
-    --nx-accent-soft: #eef2ff;
-    --nx-success: #059669;
-    --nx-warning: #d97706;
-    --nx-error: #dc2626;
-    --nx-radius: 16px;
-    --nx-radius-lg: 22px;
-    --nx-ease: cubic-bezier(0.22, 1, 0.36, 1);
-  }
-
   html {
-    @apply font-sans antialiased;
+    @apply antialiased;
   }
 
   body {
-    background: var(--nx-bg);
-    color: var(--nx-text);
-    font-family:
-      -apple-system,
-      BlinkMacSystemFont,
-      "SF Pro Display",
-      "SF Pro Text",
-      Inter,
-      "Segoe UI",
-      system-ui,
-      sans-serif;
-    @apply font-sans antialiased;
-  }
-}
-
-@layer components {
-  .nx-page {
-    @apply mx-auto w-full max-w-[1440px];
-    animation: nx-fade-up 0.55s var(--nx-ease) forwards;
+    @apply bg-background text-text-primary font-sans;
   }
 
-  .nx-page-header-title {
-    @apply text-[30px] font-extrabold tracking-[-0.04em] text-[var(--nx-text)] sm:text-[34px];
-  }
-
-  .nx-page-header-desc {
-    @apply mt-2 max-w-2xl text-[13px] font-medium leading-[1.45] text-[var(--nx-text-secondary)] sm:text-[14px];
-  }
-
-  .nx-section-title {
-    @apply text-[17px] font-bold tracking-[-0.02em] text-[var(--nx-text)] sm:text-[18px];
-  }
-
-  .nx-section-desc {
-    @apply mt-1 text-[13px] font-medium leading-[1.45] text-[var(--nx-text-muted)] sm:text-[14px];
-  }
-
-  .nx-card {
-    @apply rounded-[var(--nx-radius-lg)] border bg-[var(--nx-surface)];
-    border-color: var(--nx-border);
-    box-shadow: none;
-  }
-
-  .nx-card-hover {
-    @apply transition-all duration-300;
-  }
-
-  .nx-card-hover:hover {
-    transform: translateY(-1px);
-    border-color: var(--nx-border-strong);
-    background: var(--nx-surface-muted);
-    box-shadow: none;
-  }
-
-  .nx-stat-value {
-    @apply text-[32px] font-extrabold leading-none tracking-[-0.045em] text-[var(--nx-text)] tabular-nums sm:text-[36px];
-  }
-
-  .nx-stat-label {
-    @apply text-[13px] font-semibold text-[var(--nx-text-secondary)] sm:text-[14px];
-  }
-
-  .nx-icon-badge {
-    @apply flex shrink-0 items-center justify-center rounded-2xl border;
-    box-shadow: none;
-  }
-
-  .nx-icon-badge--blue {
-    border-color: rgba(37, 99, 235, 0.14);
-    background: rgba(37, 99, 235, 0.08);
-    color: #2563eb;
-  }
-
-  .nx-icon-badge--violet {
-    border-color: rgba(124, 58, 237, 0.14);
-    background: rgba(124, 58, 237, 0.08);
-    color: #7c3aed;
-  }
-
-  .nx-icon-badge--green {
-    border-color: rgba(22, 163, 74, 0.14);
-    background: rgba(22, 163, 74, 0.08);
-    color: #16a34a;
-  }
-
-  .nx-icon-badge--cyan {
-    border-color: rgba(8, 145, 178, 0.14);
-    background: rgba(8, 145, 178, 0.08);
-    color: #0891b2;
-  }
-
-  .nx-icon-badge--amber {
-    border-color: rgba(249, 115, 22, 0.14);
-    background: rgba(249, 115, 22, 0.08);
-    color: #f97316;
-  }
-
-  .nx-icon-badge--red {
-    border-color: rgba(220, 38, 38, 0.14);
-    background: rgba(220, 38, 38, 0.08);
-    color: #dc2626;
-  }
-
-  .nx-badge {
-    @apply inline-flex items-center rounded-full px-2.5 py-1 text-[12px] font-semibold;
-  }
-
-  .nx-table-wrap {
-    @apply nx-card overflow-hidden;
-  }
-
-  .nx-table {
-    @apply min-w-full text-left text-[14px];
-  }
-
-  .nx-table thead {
-    @apply border-b bg-[var(--nx-surface-muted)];
-    border-color: var(--nx-border);
-  }
-
-  .nx-table th {
-    @apply px-4 py-3 text-[12px] font-semibold uppercase tracking-wide text-[var(--nx-text-muted)];
-  }
-
-  .nx-table tbody tr {
-    @apply border-b transition-colors last:border-b-0;
-    border-color: var(--nx-border);
-  }
-
-  .nx-table tbody tr:hover {
-    background: var(--nx-surface-muted);
-  }
-
-  .nx-table td {
-    @apply px-4 py-3.5 text-[var(--nx-text-secondary)];
-  }
-
-  .nx-nav-item {
-    @apply flex h-11 items-center gap-3 rounded-xl px-3 text-[14px] font-semibold transition-all duration-200;
-  }
-
-  .nx-nav-item-active {
-    background: var(--nx-accent-soft);
-    color: var(--nx-accent);
-  }
-
-  .nx-nav-item-inactive {
-    @apply text-[var(--nx-text-muted)] hover:bg-[var(--nx-surface-muted)] hover:text-[var(--nx-text)];
-  }
-
-  .nx-input {
-    @apply h-11 w-full rounded-xl border bg-surface px-3.5 text-[14px] font-medium text-text-primary transition-all duration-200 placeholder:text-text-muted focus:border-accent focus:outline-none focus:ring-4 focus:ring-accent/10;
-    border-color: var(--nx-border);
-  }
-
-  .nx-textarea {
-    @apply min-h-[96px] h-auto resize-y py-3;
-  }
-
-  .nx-skeleton {
-    @apply animate-pulse rounded-xl bg-[#e8edf4];
-  }
-
-  .nx-modal-panel {
-    animation: nx-modal-sheet-in 0.22s var(--nx-ease) forwards;
-  }
-
-  .nx-modal-backdrop {
-    animation: nx-fade-in 0.2s ease-out forwards;
-  }
-
-  .nx-modal-scroll {
-    scrollbar-width: thin;
-    scrollbar-color: rgba(15, 23, 42, 0.16) transparent;
-  }
-
-  .nx-modal-scroll::-webkit-scrollbar {
-    width: 6px;
-  }
-
-  .nx-modal-scroll::-webkit-scrollbar-thumb {
-    border-radius: 999px;
-    background: rgba(15, 23, 42, 0.14);
-  }
-
-  .nx-modal-scroll::-webkit-scrollbar-thumb:hover {
-    background: rgba(15, 23, 42, 0.22);
-  }
-
-  .nx-modal-footer {
-    border-color: var(--nx-border);
-    background: linear-gradient(to top, #ffffff 88%, rgba(255, 255, 255, 0.96));
+  * {
+    @apply border-border;
   }
 }
 
 @layer utilities {
-  .nx-stagger > * {
-    opacity: 0;
-    animation: nx-fade-up 0.55s var(--nx-ease) forwards;
-  }
-
-  .nx-stagger > *:nth-child(1) { animation-delay: 0.04s; }
-  .nx-stagger > *:nth-child(2) { animation-delay: 0.08s; }
-  .nx-stagger > *:nth-child(3) { animation-delay: 0.12s; }
-  .nx-stagger > *:nth-child(4) { animation-delay: 0.16s; }
-  .nx-stagger > *:nth-child(5) { animation-delay: 0.2s; }
-  .nx-stagger > *:nth-child(6) { animation-delay: 0.24s; }
-  .nx-stagger > *:nth-child(7) { animation-delay: 0.28s; }
-  .nx-stagger > *:nth-child(8) { animation-delay: 0.32s; }
-
-  .nx-row-enter {
-    animation: nx-fade-up 0.45s var(--nx-ease) forwards;
-    opacity: 0;
-  }
-
-  .nx-chart-line {
-    stroke-dasharray: 1200;
-    stroke-dashoffset: 1200;
-    animation: nx-chart-draw 1.1s var(--nx-ease) forwards;
-  }
-
-  .nx-sparkline-line {
-    stroke-dasharray: 180;
-    stroke-dashoffset: 180;
-    animation: nx-chart-draw 0.9s var(--nx-ease) 0.15s forwards;
-  }
-
   .auth-stagger > * {
     opacity: 0;
-    animation: nx-fade-up 0.55s var(--nx-ease) forwards;
+    animation: fade-up 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
   }
 
-  .auth-stagger > *:nth-child(1) { animation-delay: 0.05s; }
-  .auth-stagger > *:nth-child(2) { animation-delay: 0.12s; }
-  .auth-stagger > *:nth-child(3) { animation-delay: 0.19s; }
-  .auth-stagger > *:nth-child(4) { animation-delay: 0.26s; }
-  .auth-stagger > *:nth-child(5) { animation-delay: 0.33s; }
+  .auth-stagger > *:nth-child(1) {
+    animation-delay: 0.05s;
+  }
+
+  .auth-stagger > *:nth-child(2) {
+    animation-delay: 0.12s;
+  }
+
+  .auth-stagger > *:nth-child(3) {
+    animation-delay: 0.19s;
+  }
+
+  .auth-stagger > *:nth-child(4) {
+    animation-delay: 0.26s;
+  }
+
+  .auth-stagger > *:nth-child(5) {
+    animation-delay: 0.33s;
+  }
+
+  .auth-stagger > *:nth-child(6) {
+    animation-delay: 0.4s;
+  }
 
   .auth-grid {
-    background-image: radial-gradient(circle at 1px 1px, #e2e8f0 1px, transparent 0);
+    background-image: radial-gradient(circle at 1px 1px, #e5e7eb 1px, transparent 0);
     background-size: 24px 24px;
   }
 }
 
-@media (min-width: 640px) {
-  .nx-modal-panel {
-    animation: nx-modal-in 0.24s var(--nx-ease) forwards;
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
   }
-}
 
-@media (prefers-reduced-motion: reduce) {
-  .nx-page,
-  .nx-stagger > *,
-  .nx-row-enter,
-  .nx-modal-panel,
-  .nx-modal-backdrop,
-  .nx-chart-line,
-  .nx-sparkline-line,
-  .auth-stagger > * {
-    animation: none !important;
-    opacity: 1 !important;
-    transform: none !important;
-    stroke-dashoffset: 0 !important;
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
-}
-
-@keyframes nx-fade-up {
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes nx-fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes nx-modal-in {
-  from { opacity: 0; transform: translateY(16px) scale(0.98); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
-}
-
-@keyframes nx-modal-sheet-in {
-  from { opacity: 0; transform: translateY(100%); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes nx-chart-draw {
-  to { stroke-dashoffset: 0; }
 }

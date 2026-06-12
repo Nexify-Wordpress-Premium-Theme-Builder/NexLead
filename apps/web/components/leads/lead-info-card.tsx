@@ -34,8 +34,8 @@ export function LeadInfoCard({ lead }: LeadInfoCardProps) {
   const metadata = parseLeadMetadata(lead.metadata);
 
   return (
-    <section className="nx-card p-5 sm:p-6">
-      <h2 className="nx-section-title">Lead Bilgileri</h2>
+    <section className="rounded-2xl border border-border bg-surface p-5 shadow-soft sm:p-6">
+      <h2 className="text-base font-semibold text-text-primary">Lead Bilgileri</h2>
       <dl className="mt-4 grid gap-4 sm:grid-cols-2">
         <InfoRow label="Şirket adı" value={lead.company_name} />
         <InfoRow label="Domain" value={lead.normalizedDomain ?? "—"} />

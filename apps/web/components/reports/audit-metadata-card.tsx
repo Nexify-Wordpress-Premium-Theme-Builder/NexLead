@@ -29,7 +29,7 @@ export function AuditMetadataCard({ report }: AuditMetadataCardProps) {
   const { audit, jobInfo } = report;
 
   return (
-    <section className="nx-card p-5 sm:p-6">
+    <section className="rounded-2xl border border-border bg-surface p-5 shadow-soft sm:p-6">
       <h2 className="text-base font-semibold text-text-primary">Analiz Meta Verisi</h2>
 
       <dl className="mt-4 grid gap-3 text-sm sm:grid-cols-2">

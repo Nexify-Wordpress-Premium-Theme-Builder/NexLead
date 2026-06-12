@@ -48,7 +48,7 @@ export function LeadDetailPageContent({ lead, websites }: LeadDetailPageContentP
   };
 
   return (
-    <div className="nx-page space-y-6">
+    <div className="animate-fade-up mx-auto max-w-7xl">
       <BackLink href="/dashboard/leads">Leadler&apos;e dön</BackLink>
 
       <LeadDetailHeader
@@ -60,7 +60,7 @@ export function LeadDetailPageContent({ lead, websites }: LeadDetailPageContentP
             </Button>
             <Link
               href={`/dashboard/websites?leadId=${lead.id}`}
-              className="inline-flex h-11 items-center justify-center rounded-lg border border-border bg-surface px-4 text-sm font-medium text-text-primary transition-colors hover:bg-surface-soft"
+              className="inline-flex h-11 items-center justify-center rounded-lg border border-border bg-surface px-4 text-sm font-medium text-text-primary shadow-sm transition-colors hover:bg-surface-soft"
             >
               Web Site Ekle
             </Link>
@@ -92,7 +92,6 @@ export function LeadDetailPageContent({ lead, websites }: LeadDetailPageContentP
 
       <Modal
         open={editOpen}
-        size="lg"
         title="Lead Düzenle"
         description="Lead bilgilerini güncelleyin."
         onClose={() => setEditOpen(false)}

@@ -10,10 +10,10 @@ type LeadDetailHeaderProps = {
 
 export function LeadDetailHeader({ lead, actions }: LeadDetailHeaderProps) {
   return (
-    <div className="mt-4 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+    <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
       <div className="min-w-0">
-        <p className="text-[13px] font-semibold text-text-muted">Lead Detayı</p>
-        <h1 className="nx-page-header-title mt-1 truncate">
+        <p className="text-sm font-medium text-text-muted">Lead Detayı</p>
+        <h1 className="mt-1 truncate text-3xl font-semibold tracking-[-0.03em] text-text-primary">
           {lead.company_name}
         </h1>
         <div className="mt-3">

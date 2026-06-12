@@ -24,7 +24,7 @@ type WebsiteInfoCardProps = {
 
 export function WebsiteInfoCard({ website }: WebsiteInfoCardProps) {
   return (
-    <section className="nx-card p-5 sm:p-6">
+    <section className="rounded-2xl border border-border bg-surface p-5 shadow-soft sm:p-6">
       <h2 className="text-base font-semibold text-text-primary">Web Site Bilgileri</h2>
       <dl className="mt-4 grid gap-4 sm:grid-cols-2">
         <InfoRow label="URL" value={website.url ?? "—"} />

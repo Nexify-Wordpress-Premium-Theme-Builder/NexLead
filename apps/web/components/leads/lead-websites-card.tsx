@@ -11,7 +11,7 @@ type LeadWebsitesCardProps = {
 
 export function LeadWebsitesCard({ websites }: LeadWebsitesCardProps) {
   return (
-    <section className="nx-card p-5 sm:p-6">
+    <section className="rounded-2xl border border-border bg-surface p-5 shadow-soft sm:p-6">
       <h2 className="text-base font-semibold text-text-primary">Bağlı Web Siteleri</h2>
 
       {websites.length === 0 ? (
@@ -37,7 +37,7 @@ export function LeadWebsitesCard({ websites }: LeadWebsitesCardProps) {
                 </div>
                 <Link
                   href={`/dashboard/websites/${website.id}`}
-                  className="inline-flex h-9 shrink-0 items-center justify-center rounded-lg border border-border bg-surface px-3 text-sm font-medium text-text-primary transition-colors hover:bg-surface-soft"
+                  className="inline-flex h-9 shrink-0 items-center justify-center rounded-lg border border-border bg-surface px-3 text-sm font-medium text-text-primary shadow-sm transition-colors hover:bg-surface-soft"
                 >
                   Detaya git
                 </Link>

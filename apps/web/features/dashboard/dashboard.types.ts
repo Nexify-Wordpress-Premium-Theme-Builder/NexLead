@@ -4,55 +4,12 @@ import type { LeadStatus } from "@/features/leads/lead.types";
 import type { AuditStatus, WebsiteStatus } from "@/features/websites/website.types";
 
 export type AuditType = Tables<"audits">["type"];
-export type FindingSeverity = Tables<"audit_findings">["severity"];
 
 export type DashboardStats = {
   totalLeads: number;
   activeWebsites: number;
   pendingAudits: number;
   completedAudits: number;
-};
-
-export type DashboardKpis = DashboardStats & {
-  averageScore: number | null;
-  criticalFindings: number;
-};
-
-export type DashboardTrendSeries = {
-  labels: string[];
-  leads: number[];
-  websites: number[];
-  audits: number[];
-  reports: number[];
-};
-
-export type DashboardScoreSummary = {
-  averageScore: number | null;
-  scoredAuditCount: number;
-  categoryAverages: Array<{
-    category: string;
-    score: number;
-  }>;
-};
-
-export type DashboardSeveritySummary = {
-  critical: number;
-  high: number;
-  medium: number;
-  low: number;
-  info: number;
-  total: number;
-};
-
-export type DashboardActivityType = "lead" | "website" | "audit";
-
-export type DashboardActivityItem = {
-  id: string;
-  type: DashboardActivityType;
-  title: string;
-  subtitle: string;
-  createdAt: string;
-  href: string | null;
 };
 
 export type DashboardRecentLead = {
@@ -81,99 +38,12 @@ export type DashboardRecentAudit = {
   completedAt: string | null;
 };
 
-export type DashboardPreviewField =
-  | "kpis"
-  | "trends"
-  | "scoreSummary"
-  | "severitySummary"
-  | "recentActivity"
-  | "recentLeads"
-  | "recentWebsites"
-  | "recentAudits"
-  | "leadTable"
-  | "funnel"
-  | "insights"
-  | "upcomingTasks"
-  | "circularScores";
-
-export type DashboardKpiTrend = {
-  percent: number;
-  direction: "up" | "down" | "neutral";
-};
-
-export type DashboardCircularScoreItem = {
-  label: string;
-  score: number;
-  qualityLabel: string;
-};
-
-export type DashboardLeadTableRow = {
-  id: string;
-  companyName: string;
-  website: string;
-  sector: string;
-  score: number | null;
-  status: LeadStatus;
-  statusLabel: string;
-  nextAction: string;
-  href: string | null;
-  isPreview: boolean;
-};
-
-export type DashboardFunnelStep = {
-  label: string;
-  value: number;
-  conversionPercent: number | null;
-};
-
-export type DashboardInsightTone = "critical" | "seo" | "lead" | "performance" | "info";
-
-export type DashboardInsightItem = {
-  id: string;
-  title: string;
-  description: string;
-  tone: DashboardInsightTone;
-};
-
-export type DashboardUpcomingTask = {
-  id: string;
-  title: string;
-  subtitle: string;
-  timeLabel: string;
-};
-
-export type DashboardDisplay = {
-  kpiTrends: {
-    leads: DashboardKpiTrend;
-    websites: DashboardKpiTrend;
-    reports: DashboardKpiTrend;
-    pending: DashboardKpiTrend;
-    score: DashboardKpiTrend;
-    critical: DashboardKpiTrend;
-  };
-  circularScores: DashboardCircularScoreItem[];
-  insights: DashboardInsightItem[];
-  leadTableRows: DashboardLeadTableRow[];
-  funnelSteps: DashboardFunnelStep[];
-  upcomingTasks: DashboardUpcomingTask[];
-};
-
-export type DashboardOverviewData = {
+export type DashboardOverview = {
   workspaceId: string;
   workspaceName: string;
   stats: DashboardStats;
-  kpis: DashboardKpis;
-  trends: DashboardTrendSeries;
-  scoreSummary: DashboardScoreSummary;
-  severitySummary: DashboardSeveritySummary;
-  recentActivity: DashboardActivityItem[];
   recentLeads: DashboardRecentLead[];
   recentWebsites: DashboardRecentWebsite[];
   recentAudits: DashboardRecentAudit[];
   isFullyEmpty: boolean;
-  previewFields?: DashboardPreviewField[];
-};
-
-export type DashboardOverview = DashboardOverviewData & {
-  display: DashboardDisplay;
 };

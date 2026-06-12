@@ -13,7 +13,7 @@ type ReportScoreOverviewProps = {
 export function ReportScoreOverview({ scores }: ReportScoreOverviewProps) {
   if (!scores) {
     return (
-      <section className="nx-card p-5 sm:p-6">
+      <section className="rounded-2xl border border-border bg-surface p-5 shadow-soft sm:p-6">
         <h2 className="text-base font-semibold text-text-primary">Skor Özeti</h2>
         <p className="mt-3 text-sm text-text-secondary">Bu analiz için skor verisi bulunmuyor.</p>
       </section>
@@ -28,7 +28,7 @@ export function ReportScoreOverview({ scores }: ReportScoreOverviewProps) {
   }));
 
   return (
-    <section className="nx-card p-5 sm:p-6">
+    <section className="rounded-2xl border border-border bg-surface p-5 shadow-soft sm:p-6">
       <h2 className="text-base font-semibold text-text-primary">Skor Özeti</h2>
       <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
         <AuditScoreCard label="Genel Skor" score={scores.overallScore} />

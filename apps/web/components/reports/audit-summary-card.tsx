@@ -9,7 +9,7 @@ export function AuditSummaryCard({ report }: AuditSummaryCardProps) {
   const overallScore = report.scores?.overallScore ?? report.audit.overall_score;
 
   return (
-    <section className="nx-card p-5 sm:p-6">
+    <section className="rounded-2xl border border-border bg-surface p-5 shadow-soft sm:p-6">
       <h2 className="text-base font-semibold text-text-primary">Özet</h2>
 
       <div className="mt-4 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
