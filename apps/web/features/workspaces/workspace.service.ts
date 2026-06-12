@@ -1,4 +1,3 @@
-import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { requireWorkspace } from "@/lib/workspace/require-workspace";
 
 export type ActiveWorkspace = {
@@ -13,21 +12,8 @@ export async function getActiveWorkspace(): Promise<ActiveWorkspace | null> {
     return null;
   }
 
-  const supabase = await createServerSupabaseClient();
-
-  const { data, error } = await supabase
-    .from("workspaces")
-    .select("id, name")
-    .eq("id", context.workspaceId)
-    .is("deleted_at", null)
-    .maybeSingle();
-
-  if (error || !data) {
-    return null;
-  }
-
   return {
-    id: data.id,
-    name: data.name,
+    id: context.workspaceId,
+    name: context.workspaceName ?? "Çalışma Alanı",
   };
 }

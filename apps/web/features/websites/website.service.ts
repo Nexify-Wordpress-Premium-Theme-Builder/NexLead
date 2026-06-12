@@ -10,33 +10,43 @@ import type {
 import { buildWebsitePayload, leadToOption, mapWebsiteRow } from "./website.utils";
 import { getLeadById } from "@/features/leads/lead.service";
 
+const WEBSITE_LIST_LIMIT = 100;
+
+const WEBSITE_LIST_SELECT =
+  "id, workspace_id, url, domain, normalized_url, status, created_at, updated_at, lead_id, description, last_audit_id, last_audited_at, is_primary, title, metadata, created_by, deleted_at, favicon_url";
+
 async function attachLatestAudits(
   workspaceId: string,
-  websites: WebsiteWithRelations[],
+  websites: Array<WebsiteWithRelations & { last_audit_id?: string | null }>,
 ): Promise<WebsiteWithRelations[]> {
   if (websites.length === 0) {
     return websites;
   }
 
   const supabase = await createServerSupabaseClient();
-  const websiteIds = websites.map((website) => website.id);
+  const auditIds = [
+    ...new Set(
+      websites
+        .map((website) => website.last_audit_id)
+        .filter((auditId): auditId is string => Boolean(auditId)),
+    ),
+  ];
 
-  const { data: audits, error } = await supabase
-    .from("audits")
-    .select("id, website_id, status, created_at")
-    .eq("workspace_id", workspaceId)
-    .in("website_id", websiteIds)
-    .order("created_at", { ascending: false });
+  const latestByAuditId = new Map<string, WebsiteWithRelations["latestAudit"]>();
 
-  if (error) {
-    throw new Error(error.message);
-  }
+  if (auditIds.length > 0) {
+    const { data: audits, error } = await supabase
+      .from("audits")
+      .select("id, status, created_at")
+      .eq("workspace_id", workspaceId)
+      .in("id", auditIds);
 
-  const latestByWebsite = new Map<string, WebsiteWithRelations["latestAudit"]>();
+    if (error) {
+      throw new Error(error.message);
+    }
 
-  for (const audit of audits ?? []) {
-    if (!latestByWebsite.has(audit.website_id)) {
-      latestByWebsite.set(audit.website_id, {
+    for (const audit of audits ?? []) {
+      latestByAuditId.set(audit.id, {
         id: audit.id,
         status: audit.status,
         created_at: audit.created_at,
@@ -45,7 +55,11 @@ async function attachLatestAudits(
   }
 
   return websites.map((website) =>
-    mapWebsiteRow(website, website.leadCompanyName, latestByWebsite.get(website.id) ?? null),
+    mapWebsiteRow(
+      website,
+      website.leadCompanyName,
+      website.last_audit_id ? (latestByAuditId.get(website.last_audit_id) ?? null) : null,
+    ),
   );
 }
 
@@ -67,10 +81,11 @@ export async function getWebsitesForWorkspace(workspaceId: string): Promise<Webs
 
   const { data, error } = await supabase
     .from("websites")
-    .select("*, leads ( company_name )")
+    .select(`${WEBSITE_LIST_SELECT}, leads ( company_name )`)
     .eq("workspace_id", workspaceId)
     .is("deleted_at", null)
-    .order("created_at", { ascending: false });
+    .order("created_at", { ascending: false })
+    .limit(WEBSITE_LIST_LIMIT);
 
   if (error) {
     throw new Error(error.message);
@@ -150,22 +165,21 @@ export async function getWebsiteDetail(
     return null;
   }
 
-  const audits = await getWebsiteAudits(workspaceId, websiteId);
-
-  let linkedLead: WebsiteDetail["linkedLead"] = null;
-
-  if (website.lead_id) {
-    const lead = await getLeadById(workspaceId, website.lead_id);
-
-    if (lead) {
-      linkedLead = {
-        id: lead.id,
-        companyName: lead.company_name,
-        normalizedDomain: lead.normalizedDomain,
-        status: lead.status,
-      };
-    }
-  }
+  const [audits, linkedLead] = await Promise.all([
+    getWebsiteAudits(workspaceId, websiteId),
+    website.lead_id
+      ? getLeadById(workspaceId, website.lead_id).then((lead) =>
+          lead
+            ? {
+                id: lead.id,
+                companyName: lead.company_name,
+                normalizedDomain: lead.normalizedDomain,
+                status: lead.status,
+              }
+            : null,
+        )
+      : Promise.resolve(null),
+  ]);
 
   return {
     ...website,

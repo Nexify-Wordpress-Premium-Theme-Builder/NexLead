@@ -12,6 +12,10 @@ type AuditStatusRefreshProps = {
   message?: string;
 };
 
+function isDocumentVisible(): boolean {
+  return typeof document === "undefined" || document.visibilityState === "visible";
+}
+
 export function AuditStatusRefresh({
   isActive,
   intervalMs = AUDIT_DETAIL_REFRESH_INTERVAL_MS,
@@ -24,11 +28,26 @@ export function AuditStatusRefresh({
       return;
     }
 
-    const intervalId = setInterval(() => {
-      router.refresh();
-    }, intervalMs);
+    const refreshIfVisible = () => {
+      if (isDocumentVisible()) {
+        router.refresh();
+      }
+    };
 
-    return () => clearInterval(intervalId);
+    const intervalId = setInterval(refreshIfVisible, intervalMs);
+
+    const handleVisibilityChange = () => {
+      if (isDocumentVisible()) {
+        router.refresh();
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      clearInterval(intervalId);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
   }, [isActive, intervalMs, router]);
 
   if (!isActive) {

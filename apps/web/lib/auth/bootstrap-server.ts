@@ -1,4 +1,5 @@
 import type { BootstrapStatus } from "@nexlead/types";
+import { cache } from "react";
 
 import { getServerBootstrapStatus } from "./bootstrap";
 import { getServerAccessToken } from "./session";
@@ -7,7 +8,7 @@ function getApiBaseUrl(): string {
   return process.env.NEXT_PUBLIC_API_URL?.trim() || "http://localhost:4000";
 }
 
-export async function ensureServerBootstrap(userId: string): Promise<BootstrapStatus> {
+export const ensureServerBootstrap = cache(async (userId: string): Promise<BootstrapStatus> => {
   const current = await getServerBootstrapStatus(userId);
 
   if (current.ready) {
@@ -30,4 +31,4 @@ export async function ensureServerBootstrap(userId: string): Promise<BootstrapSt
   });
 
   return getServerBootstrapStatus(userId);
-}
+});

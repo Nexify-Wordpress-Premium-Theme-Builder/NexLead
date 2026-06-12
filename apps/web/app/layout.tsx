@@ -14,9 +14,9 @@ export const metadata: Metadata = {
   title: "NexLead",
   description: "AI destekli müşteri bulma ve web sitesi denetim platformu",
   icons: {
-    icon: "/favicon.png",
-    shortcut: "/favicon.png",
-    apple: "/favicon.png",
+    icon: "/favicon-128.png",
+    shortcut: "/favicon-128.png",
+    apple: "/favicon-128.png",
   },
 };
 

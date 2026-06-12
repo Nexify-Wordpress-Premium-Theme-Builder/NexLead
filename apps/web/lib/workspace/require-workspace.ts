@@ -1,12 +1,15 @@
-import { createServerSupabaseClient } from "@/lib/supabase/server";
+import { cache } from "react";
+
 import { getServerAuthSessionUser } from "@/lib/auth/session";
+import { createServerSupabaseClient } from "@/lib/supabase/server";
 
 export type WorkspaceContext = {
   userId: string;
   workspaceId: string;
+  workspaceName: string | null;
 };
 
-export async function requireWorkspace(): Promise<WorkspaceContext | null> {
+export const requireWorkspace = cache(async (): Promise<WorkspaceContext | null> => {
   const user = await getServerAuthSessionUser();
 
   if (!user) {
@@ -39,8 +42,16 @@ export async function requireWorkspace(): Promise<WorkspaceContext | null> {
     return null;
   }
 
+  const { data: workspace } = await supabase
+    .from("workspaces")
+    .select("name")
+    .eq("id", workspaceId)
+    .is("deleted_at", null)
+    .maybeSingle();
+
   return {
     userId: user.id,
     workspaceId,
+    workspaceName: workspace?.name ?? null,
   };
-}
+});

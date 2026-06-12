@@ -27,13 +27,22 @@ export default async function WebsiteDetailPage({ params }: WebsiteDetailPagePro
   let auditResult;
 
   try {
-    const [websiteResult, leadOptions, auditResultData] = await Promise.all([
+    const [websiteResult, leadOptions] = await Promise.all([
       getWebsiteDetail(workspace.workspaceId, websiteId),
       getLeadOptionsForWorkspace(workspace.workspaceId),
-      getWebsiteAuditResult(workspace.workspaceId, websiteId),
     ]);
 
-    if (!websiteResult || !auditResultData) {
+    if (!websiteResult) {
+      notFound();
+    }
+
+    const auditResultData = await getWebsiteAuditResult(
+      workspace.workspaceId,
+      websiteId,
+      { latestAudit: websiteResult.latestAudit },
+    );
+
+    if (!auditResultData) {
       notFound();
     }
 

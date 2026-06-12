@@ -1,9 +1,9 @@
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 
-import type { WebsiteWithRelations } from "@/features/websites/website.types";
+import type { WebsiteRow, WebsiteWithRelations } from "@/features/websites/website.types";
 import { mapWebsiteRow } from "@/features/websites/website.utils";
 
-import type { LeadFormInput, LeadWithPrimaryContact } from "./lead.types";
+import type { LeadFormInput, LeadRow, LeadWithPrimaryContact } from "./lead.types";
 import { buildLocation, mapLeadRow, toLeadMetadata } from "./lead.utils";
 
 function buildLeadInsert(workspaceId: string, userId: string, input: LeadFormInput) {
@@ -25,21 +25,27 @@ function buildLeadInsert(workspaceId: string, userId: string, input: LeadFormInp
   };
 }
 
+const LEAD_LIST_LIMIT = 100;
+
+const LEAD_LIST_SELECT =
+  "id, workspace_id, company_name, industry, location, status, created_at, contact_name, contact_email, contact_phone, notes_summary, metadata, created_by, deleted_at, updated_at, priority, source_type, score, score_breakdown, assigned_to, last_contacted_at";
+
 export async function getLeadsForWorkspace(workspaceId: string): Promise<LeadWithPrimaryContact[]> {
   const supabase = await createServerSupabaseClient();
 
   const { data, error } = await supabase
     .from("leads")
-    .select("*")
+    .select(LEAD_LIST_SELECT)
     .eq("workspace_id", workspaceId)
     .is("deleted_at", null)
-    .order("created_at", { ascending: false });
+    .order("created_at", { ascending: false })
+    .limit(LEAD_LIST_LIMIT);
 
   if (error) {
     throw new Error(error.message);
   }
 
-  return (data ?? []).map(mapLeadRow);
+  return (data ?? []).map((row) => mapLeadRow(row as LeadRow));
 }
 
 export async function getLeadById(
@@ -79,11 +85,14 @@ export async function getLeadWebsites(
 
   const { data, error } = await supabase
     .from("websites")
-    .select("*")
+    .select(
+      "id, workspace_id, url, domain, normalized_url, status, created_at, lead_id, last_audit_id, last_audited_at, description, metadata, created_by, updated_at, deleted_at, is_primary, title, favicon_url",
+    )
     .eq("workspace_id", workspaceId)
     .eq("lead_id", leadId)
     .is("deleted_at", null)
-    .order("created_at", { ascending: false });
+    .order("created_at", { ascending: false })
+    .limit(20);
 
   if (error) {
     throw new Error(error.message);
@@ -95,24 +104,27 @@ export async function getLeadWebsites(
     return [];
   }
 
-  const websiteIds = rows.map((row) => row.id);
+  const auditIds = [
+    ...new Set(
+      rows.map((row) => row.last_audit_id).filter((auditId): auditId is string => Boolean(auditId)),
+    ),
+  ];
 
-  const { data: audits, error: auditError } = await supabase
-    .from("audits")
-    .select("id, website_id, status, created_at")
-    .eq("workspace_id", workspaceId)
-    .in("website_id", websiteIds)
-    .order("created_at", { ascending: false });
+  const latestByAuditId = new Map<string, WebsiteWithRelations["latestAudit"]>();
 
-  if (auditError) {
-    throw new Error(auditError.message);
-  }
+  if (auditIds.length > 0) {
+    const { data: audits, error: auditError } = await supabase
+      .from("audits")
+      .select("id, status, created_at")
+      .eq("workspace_id", workspaceId)
+      .in("id", auditIds);
 
-  const latestByWebsite = new Map<string, WebsiteWithRelations["latestAudit"]>();
+    if (auditError) {
+      throw new Error(auditError.message);
+    }
 
-  for (const audit of audits ?? []) {
-    if (!latestByWebsite.has(audit.website_id)) {
-      latestByWebsite.set(audit.website_id, {
+    for (const audit of audits ?? []) {
+      latestByAuditId.set(audit.id, {
         id: audit.id,
         status: audit.status,
         created_at: audit.created_at,
@@ -121,7 +133,11 @@ export async function getLeadWebsites(
   }
 
   return rows.map((row) =>
-    mapWebsiteRow(row, leadCompanyName, latestByWebsite.get(row.id) ?? null),
+    mapWebsiteRow(
+      row as WebsiteRow,
+      leadCompanyName,
+      row.last_audit_id ? (latestByAuditId.get(row.last_audit_id) ?? null) : null,
+    ),
   );
 }
 

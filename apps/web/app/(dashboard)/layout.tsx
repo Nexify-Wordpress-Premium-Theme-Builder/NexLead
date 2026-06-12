@@ -4,8 +4,8 @@ import { redirect } from "next/navigation";
 export const dynamic = "force-dynamic";
 
 import { DashboardShell } from "@/components/dashboard/dashboard-shell";
-import { getActiveWorkspace } from "@/features/workspaces/workspace.service";
 import { ensureServerBootstrap, getServerAuthSessionUser } from "@/lib/auth";
+import { requireWorkspace } from "@/lib/workspace/require-workspace";
 
 export default async function DashboardLayout({ children }: { children: ReactNode }) {
   const user = await getServerAuthSessionUser();
@@ -14,12 +14,16 @@ export default async function DashboardLayout({ children }: { children: ReactNod
     redirect("/login");
   }
 
-  await ensureServerBootstrap(user.id);
+  const workspace = await requireWorkspace();
 
-  const workspace = await getActiveWorkspace();
+  if (!workspace) {
+    redirect("/login");
+  }
+
+  await ensureServerBootstrap(workspace.userId);
 
   return (
-    <DashboardShell userEmail={user.email} workspaceName={workspace?.name ?? null}>
+    <DashboardShell userEmail={user.email} workspaceName={workspace.workspaceName}>
       {children}
     </DashboardShell>
   );

@@ -1,8 +1,9 @@
 import type { BootstrapStatus } from "@nexlead/types";
+import { cache } from "react";
 
 import { createServerSupabaseClient } from "@/lib/supabase";
 
-export async function getServerBootstrapStatus(userId: string): Promise<BootstrapStatus> {
+export const getServerBootstrapStatus = cache(async (userId: string): Promise<BootstrapStatus> => {
   const supabase = await createServerSupabaseClient();
 
   const [profileResult, membershipResult] = await Promise.all([
@@ -31,4 +32,4 @@ export async function getServerBootstrapStatus(userId: string): Promise<Bootstra
     workspaceId,
     membershipId: membership?.id,
   };
-}
+});

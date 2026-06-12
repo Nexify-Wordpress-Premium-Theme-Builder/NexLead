@@ -6,6 +6,7 @@ import { useState } from "react";
 type NexLeadLogoProps = {
   variant?: "full" | "compact";
   className?: string;
+  priority?: boolean;
 };
 
 const LOGO_ASSETS = {
@@ -16,7 +17,7 @@ const LOGO_ASSETS = {
     className: "h-8 w-auto max-w-[min(100%,10.5rem)]",
   },
   compact: {
-    src: "/brand/nexlead-icon.png",
+    src: "/brand/nexlead-icon-128.png",
     width: 32,
     height: 32,
     className: "h-8 w-8",
@@ -37,7 +38,7 @@ function LogoFallback({ variant }: { variant: "full" | "compact" }) {
   );
 }
 
-export function NexLeadLogo({ variant = "full", className }: NexLeadLogoProps) {
+export function NexLeadLogo({ variant = "full", className, priority = false }: NexLeadLogoProps) {
   const [imageError, setImageError] = useState(false);
   const asset = LOGO_ASSETS[variant];
 
@@ -56,7 +57,7 @@ export function NexLeadLogo({ variant = "full", className }: NexLeadLogoProps) {
         alt="NexLead"
         width={asset.width}
         height={asset.height}
-        priority
+        priority={priority}
         className={asset.className}
         onError={() => setImageError(true)}
       />

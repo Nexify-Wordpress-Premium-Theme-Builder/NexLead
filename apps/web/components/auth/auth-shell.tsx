@@ -16,7 +16,7 @@ export function AuthShell({ title, subtitle, children, footer }: AuthShellProps)
         <div className="auth-grid absolute inset-0 opacity-60" />
         <div className="relative z-10 flex h-full flex-col justify-between p-10 xl:p-14">
           <div className="animate-fade-in max-w-full">
-            <NexLeadLogo variant="full" />
+            <NexLeadLogo variant="full" priority />
           </div>
 
           <div className="max-w-md space-y-6">

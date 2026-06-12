@@ -1,8 +1,9 @@
 import type { AuthSessionUser } from "@nexlead/types";
+import { cache } from "react";
 
 import { createServerSupabaseClient } from "@/lib/supabase";
 
-export async function getServerAuthSessionUser(): Promise<AuthSessionUser | null> {
+export const getServerAuthSessionUser = cache(async (): Promise<AuthSessionUser | null> => {
   const supabase = await createServerSupabaseClient();
   const {
     data: { user },
@@ -17,7 +18,7 @@ export async function getServerAuthSessionUser(): Promise<AuthSessionUser | null
     id: user.id,
     email: user.email ?? null,
   };
-}
+});
 
 export async function getServerAccessToken(): Promise<string | null> {
   const supabase = await createServerSupabaseClient();

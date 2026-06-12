@@ -19,7 +19,10 @@ export default async function DashboardPage() {
   }
 
   try {
-    const overview = await getDashboardOverview(workspace.workspaceId);
+    const overview = await getDashboardOverview(
+      workspace.workspaceId,
+      workspace.workspaceName ?? "Çalışma Alanı",
+    );
     return <DashboardOverview data={overview} />;
   } catch {
     return (

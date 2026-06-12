@@ -1,5 +1,6 @@
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { getWebsiteById } from "@/features/websites/website.service";
+import type { WebsiteWithRelations } from "@/features/websites/website.types";
 
 import type {
   AuditCategoryScore,
@@ -122,17 +123,26 @@ function hasAuditOutput(
   return overallScore !== null || categories.length > 0 || findings.length > 0;
 }
 
+type WebsiteAuditResultOptions = {
+  latestAudit?: WebsiteWithRelations["latestAudit"];
+};
+
 export async function getWebsiteAuditResult(
   workspaceId: string,
   websiteId: string,
+  options?: WebsiteAuditResultOptions,
 ): Promise<WebsiteAuditResult | null> {
-  const website = await getWebsiteById(workspaceId, websiteId);
+  let latest = options?.latestAudit;
 
-  if (!website) {
-    return null;
+  if (latest === undefined) {
+    const website = await getWebsiteById(workspaceId, websiteId);
+
+    if (!website) {
+      return null;
+    }
+
+    latest = website.latestAudit;
   }
-
-  const latest = website.latestAudit;
 
   if (!latest) {
     return {
@@ -215,8 +225,10 @@ export async function getWebsiteAuditResult(
     };
   }
 
-  const categories = await getAuditScoresForAudit(workspaceId, auditRow.id);
-  const findings = await getAuditFindingsForAudit(workspaceId, auditRow.id);
+  const [categories, findings] = await Promise.all([
+    getAuditScoresForAudit(workspaceId, auditRow.id),
+    getAuditFindingsForAudit(workspaceId, auditRow.id),
+  ]);
 
   const scores: AuditScoresView = {
     overallScore: auditRow.overall_score,
