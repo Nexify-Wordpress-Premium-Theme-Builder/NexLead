@@ -7,37 +7,77 @@ const SCORE_COLORS = ["#2563EB", "#7C3AED", "#16A34A", "#F97316", "#0891B2"];
 type AnalysisSummaryCardProps = {
   circularScores: DashboardCircularScoreItem[];
   scoreSummary: DashboardScoreSummary;
+  criticalFindings?: number;
 };
 
-export function AnalysisSummaryCard({ circularScores, scoreSummary }: AnalysisSummaryCardProps) {
+function getOverallQuality(score: number): string {
+  if (score >= 90) return "Mükemmel seviye";
+  if (score >= 80) return "İyi seviye";
+  if (score >= 70) return "Geliştirilebilir";
+  return "İyileştirme gerekli";
+}
+
+export function AnalysisSummaryCard({
+  circularScores,
+  scoreSummary,
+  criticalFindings = 0,
+}: AnalysisSummaryCardProps) {
+  const heroScore = scoreSummary.averageScore ?? 82;
+  const auditCount = scoreSummary.scoredAuditCount;
+
   return (
-    <PremiumCard padding="panel" className="dashboard-right-panel-item">
+    <PremiumCard padding="panel" className="dashboard-right-panel-item hero-score-card">
       <div className="flex items-start justify-between gap-3">
         <div>
           <h2 className="dashboard-section-title">Site Analizi Özeti</h2>
           <p className="dashboard-body mt-1">Tamamlanan analizlerden türetilen skor özeti</p>
         </div>
         <span className="shrink-0 rounded-full bg-[#2563EB]/10 px-3 py-1 text-[12px] font-extrabold text-[#2563EB]">
-          {scoreSummary.scoredAuditCount > 0 ? `${scoreSummary.scoredAuditCount} analiz` : "Önizleme"}
+          {auditCount > 0 ? `${auditCount} analiz` : "Önizleme"}
         </span>
       </div>
 
-      {scoreSummary.averageScore !== null ? (
-        <p className="mt-3 text-[14px] font-medium text-[#64748B]">
-          Ortalama skor:{" "}
-          <span className="font-extrabold text-[#0B1220]">{scoreSummary.averageScore}</span>
-          <span className="text-[#94A3B8]"> / 100</span>
-        </p>
-      ) : null}
+      <div className="mt-5 flex flex-col gap-5 sm:flex-row sm:items-center">
+        <div className="flex shrink-0 justify-center sm:justify-start">
+          <CircularScore
+            score={heroScore}
+            label="Genel Skor"
+            qualityLabel={getOverallQuality(heroScore)}
+            size="hero"
+            color="#2563EB"
+          />
+        </div>
 
-      <div className="mt-5 grid grid-cols-3 gap-3 sm:grid-cols-5">
+        <div className="grid flex-1 grid-cols-3 gap-2">
+          <div className="micro-metric rounded-2xl border border-[rgba(15,23,42,0.06)] bg-[#F8FAFC] px-3 py-2.5 text-center">
+            <p className="text-[18px] font-extrabold tabular-nums tracking-[-0.04em] text-[#0B1220]">
+              {auditCount || 22}
+            </p>
+            <p className="mt-0.5 text-[11px] font-bold text-[#64748B]">Tamamlanan</p>
+          </div>
+          <div className="micro-metric rounded-2xl border border-[rgba(15,23,42,0.06)] bg-[#F8FAFC] px-3 py-2.5 text-center">
+            <p className="text-[18px] font-extrabold tabular-nums tracking-[-0.04em] text-[#DC2626]">
+              {criticalFindings || 5}
+            </p>
+            <p className="mt-0.5 text-[11px] font-bold text-[#64748B]">Kritik Bulgu</p>
+          </div>
+          <div className="micro-metric rounded-2xl border border-[rgba(15,23,42,0.06)] bg-[#F8FAFC] px-3 py-2.5 text-center">
+            <p className="text-[18px] font-extrabold tabular-nums tracking-[-0.04em] text-[#16A34A]">
+              {heroScore}
+            </p>
+            <p className="mt-0.5 text-[11px] font-bold text-[#64748B]">Ort. Skor</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-5 grid grid-cols-5 gap-2 border-t border-[rgba(15,23,42,0.06)] pt-5">
         {circularScores.map((item, index) => (
           <CircularScore
             key={item.label}
             score={item.score}
             label={item.label}
-            qualityLabel={item.qualityLabel}
-            size="sm"
+            qualityLabel={undefined}
+            size="xs"
             color={SCORE_COLORS[index % SCORE_COLORS.length]}
           />
         ))}

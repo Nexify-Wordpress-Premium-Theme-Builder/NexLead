@@ -35,8 +35,20 @@
 
   .premium-card {
     box-shadow:
-      0 18px 40px rgba(15, 23, 42, 0.06),
+      0 18px 40px rgba(15, 23, 42, 0.07),
       0 2px 8px rgba(15, 23, 42, 0.04);
+  }
+
+  .kpi-card {
+    box-shadow:
+      0 18px 40px rgba(15, 23, 42, 0.07),
+      0 2px 8px rgba(15, 23, 42, 0.04);
+  }
+
+  .chart-hero-card {
+    box-shadow:
+      0 22px 48px rgba(15, 23, 42, 0.08),
+      0 4px 12px rgba(15, 23, 42, 0.05);
   }
 
   .premium-card-hover {
@@ -52,6 +64,16 @@
 
   .icon-badge {
     @apply flex shrink-0 items-center justify-center rounded-2xl;
+    width: 44px;
+    height: 44px;
+  }
+
+  .kpi-icon-badge {
+    width: 46px;
+    height: 46px;
+  }
+
+  .insight-icon-badge {
     width: 44px;
     height: 44px;
   }
@@ -134,6 +156,17 @@
     animation: fade-up 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
   }
 
+  .funnel-step-item {
+    animation: fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    opacity: 0;
+  }
+
+  .sparkline-line {
+    stroke-dasharray: 200;
+    stroke-dashoffset: 200;
+    animation: sparkline-draw 1s cubic-bezier(0.22, 1, 0.36, 1) 0.2s forwards;
+  }
+
   .chart-line-draw {
     stroke-dasharray: 1400;
     stroke-dashoffset: 1400;
@@ -154,6 +187,8 @@
     .chart-area-fade,
     .dashboard-table-row,
     .insight-row-stagger,
+    .funnel-step-item,
+    .sparkline-line,
     .auth-stagger > * {
       animation: none !important;
       opacity: 1 !important;
@@ -173,6 +208,11 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+@keyframes sparkline-draw {
+  from { stroke-dashoffset: 200; }
+  to { stroke-dashoffset: 0; }
 }
 
 @keyframes chart-draw {

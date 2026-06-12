@@ -5,12 +5,18 @@ type PremiumCardProps = {
   className?: string;
   padding?: "kpi" | "chart" | "panel";
   hover?: boolean;
+  radius?: "default" | "chart";
 };
 
 const PADDING_MAP = {
   kpi: "p-[18px]",
-  chart: "p-6",
+  chart: "p-[26px]",
   panel: "p-[22px]",
+} as const;
+
+const RADIUS_MAP = {
+  default: "rounded-[24px]",
+  chart: "rounded-[26px]",
 } as const;
 
 export function PremiumCard({
@@ -18,10 +24,11 @@ export function PremiumCard({
   className = "",
   padding = "panel",
   hover = true,
+  radius = "default",
 }: PremiumCardProps) {
   return (
     <div
-      className={`premium-card rounded-[22px] border border-[rgba(15,23,42,0.08)] bg-white ${PADDING_MAP[padding]} ${
+      className={`premium-card border border-[rgba(15,23,42,0.08)] bg-white ${RADIUS_MAP[radius]} ${PADDING_MAP[padding]} ${
         hover ? "premium-card-hover" : ""
       } ${className}`}
     >

@@ -8,14 +8,20 @@ type ChartSeries = {
   color: string;
 };
 
+type ChartMetricChip = {
+  label: string;
+  value: string;
+};
+
 type DashboardLineChartProps = {
   labels: string[];
   series: ChartSeries[];
+  metrics?: ChartMetricChip[];
 };
 
 type Point = { x: number; y: number };
 
-const CHART_HEIGHT = 380;
+const CHART_HEIGHT = 340;
 
 function getPoints(
   values: number[],
@@ -68,10 +74,15 @@ function slugify(value: string): string {
   return value.replace(/\s+/g, "-").toLowerCase();
 }
 
-export function DashboardLineChart({ labels, series }: DashboardLineChartProps) {
+function getSeriesSummary(values: number[]): string {
+  const total = values.reduce((sum, value) => sum + value, 0);
+  return String(total);
+}
+
+export function DashboardLineChart({ labels, series, metrics = [] }: DashboardLineChartProps) {
   const width = 800;
   const height = CHART_HEIGHT;
-  const padding = { top: 28, right: 20, bottom: 48, left: 48 };
+  const padding = { top: 24, right: 24, bottom: 44, left: 52 };
   const chartHeight = height - padding.top - padding.bottom;
   const hasData = series.some((item) => hasTrendData(item.values));
   const maxValue = Math.max(...series.flatMap((item) => item.values), 1);
@@ -82,8 +93,10 @@ export function DashboardLineChart({ labels, series }: DashboardLineChartProps) 
         className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-[rgba(15,23,42,0.1)] bg-[#F8FAFC] px-6 text-center"
         style={{ height: CHART_HEIGHT }}
       >
-        <p className="dashboard-body font-bold text-[#0F172A]">Grafik için yeterli veri yok</p>
-        <p className="dashboard-body mt-2 max-w-sm">Kayıtlar oluştukça trend grafiği burada görünecek.</p>
+        <p className="text-[14px] font-extrabold text-[#0F172A]">Grafik için yeterli veri yok</p>
+        <p className="mt-2 max-w-sm text-[13px] font-medium text-[#64748B]">
+          Kayıtlar oluştukça trend grafiği burada görünecek.
+        </p>
       </div>
     );
   }
@@ -94,13 +107,29 @@ export function DashboardLineChart({ labels, series }: DashboardLineChartProps) 
   }));
 
   const xLabelIndices = labels.map((_, i) => i).filter((i) => i % 2 === 0 || i === labels.length - 1);
-  const firstSeriesPoints = getPoints(series[0].values, width, height, padding, maxValue);
+  const primarySeries = series[0];
+  const primaryPoints = getPoints(primarySeries.values, width, height, padding, maxValue);
+  const lastPrimaryPoint = primaryPoints[primaryPoints.length - 1];
 
   return (
-    <div className="w-full" style={{ minHeight: CHART_HEIGHT }}>
+    <div className="relative w-full" style={{ minHeight: CHART_HEIGHT }}>
+      {metrics.length > 0 ? (
+        <div className="absolute right-0 top-0 z-10 flex flex-wrap justify-end gap-2">
+          {metrics.map((chip) => (
+            <span
+              key={chip.label}
+              className="inline-flex flex-col rounded-2xl border border-[rgba(15,23,42,0.08)] bg-white/90 px-3 py-1.5 backdrop-blur-sm"
+            >
+              <span className="text-[10px] font-bold uppercase tracking-wide text-[#94A3B8]">{chip.label}</span>
+              <span className="text-[13px] font-extrabold tabular-nums text-[#0B1220]">{chip.value}</span>
+            </span>
+          ))}
+        </div>
+      ) : null}
+
       <svg
         viewBox={`0 0 ${width} ${height}`}
-        className="h-[380px] w-full"
+        className="h-[340px] w-full"
         role="img"
         aria-label="Lead, web sitesi, analiz ve rapor trend grafiği"
         preserveAspectRatio="xMidYMid meet"
@@ -110,8 +139,8 @@ export function DashboardLineChart({ labels, series }: DashboardLineChartProps) 
             const slug = slugify(item.label);
             return (
               <linearGradient key={`gradient-${slug}`} id={`area-${slug}`} x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor={item.color} stopOpacity="0.2" />
-                <stop offset="90%" stopColor={item.color} stopOpacity="0.03" />
+                <stop offset="0%" stopColor={item.color} stopOpacity="0.18" />
+                <stop offset="85%" stopColor={item.color} stopOpacity="0.04" />
                 <stop offset="100%" stopColor={item.color} stopOpacity="0" />
               </linearGradient>
             );
@@ -125,10 +154,17 @@ export function DashboardLineChart({ labels, series }: DashboardLineChartProps) 
               y1={tick.y}
               x2={width - padding.right}
               y2={tick.y}
-              stroke="#EEF2F7"
+              stroke="#E8EDF4"
               strokeWidth="1"
             />
-            <text x={padding.left - 12} y={tick.y + 4} textAnchor="end" fill="#94A3B8" fontSize="11" fontWeight="600">
+            <text
+              x={padding.left - 14}
+              y={tick.y + 4}
+              textAnchor="end"
+              fill="#64748B"
+              fontSize="12"
+              fontWeight="700"
+            >
               {tick.value}
             </text>
           </g>
@@ -137,41 +173,63 @@ export function DashboardLineChart({ labels, series }: DashboardLineChartProps) 
         {series.map((item, seriesIndex) => {
           const points = getPoints(item.values, width, height, padding, maxValue);
           const slug = slugify(item.label);
+          const isPrimary = seriesIndex === 0;
 
           return (
             <g key={item.label}>
-              <path
-                d={buildAreaPath(points, height, padding.bottom)}
-                fill={`url(#area-${slug})`}
-                className="chart-area-fade"
-                style={{ animationDelay: `${seriesIndex * 0.08}s` }}
-              />
+              {isPrimary ? (
+                <path
+                  d={buildAreaPath(points, height, padding.bottom)}
+                  fill={`url(#area-${slug})`}
+                  className="chart-area-fade"
+                />
+              ) : null}
               <path
                 d={buildCatmullRomPath(points)}
                 fill="none"
                 stroke={item.color}
-                strokeWidth="2.5"
+                strokeWidth="2.6"
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 className="chart-line-draw"
-                style={{ animationDelay: `${0.1 + seriesIndex * 0.1}s` }}
+                style={{ animationDelay: `${0.08 + seriesIndex * 0.1}s` }}
               />
             </g>
           );
         })}
 
+        {lastPrimaryPoint ? (
+          <g className="chart-end-marker">
+            <circle
+              cx={lastPrimaryPoint.x}
+              cy={lastPrimaryPoint.y}
+              r="6"
+              fill="#2563EB"
+              fillOpacity="0.15"
+            />
+            <circle
+              cx={lastPrimaryPoint.x}
+              cy={lastPrimaryPoint.y}
+              r="4"
+              fill="#2563EB"
+              stroke="#FFFFFF"
+              strokeWidth="2"
+            />
+          </g>
+        ) : null}
+
         {xLabelIndices.map((labelIndex) => {
-          const point = firstSeriesPoints[labelIndex];
+          const point = primaryPoints[labelIndex];
           if (!point) return null;
           return (
             <text
               key={labels[labelIndex]}
               x={point.x}
-              y={height - 16}
+              y={height - 14}
               textAnchor="middle"
-              fill="#94A3B8"
-              fontSize="11"
-              fontWeight="600"
+              fill="#64748B"
+              fontSize="12"
+              fontWeight="700"
             >
               {labels[labelIndex]}
             </text>
@@ -179,15 +237,18 @@ export function DashboardLineChart({ labels, series }: DashboardLineChartProps) 
         })}
       </svg>
 
-      <div className="mt-2 flex flex-wrap items-center justify-between gap-3 border-t border-[rgba(15,23,42,0.06)] pt-4">
+      <div className="mt-3 flex flex-wrap items-center justify-between gap-3 border-t border-[rgba(15,23,42,0.06)] pt-4">
         <div className="flex flex-wrap gap-2">
           {series.map((item) => (
             <span
               key={item.label}
-              className="inline-flex items-center gap-2 rounded-full border border-[rgba(15,23,42,0.08)] bg-[#F8FAFC] px-3 py-1.5 text-[12px] font-bold text-[#475569]"
+              className="inline-flex items-center gap-2 rounded-2xl border border-[rgba(15,23,42,0.08)] bg-[#F8FAFC] px-3 py-1.5"
             >
               <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: item.color }} aria-hidden="true" />
-              {item.label}
+              <span className="text-[12px] font-bold text-[#475569]">{item.label}</span>
+              <span className="text-[12px] font-extrabold tabular-nums text-[#0B1220]">
+                {getSeriesSummary(item.values)}
+              </span>
             </span>
           ))}
         </div>

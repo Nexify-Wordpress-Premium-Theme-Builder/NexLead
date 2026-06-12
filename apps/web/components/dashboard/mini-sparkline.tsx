@@ -10,13 +10,16 @@ type MiniSparklineProps = {
 
 type Point = { x: number; y: number };
 
+const DEFAULT_WIDTH = 92;
+const DEFAULT_HEIGHT = 38;
+
 function buildPoints(values: number[], width: number, height: number): Point[] {
   if (values.length === 0) return [];
   const max = Math.max(...values, 1);
   const step = values.length > 1 ? width / (values.length - 1) : 0;
   return values.map((value, index) => ({
     x: index * step,
-    y: height - (value / max) * (height - 8) - 4,
+    y: height - (value / max) * (height - 10) - 5,
   }));
 }
 
@@ -39,11 +42,12 @@ export function MiniSparkline({
   className,
 }: MiniSparklineProps) {
   const gradientId = useId();
-  const width = 84;
-  const height = 36;
+  const width = DEFAULT_WIDTH;
+  const height = DEFAULT_HEIGHT;
   const points = buildPoints(values, width, height);
   const hasData = values.some((value) => value > 0);
   const path = buildSmoothPath(points);
+  const lastPoint = points[points.length - 1];
 
   if (!hasData) {
     return (
@@ -57,7 +61,7 @@ export function MiniSparkline({
     <svg viewBox={`0 0 ${width} ${height}`} className={className} aria-hidden="true">
       <defs>
         <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor={color} stopOpacity="0.25" />
+          <stop offset="0%" stopColor={color} stopOpacity="0.22" />
           <stop offset="100%" stopColor={color} stopOpacity="0" />
         </linearGradient>
       </defs>
@@ -67,7 +71,18 @@ export function MiniSparkline({
           fill={`url(#${gradientId})`}
         />
       ) : null}
-      <path d={path} fill="none" stroke={color} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+      <path
+        d={path}
+        fill="none"
+        stroke={color}
+        strokeWidth="2.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="sparkline-line"
+      />
+      {lastPoint ? (
+        <circle cx={lastPoint.x} cy={lastPoint.y} r="3" fill={color} stroke="#FFFFFF" strokeWidth="1.5" />
+      ) : null}
     </svg>
   );
 }

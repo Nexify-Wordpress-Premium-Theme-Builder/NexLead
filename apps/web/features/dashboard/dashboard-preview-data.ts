@@ -29,14 +29,14 @@ export const DASHBOARD_PREVIEW_DISPLAY: DashboardDisplay = {
     },
     {
       id: "preview-insight-2",
-      title: "SEO sinyalleri kontrol edilmeli",
-      description: "Meta açıklama ve canonical eksikleri raporlarda öne çıkıyor.",
+      title: "SEO sinyalleri eksik",
+      description: "Meta açıklama ve canonical kontrolleri öne çıkıyor.",
       tone: "seo",
     },
     {
       id: "preview-insight-3",
-      title: "Lead eşleşmeleri iyileştirilebilir",
-      description: "Bazı web siteleri lead kaydıyla eşleşmemiş.",
+      title: "Lead eşleşmeleri geliştirilmeli",
+      description: "Bazı web siteleri lead kaydıyla ilişkilendirilmemiş.",
       tone: "lead",
     },
   ],

@@ -21,13 +21,13 @@ function TrendBadge({ trend }: { trend: DashboardKpiTrend }) {
   const isUp = trend.direction === "up";
   const isDown = trend.direction === "down";
   const tone = isUp
-    ? "bg-[#16A34A]/10 text-[#16A34A]"
+    ? "bg-[#16A34A]/12 text-[#16A34A]"
     : isDown
-      ? "bg-[#DC2626]/10 text-[#DC2626]"
+      ? "bg-[#DC2626]/12 text-[#DC2626]"
       : "bg-[#F1F5F9] text-[#64748B]";
 
   return (
-    <span className={`trend-pill ${tone}`}>
+    <span className={`trend-pill text-[12px] font-extrabold ${tone}`}>
       {isUp ? "↑" : isDown ? "↓" : "—"}
       {trend.percent.toFixed(1)}%
     </span>
@@ -45,34 +45,33 @@ export function MetricCard({
   delayClassName,
   displayValue,
 }: MetricCardProps) {
+  const sparklineValues = sparkline ?? [3, 4, 3, 5, 4, 6, 5, 7, 6, 8];
+
   return (
     <PremiumCard
       padding="kpi"
-      className={`dashboard-stagger-item flex h-[158px] flex-col ${delayClassName ?? ""}`}
+      className={`dashboard-stagger-item kpi-card flex h-[150px] flex-col ${delayClassName ?? ""}`}
     >
       <div className="flex items-start justify-between gap-2">
-        <div className={`icon-badge ${accentClassName}`}>{icon}</div>
-        {sparkline ? (
-          <MiniSparkline values={sparkline} color={sparklineColor} className="h-9 w-[84px] shrink-0" />
-        ) : (
-          <span className="h-9 w-[84px] shrink-0" aria-hidden="true" />
-        )}
+        <div className={`icon-badge kpi-icon-badge ${accentClassName}`}>{icon}</div>
+        <MiniSparkline
+          values={sparklineValues}
+          color={sparklineColor}
+          className="sparkline-draw h-[38px] w-[92px] shrink-0"
+        />
       </div>
 
-      <p className="dashboard-label mt-3">{label}</p>
-
-      <div className="mt-auto flex items-end justify-between gap-2 pt-1">
-        <p className="dashboard-metric-value tabular-nums">
+      <div className="mt-2.5 min-w-0">
+        <p className="dashboard-label truncate">{label}</p>
+        <p className="dashboard-metric-value mt-1 tabular-nums">
           {displayValue ?? <AnimatedNumber value={value} />}
         </p>
-        {trend ? <TrendBadge trend={trend} /> : null}
       </div>
 
-      {trend ? (
-        <p className="mt-1 text-[12px] font-medium text-[#94A3B8]">önceki 30 güne göre</p>
-      ) : (
-        <span className="mt-1 block h-[18px]" aria-hidden="true" />
-      )}
+      <div className="mt-auto flex items-center justify-between gap-2 pt-2">
+        {trend ? <TrendBadge trend={trend} /> : <span />}
+        <span className="text-[11px] font-semibold text-[#94A3B8]">önceki 30 güne göre</span>
+      </div>
     </PremiumCard>
   );
 }
