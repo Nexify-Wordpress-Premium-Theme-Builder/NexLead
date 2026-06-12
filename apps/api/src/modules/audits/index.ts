@@ -1,5 +1,22 @@
 export { handleProcessNextAuditJob } from "./audit-worker.routes";
 export {
+  extractHtmlSignals,
+  fetchWebsiteSnapshot,
+  fetchWithRedirectLimit,
+  normalizeWebsiteUrl,
+  truncateHtmlBody,
+} from "./website-fetch.service";
+export type {
+  WebsiteFetchErrorCode,
+  WebsiteFetchSnapshot,
+  WebsiteHtmlSignals,
+} from "./website-fetch.types";
+export {
+  assertSafeFetchUrl,
+  isPrivateOrLocalIp,
+  resolveHostnameSafely,
+} from "../../utils/url-safety";
+export {
   calculateOverallScore,
   clampScore,
   createAuditFindings,

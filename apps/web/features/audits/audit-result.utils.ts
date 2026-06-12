@@ -71,6 +71,38 @@ export function formatEvidenceSummary(evidence: Json | null): string | null {
       return record.message.trim();
     }
 
+    const preferredKeys = [
+      "status_code",
+      "response_time_ms",
+      "final_url",
+      "requested_url",
+      "actual",
+      "expected",
+      "check_key",
+    ];
+
+    const preferredParts = preferredKeys
+      .map((key) => {
+        const value = record[key];
+
+        if (typeof value === "string" && value.trim()) {
+          const trimmed = value.trim();
+          const display = trimmed.length > 80 ? `${trimmed.slice(0, 77)}...` : trimmed;
+          return `${key}: ${display}`;
+        }
+
+        if (typeof value === "number") {
+          return `${key}: ${value}`;
+        }
+
+        return null;
+      })
+      .filter((part): part is string => part !== null);
+
+    if (preferredParts.length > 0) {
+      return preferredParts.slice(0, 3).join(" · ");
+    }
+
     const parts = Object.entries(record)
       .filter(([, value]) => typeof value === "string" || typeof value === "number")
       .slice(0, 3)

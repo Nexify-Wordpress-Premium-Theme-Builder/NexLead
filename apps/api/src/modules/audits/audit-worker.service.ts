@@ -92,7 +92,7 @@ export async function createAuditJobRun(audit: AuditRow): Promise<string> {
     payload: {
       auditId: audit.id,
       websiteId: audit.website_id,
-      engine: "deterministic_foundation",
+      engine: "safe_fetch_foundation",
     },
     created_by: audit.created_by,
   };
@@ -146,12 +146,14 @@ function toJobOutputResult(output: GenerateAuditOutputResult): AuditOutputJobRes
   const scoresCount = Object.keys(output.scoreBreakdown).length;
 
   return {
-    engine: "deterministic_foundation",
+    engine: "safe_fetch_foundation",
     findingsGenerated: output.findingsCreated > 0,
     scoresGenerated: scoresCount > 0,
     overallScore: output.overallScore,
     findingsCount: output.findingsCreated,
     scoresCount,
+    fetchAttempted: output.fetchAttempted,
+    fetchOk: output.fetchOk,
   };
 }
 

@@ -1,5 +1,7 @@
 import type { Enums, Json, Tables } from "@nexlead/types";
 
+import type { WebsiteFetchSnapshot } from "./website-fetch.types";
+
 export type FindingCategory = Enums<"finding_category">;
 export type FindingSeverity = Enums<"finding_severity">;
 
@@ -9,16 +11,25 @@ export type LeadRow = Tables<"leads">;
 
 export type AuditEvidence = {
   check_key: string;
-  checked_value: string | null;
-  expected_value: string | null;
-  source_table: string;
-  source_field: string;
+  checked_value?: string | null;
+  expected_value?: string | null;
+  source_table?: string;
+  source_field?: string;
+  status_code?: number | null;
+  requested_url?: string | null;
+  final_url?: string | null;
+  content_type?: string | null;
+  response_time_ms?: number | null;
+  source?: string;
+  expected?: string | null;
+  actual?: string | null;
 };
 
 export type AuditOutputContext = {
   audit: AuditRow;
   website: WebsiteRow;
   lead: LeadRow | null;
+  fetchSnapshot: WebsiteFetchSnapshot | null;
 };
 
 export type DeterministicAuditCheck = {
@@ -57,15 +68,19 @@ export type GenerateAuditOutputResult = {
   scoresCreated: number;
   findingsCreated: number;
   skipped: boolean;
+  fetchAttempted: boolean;
+  fetchOk: boolean;
 };
 
 export type AuditOutputJobResult = {
-  engine: "deterministic_foundation";
+  engine: "safe_fetch_foundation";
   findingsGenerated: boolean;
   scoresGenerated: boolean;
   overallScore: number;
   findingsCount: number;
   scoresCount: number;
+  fetchAttempted: boolean;
+  fetchOk: boolean;
 };
 
 export function toJsonValue(value: ScoreBreakdown): Json {
