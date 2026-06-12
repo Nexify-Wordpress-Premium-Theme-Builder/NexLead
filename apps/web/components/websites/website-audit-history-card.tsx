@@ -1,3 +1,4 @@
+import { AuditReportLink } from "@/components/reports/audit-report-link";
 import { AuditStatusBadge } from "@/components/websites/audit-status-badge";
 import type { AuditType } from "@/features/dashboard/dashboard.types";
 import type { AuditHistoryItem } from "@/features/websites/website.types";
@@ -37,15 +38,20 @@ export function WebsiteAuditHistoryCard({ audits }: WebsiteAuditHistoryCardProps
                 key={audit.id}
                 className="rounded-xl border border-border bg-surface-soft/40 p-4 sm:p-5"
               >
-                <div className="flex flex-wrap items-center gap-2">
-                  <AuditStatusBadge status={audit.status} />
-                  <span className="text-xs text-text-muted">
-                    {AUDIT_TYPE_LABELS[audit.type]} analiz
-                  </span>
-                  {isLatest ? (
-                    <span className="inline-flex items-center rounded-full bg-surface px-2 py-0.5 text-xs font-medium text-text-secondary">
-                      En son
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <AuditStatusBadge status={audit.status} />
+                    <span className="text-xs text-text-muted">
+                      {AUDIT_TYPE_LABELS[audit.type]} analiz
                     </span>
+                    {isLatest ? (
+                      <span className="inline-flex items-center rounded-full bg-surface px-2 py-0.5 text-xs font-medium text-text-secondary">
+                        En son
+                      </span>
+                    ) : null}
+                  </div>
+                  {audit.status === "completed" ? (
+                    <AuditReportLink auditId={audit.id} />
                   ) : null}
                 </div>
 
