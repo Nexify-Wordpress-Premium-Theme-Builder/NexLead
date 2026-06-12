@@ -24,7 +24,7 @@
   }
 
   html {
-    @apply antialiased;
+    @apply font-sans antialiased;
   }
 
   body {
@@ -183,8 +183,43 @@
     border-color: var(--nx-border);
   }
 
+  .nx-textarea {
+    @apply min-h-[96px] h-auto resize-y py-3;
+  }
+
   .nx-skeleton {
     @apply animate-pulse rounded-xl bg-[#e8edf4];
+  }
+
+  .nx-modal-panel {
+    animation: nx-modal-sheet-in 0.22s var(--nx-ease) forwards;
+  }
+
+  .nx-modal-backdrop {
+    animation: nx-fade-in 0.2s ease-out forwards;
+  }
+
+  .nx-modal-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(15, 23, 42, 0.16) transparent;
+  }
+
+  .nx-modal-scroll::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .nx-modal-scroll::-webkit-scrollbar-thumb {
+    border-radius: 999px;
+    background: rgba(15, 23, 42, 0.14);
+  }
+
+  .nx-modal-scroll::-webkit-scrollbar-thumb:hover {
+    background: rgba(15, 23, 42, 0.22);
+  }
+
+  .nx-modal-footer {
+    border-color: var(--nx-border);
+    background: linear-gradient(to top, #ffffff 88%, rgba(255, 255, 255, 0.96));
   }
 }
 
@@ -206,14 +241,6 @@
   .nx-row-enter {
     animation: nx-fade-up 0.45s var(--nx-ease) forwards;
     opacity: 0;
-  }
-
-  .nx-modal-enter {
-    animation: nx-modal-in 0.35s var(--nx-ease) forwards;
-  }
-
-  .nx-modal-backdrop {
-    animation: nx-fade-in 0.25s ease-out forwards;
   }
 
   .nx-chart-line {
@@ -243,21 +270,27 @@
     background-image: radial-gradient(circle at 1px 1px, #e2e8f0 1px, transparent 0);
     background-size: 24px 24px;
   }
+}
 
-  @media (prefers-reduced-motion: reduce) {
-    .nx-page,
-    .nx-stagger > *,
-    .nx-row-enter,
-    .nx-modal-enter,
-    .nx-modal-backdrop,
-    .nx-chart-line,
-    .nx-sparkline-line,
-    .auth-stagger > * {
-      animation: none !important;
-      opacity: 1 !important;
-      transform: none !important;
-      stroke-dashoffset: 0 !important;
-    }
+@media (min-width: 640px) {
+  .nx-modal-panel {
+    animation: nx-modal-in 0.24s var(--nx-ease) forwards;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nx-page,
+  .nx-stagger > *,
+  .nx-row-enter,
+  .nx-modal-panel,
+  .nx-modal-backdrop,
+  .nx-chart-line,
+  .nx-sparkline-line,
+  .auth-stagger > * {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    stroke-dashoffset: 0 !important;
   }
 }
 
@@ -274,6 +307,11 @@
 @keyframes nx-modal-in {
   from { opacity: 0; transform: translateY(16px) scale(0.98); }
   to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes nx-modal-sheet-in {
+  from { opacity: 0; transform: translateY(100%); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes nx-chart-draw {

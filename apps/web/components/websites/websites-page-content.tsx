@@ -12,6 +12,7 @@ import { WebsiteForm } from "@/components/websites/website-form";
 import { WebsitesTable } from "@/components/websites/websites-table";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { FilterPills } from "@/components/ui/filter-pills";
 import { Modal } from "@/components/ui/modal";
 import { PageHeader } from "@/components/ui/page-header";
 import type { LeadOption, WebsiteWithRelations } from "@/features/websites/website.types";
@@ -29,12 +30,15 @@ type ModalState =
   | { type: "create" }
   | { type: "edit"; website: WebsiteWithRelations };
 
+type AuditStatusFilter = "all" | "running" | "completed" | "none";
+
 export function WebsitesPageContent({ websites, leads, initialLeadId }: WebsitesPageContentProps) {
   const router = useRouter();
   const [modal, setModal] = useState<ModalState>({ type: "closed" });
   const [createLeadId, setCreateLeadId] = useState(initialLeadId ?? "");
   const [quickLeadId, setQuickLeadId] = useState("");
   const [search, setSearch] = useState("");
+  const [auditFilter, setAuditFilter] = useState<AuditStatusFilter>("all");
   const [quickMessage, setQuickMessage] = useState<string | null>(null);
   const [quickPending, startQuickTransition] = useTransition();
 
@@ -72,12 +76,23 @@ export function WebsitesPageContent({ websites, leads, initialLeadId }: Websites
 
   const filteredWebsites = useMemo(() => {
     const query = search.trim().toLowerCase();
-    if (!query) return websites;
-    return websites.filter((w) => {
-      const haystack = [w.url, w.domain, w.leadCompanyName].filter(Boolean).join(" ").toLowerCase();
+
+    return websites.filter((website) => {
+      const auditStatus = website.latestAudit?.status ?? null;
+
+      if (auditFilter === "running" && !isAuditInProgress(auditStatus ?? undefined)) return false;
+      if (auditFilter === "completed" && auditStatus !== "completed") return false;
+      if (auditFilter === "none" && auditStatus !== null) return false;
+
+      if (!query) return true;
+
+      const haystack = [website.url, website.domain, website.leadCompanyName]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase();
       return haystack.includes(query);
     });
-  }, [websites, search]);
+  }, [websites, search, auditFilter]);
 
   const handleQuickCreateFromLead = () => {
     if (!quickLeadId) {
@@ -167,7 +182,7 @@ export function WebsitesPageContent({ websites, leads, initialLeadId }: Websites
       ) : null}
 
       {websites.length > 0 ? (
-        <Card padding="md">
+        <Card padding="md" className="space-y-4">
           <input
             type="search"
             value={search}
@@ -175,6 +190,17 @@ export function WebsitesPageContent({ websites, leads, initialLeadId }: Websites
             placeholder="Web sitesi veya lead ara..."
             className="nx-input max-w-md"
             aria-label="Web sitesi ara"
+          />
+          <FilterPills
+            value={auditFilter}
+            onChange={setAuditFilter}
+            ariaLabel="Analiz durumu filtresi"
+            options={[
+              { value: "all", label: "Tümü" },
+              { value: "running", label: "Analizde" },
+              { value: "completed", label: "Tamamlandı" },
+              { value: "none", label: "Analiz yok" },
+            ]}
           />
         </Card>
       ) : null}
@@ -191,7 +217,13 @@ export function WebsitesPageContent({ websites, leads, initialLeadId }: Websites
         )}
       </div>
 
-      <Modal open={modal.type === "create"} title="Yeni Web Site Ekle" description="Manuel website ekleyin veya bir lead ile ilişkilendirin." onClose={closeModal}>
+      <Modal
+        open={modal.type === "create"}
+        size="md"
+        title="Yeni Web Site Ekle"
+        description="Manuel website ekleyin veya bir lead ile ilişkilendirin."
+        onClose={closeModal}
+      >
         <WebsiteForm
           key={createLeadId || "create"}
           mode="create"
@@ -202,7 +234,13 @@ export function WebsitesPageContent({ websites, leads, initialLeadId }: Websites
         />
       </Modal>
 
-      <Modal open={modal.type === "edit"} title="Web Site Düzenle" description="Web sitesi bilgilerini güncelleyin." onClose={closeModal}>
+      <Modal
+        open={modal.type === "edit"}
+        size="md"
+        title="Web Site Düzenle"
+        description="Web sitesi bilgilerini güncelleyin."
+        onClose={closeModal}
+      >
         {modal.type === "edit" ? (
           <WebsiteForm mode="edit" website={modal.website} leads={leads} onSuccess={handleSuccess} onCancel={closeModal} />
         ) : null}

@@ -7,7 +7,7 @@ type GlobalErrorProps = {
 
 export default function GlobalError({ reset }: GlobalErrorProps) {
   return (
-    <html lang="tr">
+    <html lang="tr" className="font-sans">
       <body className="bg-[#f5f7fb] font-sans text-[#0f172a] antialiased">
         <div className="flex min-h-screen items-center justify-center px-4">
           <div className="w-full max-w-lg rounded-[20px] border border-[rgba(15,23,42,0.08)] bg-white p-8 text-center">

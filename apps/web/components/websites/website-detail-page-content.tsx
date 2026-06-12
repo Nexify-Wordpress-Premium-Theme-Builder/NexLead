@@ -126,6 +126,7 @@ export function WebsiteDetailPageContent({
 
       <Modal
         open={editOpen}
+        size="md"
         title="Web Site Düzenle"
         description="Web sitesi bilgilerini güncelleyin."
         onClose={() => setEditOpen(false)}

@@ -56,6 +56,7 @@ function LeadActions({
         title="Lead arşivlensin mi?"
         description={`${lead.company_name} kaydı listeden kaldırılacak ve arşivlenecek.`}
         confirmLabel="Arşivle"
+        tone="danger"
         loading={pending}
         onConfirm={() => {
           startTransition(async () => {

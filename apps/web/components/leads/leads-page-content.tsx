@@ -8,6 +8,7 @@ import { LeadForm } from "@/components/leads/lead-form";
 import { LeadsTable } from "@/components/leads/leads-table";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { FilterPills } from "@/components/ui/filter-pills";
 import { Modal } from "@/components/ui/modal";
 import { PageHeader } from "@/components/ui/page-header";
 import type { LeadWithPrimaryContact } from "@/features/leads/lead.types";
@@ -21,10 +22,13 @@ type ModalState =
   | { type: "create" }
   | { type: "edit"; lead: LeadWithPrimaryContact };
 
+type LeadStatusFilter = "all" | "new" | "qualified" | "contacted";
+
 export function LeadsPageContent({ leads }: LeadsPageContentProps) {
   const router = useRouter();
   const [modal, setModal] = useState<ModalState>({ type: "closed" });
   const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState<LeadStatusFilter>("all");
 
   const closeModal = useCallback(() => setModal({ type: "closed" }), []);
 
@@ -44,14 +48,26 @@ export function LeadsPageContent({ leads }: LeadsPageContentProps) {
 
   const filteredLeads = useMemo(() => {
     const query = search.trim().toLowerCase();
-    if (!query) return leads;
-    return leads.filter(
-      (lead) =>
+
+    return leads.filter((lead) => {
+      if (statusFilter === "new" && lead.status !== "new") return false;
+      if (statusFilter === "qualified" && lead.status !== "qualified") return false;
+      if (
+        statusFilter === "contacted" &&
+        !["contacted", "replied", "meeting_scheduled"].includes(lead.status)
+      ) {
+        return false;
+      }
+
+      if (!query) return true;
+
+      return (
         lead.company_name.toLowerCase().includes(query) ||
         (lead.normalizedDomain?.toLowerCase().includes(query) ?? false) ||
-        (lead.industry?.toLowerCase().includes(query) ?? false),
-    );
-  }, [leads, search]);
+        (lead.industry?.toLowerCase().includes(query) ?? false)
+      );
+    });
+  }, [leads, search, statusFilter]);
 
   return (
     <div className="nx-page space-y-6">
@@ -82,7 +98,7 @@ export function LeadsPageContent({ leads }: LeadsPageContentProps) {
       ) : null}
 
       {leads.length > 0 ? (
-        <Card padding="md">
+        <Card padding="md" className="space-y-4">
           <label className="block">
             <span className="sr-only">Lead ara</span>
             <input
@@ -93,6 +109,17 @@ export function LeadsPageContent({ leads }: LeadsPageContentProps) {
               className="nx-input max-w-md"
             />
           </label>
+          <FilterPills
+            value={statusFilter}
+            onChange={setStatusFilter}
+            ariaLabel="Lead durumu filtresi"
+            options={[
+              { value: "all", label: "Tümü" },
+              { value: "new", label: "Yeni" },
+              { value: "qualified", label: "Nitelikli" },
+              { value: "contacted", label: "İletişimde" },
+            ]}
+          />
         </Card>
       ) : null}
 
@@ -104,11 +131,23 @@ export function LeadsPageContent({ leads }: LeadsPageContentProps) {
         )}
       </div>
 
-      <Modal open={modal.type === "create"} title="Yeni Lead Ekle" description="Potansiyel müşteri bilgilerini girin." onClose={closeModal}>
+      <Modal
+        open={modal.type === "create"}
+        size="lg"
+        title="Yeni Lead Ekle"
+        description="Potansiyel müşteri bilgilerini girin."
+        onClose={closeModal}
+      >
         <LeadForm mode="create" onSuccess={handleSuccess} onCancel={closeModal} />
       </Modal>
 
-      <Modal open={modal.type === "edit"} title="Lead Düzenle" description="Lead bilgilerini güncelleyin." onClose={closeModal}>
+      <Modal
+        open={modal.type === "edit"}
+        size="lg"
+        title="Lead Düzenle"
+        description="Lead bilgilerini güncelleyin."
+        onClose={closeModal}
+      >
         {modal.type === "edit" ? (
           <LeadForm mode="edit" lead={modal.lead} onSuccess={handleSuccess} onCancel={closeModal} />
         ) : null}

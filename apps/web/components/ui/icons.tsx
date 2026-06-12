@@ -1,4 +1,3 @@
-import type { IconProps as PhosphorIconProps, IconWeight } from "@phosphor-icons/react";
 import {
   Bell,
   CalendarBlank,
@@ -25,13 +24,15 @@ import {
   Warning,
   X,
 } from "@phosphor-icons/react/ssr";
-import type { ComponentType } from "react";
+import type { ComponentProps, ComponentType } from "react";
+
+type PhosphorIconProps = ComponentProps<typeof Bell>;
 
 export type IconProps = PhosphorIconProps & {
   strokeWidth?: number;
 };
 
-function strokeWidthToWeight(strokeWidth?: number): IconWeight | undefined {
+function strokeWidthToWeight(strokeWidth?: number): PhosphorIconProps["weight"] | undefined {
   if (strokeWidth === undefined) return undefined;
   if (strokeWidth >= 2.2) return "bold";
   if (strokeWidth >= 1.75) return "regular";

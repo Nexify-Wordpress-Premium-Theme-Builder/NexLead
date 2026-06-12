@@ -16,8 +16,8 @@ const NAV_ITEMS: NavItem[] = [
   { label: "Genel Bakış", href: "/dashboard" },
   { label: "Leadler", href: "/dashboard/leads" },
   { label: "Web Site Analizleri", href: "/dashboard/websites" },
-  { label: "Raporlar", disabled: true },
-  { label: "Ayarlar", disabled: true },
+  { label: "Raporlar", href: "/dashboard/reports" },
+  { label: "Ayarlar", href: "/dashboard/settings" },
 ];
 
 function isActive(pathname: string, href: string): boolean {
@@ -98,7 +98,14 @@ export function DashboardSidebar({ userEmail, onNavigate }: DashboardSidebarProp
             <p className="text-[11px] font-medium text-text-muted">Aktif oturum</p>
           </div>
         </div>
-        <div className="mt-3">
+        <div className="mt-3 flex flex-col gap-2">
+          <Link
+            href="/dashboard/settings"
+            className="inline-flex h-9 items-center justify-center rounded-xl border text-[13px] font-semibold text-text-secondary transition-colors hover:bg-surface hover:text-text-primary"
+            style={{ borderColor: "var(--nx-border)" }}
+          >
+            Ayarlar
+          </Link>
           <LogoutButton compact />
         </div>
       </div>
@@ -109,5 +116,8 @@ export function DashboardSidebar({ userEmail, onNavigate }: DashboardSidebarProp
 export function getDashboardSectionTitle(pathname: string): string {
   if (pathname.startsWith("/dashboard/leads")) return "Leadler";
   if (pathname.startsWith("/dashboard/websites")) return "Web Site Analizleri";
+  if (pathname.startsWith("/dashboard/reports")) return "Raporlar";
+  if (pathname.startsWith("/dashboard/settings")) return "Ayarlar";
+  if (pathname.startsWith("/dashboard/audits")) return "Rapor";
   return "Genel Bakış";
 }

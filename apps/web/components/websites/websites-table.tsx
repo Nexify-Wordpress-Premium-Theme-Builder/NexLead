@@ -64,6 +64,7 @@ function WebsiteActions({
         title="Web site arşivlensin mi?"
         description={`${displayUrl} kaydı listeden kaldırılacak ve arşivlenecek.`}
         confirmLabel="Arşivle"
+        tone="danger"
         loading={pending}
         onConfirm={() => {
           startTransition(async () => {

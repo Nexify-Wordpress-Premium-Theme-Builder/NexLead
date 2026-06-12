@@ -92,6 +92,7 @@ export function LeadDetailPageContent({ lead, websites }: LeadDetailPageContentP
 
       <Modal
         open={editOpen}
+        size="lg"
         title="Lead Düzenle"
         description="Lead bilgilerini güncelleyin."
         onClose={() => setEditOpen(false)}
